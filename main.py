@@ -44,14 +44,49 @@ def by_angle_zero():  # Бросок под углом с земли
 
     bV0 = Button(root,  width=5, height=1)
     bV0.grid(row=0, column=1)
-
     change_button(bV0, "Vo")
     vvod.append(bV0)
     bV0.config(command=get_num)
 
+    vA = Entry(width=7)
+    vA.grid(row=1, column=0)
+    vvod.append(vA)
 
+    bA = Button(root, width=5, height=1)
+    bA.grid(row=1, column=1)
+    change_button(bA, "Угол")
+    vvod.append(bA)
+    bA.config(command=get_num)
 
+    vH = Entry(width=7)
+    vH.grid(row=2, column=0)
+    vvod.append(vH)
 
+    bH = Button(root, width=5, height=1)
+    bH.grid(row=2, column=1)
+    change_button(bH, "Hmax")
+    vvod.append(bH)
+    bH.config(command=get_num)
+
+    vT = Entry(width=7)
+    vT.grid(row=3, column=0)
+    vvod.append(vT)
+
+    bT = Button(root, width=5, height=1)
+    bT.grid(row=3, column=1)
+    change_button(bT, "Tпол.")
+    vvod.append(bT)
+    bT.config(command=get_num)
+
+    vL = Entry(width=7)
+    vL.grid(row=4, column=0)
+    vvod.append(vL)
+
+    bL = Button(root, width=5, height=1)
+    bL.grid(row=4, column=1)
+    change_button(bL, "Lпол.")
+    vvod.append(bL)
+    bL.config(command=get_num)
 
 def start_window():  # Основное меню
     b_home.destroy()
