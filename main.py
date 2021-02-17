@@ -6,10 +6,20 @@ root = Tk()
 root.title("Movement of the body thrown at the angle to the horizon")
 c = Canvas(root, bg='#F7DDC4', width=680, height=500)
 root.geometry("680x500")
-c.grid(row=0, column=0, columnspan=100, rowspan=70)
+c.grid(row=0, column=0, columnspan=200, rowspan=70)
 
 b_home = Button(root)
 vvod = []
+g = 9.81
+
+cifr = "1234567890"
+
+def if_num(st):
+    flag=True
+    for a in st:
+        if not(a in cifr):
+            flag=False
+    return(flag)
 
 def get_num(): # Получение числа из поля ввода
     pass
@@ -31,64 +41,78 @@ def delete_main():  # Переход от главного окна к побо�
     global b_home
     b_home = Button(root, height=2, width=5)
     change_button(b_home, 'HOME')
-    b_home.place(x=635, y=458)
+    b_home.place(x=633, y=457)
     b_home.config(command=start_window)
 
 def by_angle_zero():  # Бросок под углом с земли
     global vvod
-    delete_main()
     vvod = []
+
+    l1 = Label(text="Введите хотя бы \n два значения", font="Cricket 12")
+    l1.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l1.grid(row=1, column=0, columnspan=2, rowspan=1)
+    vvod.append(l1)
+
+    l2 = Label(text="Бросок под углом с земли", font="Cricket 18")
+    l2.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l2.grid(row=0,  column=0, columnspan=100, rowspan=1)
+    vvod.append(l2)
+
+    delete_main()
     vV0 = Entry(width=7)
-    vV0.grid(row=0, column=0)
+    vV0.grid(row=2, column=0)
     vvod.append(vV0)
 
-    bV0 = Button(root,  width=5, height=1)
-    bV0.grid(row=0, column=1)
-    change_button(bV0, "Vo")
+    bV0 = Label(text="- Vo", font="Cricket 10")
+    bV0.place(x=75, y=152)
+    bV0.config(bg='#F7DDC4', fg='#0C136F')
     vvod.append(bV0)
-    bV0.config(command=get_num)
 
     vA = Entry(width=7)
-    vA.grid(row=1, column=0)
+    vA.grid(row=3, column=0)
     vvod.append(vA)
 
     bA = Button(root, width=5, height=1)
-    bA.grid(row=1, column=1)
+    bA.grid(row=3, column=1)
     change_button(bA, "Угол")
     vvod.append(bA)
     bA.config(command=get_num)
 
     vH = Entry(width=7)
-    vH.grid(row=2, column=0)
+    vH.grid(row=4, column=0)
     vvod.append(vH)
 
     bH = Button(root, width=5, height=1)
-    bH.grid(row=2, column=1)
+    bH.grid(row=4, column=1)
     change_button(bH, "Hmax")
     vvod.append(bH)
     bH.config(command=get_num)
 
     vT = Entry(width=7)
-    vT.grid(row=3, column=0)
+    vT.grid(row=5, column=0)
     vvod.append(vT)
 
     bT = Button(root, width=5, height=1)
-    bT.grid(row=3, column=1)
+    bT.grid(row=5, column=1)
     change_button(bT, "Tпол.")
     vvod.append(bT)
     bT.config(command=get_num)
 
     vL = Entry(width=7)
-    vL.grid(row=4, column=0)
+    vL.grid(row=6, column=0)
     vvod.append(vL)
 
     bL = Button(root, width=5, height=1)
-    bL.grid(row=4, column=1)
+    bL.grid(row=6, column=1)
     change_button(bL, "Lпол.")
     vvod.append(bL)
     bL.config(command=get_num)
 
+
+
+
 def start_window():  # Основное меню
+
     b_home.destroy()
     c.create_text(340, 50, text="Движение тела, брошенного под углом к горизонту", font="Cricket 18", fill = '#0C136F')
     for a in vvod:
