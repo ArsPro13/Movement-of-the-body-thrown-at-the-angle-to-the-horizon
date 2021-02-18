@@ -48,7 +48,7 @@ def by_angle_zero():  # Бросок под углом с земли
     global vvod
     vvod = []
 
-    l1 = Label(text="Введите хотя бы \n два значения", font="Cricket 12")
+    l1 = Label(text="Введите любые\n два значения", font="Cricket 12")
     l1.config(bd=20, bg='#F7DDC4', fg='#0C136F')
     l1.grid(row=1, column=0, columnspan=2, rowspan=1)
     vvod.append(l1)
@@ -64,7 +64,7 @@ def by_angle_zero():  # Бросок под углом с земли
     vvod.append(vV0)
 
     bV0 = Label(text="- Vo", font="Cricket 10")
-    bV0.place(x=75, y=152)
+    bV0.place(x=80, y=152)
     bV0.config(bg='#F7DDC4', fg='#0C136F')
     vvod.append(bV0)
 
@@ -72,41 +72,38 @@ def by_angle_zero():  # Бросок под углом с земли
     vA.grid(row=3, column=0)
     vvod.append(vA)
 
-    bA = Button(root, width=5, height=1)
-    bA.grid(row=3, column=1)
-    change_button(bA, "Угол")
+    bA = Label(text="- Угол", font="Cricket 10")
+    bA.place(x=80, y=175)
+    bA.config(bg='#F7DDC4', fg='#0C136F')
     vvod.append(bA)
-    bA.config(command=get_num)
 
     vH = Entry(width=7)
     vH.grid(row=4, column=0)
     vvod.append(vH)
 
-    bH = Button(root, width=5, height=1)
-    bH.grid(row=4, column=1)
-    change_button(bH, "Hmax")
+    bH = Label(text="- Hmax", font="Cricket 10")
+    bH.place(x=80, y=197)
+    bH.config(bg='#F7DDC4', fg='#0C136F')
     vvod.append(bH)
-    bH.config(command=get_num)
 
     vT = Entry(width=7)
     vT.grid(row=5, column=0)
     vvod.append(vT)
 
-    bT = Button(root, width=5, height=1)
-    bT.grid(row=5, column=1)
-    change_button(bT, "Tпол.")
+    bT = Label(text="- Tполёта", font="Cricket 10")
+    bT.place(x=80, y=219)
+    bT.config(bg='#F7DDC4', fg='#0C136F')
     vvod.append(bT)
-    bT.config(command=get_num)
 
     vL = Entry(width=7)
     vL.grid(row=6, column=0)
     vvod.append(vL)
 
-    bL = Button(root, width=5, height=1)
-    bL.grid(row=6, column=1)
-    change_button(bL, "Lпол.")
+    bL = Label(text="- Lполёта", font="Cricket 10")
+    bL.place(x=80, y=244)
+    bL.config(bg='#F7DDC4', fg='#0C136F')
     vvod.append(bL)
-    bL.config(command=get_num)
+
 
 
 
