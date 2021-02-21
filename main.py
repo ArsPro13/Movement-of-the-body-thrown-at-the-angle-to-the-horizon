@@ -243,12 +243,50 @@ def del_by_angle_zero():
 
 
 def file_by_angle_zero():
+    colvo = 0
+    n = 0
     with open('input.txt', "r") as file:
         line = file.readline()
         while line:
+            colvo+=1
             print(line, end="")
             line = file.readline()
-
+            if (colvo==1):
+                fV0 = file.readline()
+                if (is_num(fV0)):
+                    n+=1
+            if (colvo==2):
+                fA = file.readline()
+                if (is_num(fA)):
+                    n+=1
+            if (colvo==3):
+                fH = file.readline()
+                if (is_num(fH)):
+                    n+=1
+            if (colvo==4):
+                fT = file.raedline()
+                if (is_num(fT)):
+                    n+=1
+            if (colvo==5):
+                fL = file.readline()
+                if (is_num(fL)):
+                    n+=1
+    if (colvo==5) and (n==2):
+        vL.delete(0, END)
+        vH.delete(0, END)
+        vT.delete(0, END)
+        vV0.delete(0, END)
+        vA.delete(0, END)
+        if (is_num(fV0)):
+            vV0.insert(fV0)
+        if (is_num(fA)):
+            vV0.insert(fA)
+        if (is_num(fH)):
+            vV0.insert(fH)
+        if (is_num(fT)):
+            vV0.insert(fT)
+        if (is_num(fL)):
+            vV0.insert(fL)
 
 def by_angle_zero():  # Бросок под углом с земли
     global vvod
@@ -341,7 +379,7 @@ def by_angle_zero():  # Бросок под углом с земли
 
 def start_window():  # Основное меню
     grafic.delete("all")
-    grafic.place(x=1257, y=70)
+    grafic.place(x=100000, y=70)
     b_home.destroy()
     c.create_text(340, 50, text="Движение тела, брошенного под углом к горизонту", font="Cricket 18", fill = '#0C136F')
     for a in vvod:
