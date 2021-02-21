@@ -241,6 +241,15 @@ def del_by_angle_zero():
     vL.delete(0, END)
     grafic.delete("all")
 
+
+def file_by_angle_zero():
+    with open('input.txt', "r") as file:
+        line = file.readline()
+        while line:
+            print(line, end="")
+            line = file.readline()
+
+
 def by_angle_zero():  # Бросок под углом с земли
     global vvod
     vvod = []
@@ -319,8 +328,16 @@ def by_angle_zero():  # Бросок под углом с земли
     vvod.append(bdel)
     bdel.config(command=del_by_angle_zero)
 
+    bopen = Button(root, height=5, width=30)
+    change_button(bopen, 'Считать значения из файла \n(введите 2 значения, на \nместе остальных "_" в\nследующем порядке: V0, A, H, T, L \n в файл "input.txt" в столбик)' )
+    bopen.place(x=20, y=385)
+    vvod.append(bopen)
+    bopen.config(command=file_by_angle_zero)
 
-
+    l3 = Label(text="ИЛИ", font="Cricket 12")
+    l3.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l3.place(x=90, y=320)
+    vvod.append(l3)
 
 def start_window():  # Основное меню
     grafic.delete("all")
@@ -380,7 +397,5 @@ def start_window():  # Основное меню
 
 
 
-
 start_window()
-
 root.mainloop()
