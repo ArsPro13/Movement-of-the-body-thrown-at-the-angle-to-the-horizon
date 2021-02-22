@@ -1,6 +1,6 @@
 from tkinter import *
 from math import sin, cos, pi, asin, acos, atan, sqrt, tan
-
+import datetime
 
 root = Tk()
 root.title("Movement of the body thrown at the angle to the horizon")
@@ -241,36 +241,57 @@ def del_by_angle_zero():
     vL.delete(0, END)
     grafic.delete("all")
 
+def save_by_angle_zero():
+    vvod_by_angle_zero()
+    if (is_num(vV0.get()) and is_num(vA.get())):
+        now = datetime.datetime.now()
+        cur_time = now.strftime("%d-%m-%Y(%H-%M)") + ".txt"
+        with open(cur_time, "w") as file:
+            st = 'Бросок под углом к горизонту с земли \n'
+            file.write(st)
+            st = "Vo (м/с) = " + str(vV0.get()) + '\n'
+            file.write(st)
+            st = "A (градусов) = " + str(vA.get()) + '\n'
+            file.write(st)
+            st = "H (м) = " + str(vH.get()) + '\n'
+            file.write(st)
+            st = "L (м) = " + str(vL.get()) + '\n'
+            file.write(st)
+            st = "T (с) = " + str(vT.get()) + '\n'
+            file.write(st)
+
 
 def file_by_angle_zero():
     colvo = 0
     n = 0
     with open('input.txt', "r") as file:
-        line = file.readline()
-        while line:
+        st = file.readline()
+        while st:
             colvo+=1
-            print(line, end="")
-            line = file.readline()
+            st=st.rstrip('\n')
+            print(st)
             if (colvo==1):
-                fV0 = file.readline()
+                fV0 = st
                 if (is_num(fV0)):
                     n+=1
             if (colvo==2):
-                fA = file.readline()
+                fA = st
                 if (is_num(fA)):
                     n+=1
             if (colvo==3):
-                fH = file.readline()
+                fH = st
                 if (is_num(fH)):
                     n+=1
             if (colvo==4):
-                fT = file.raedline()
+                fT = st
                 if (is_num(fT)):
                     n+=1
             if (colvo==5):
-                fL = file.readline()
+                fL = st
                 if (is_num(fL)):
                     n+=1
+            st = file.readline()
+    print(colvo, n)
     if (colvo==5) and (n==2):
         vL.delete(0, END)
         vH.delete(0, END)
@@ -278,15 +299,16 @@ def file_by_angle_zero():
         vV0.delete(0, END)
         vA.delete(0, END)
         if (is_num(fV0)):
-            vV0.insert(fV0)
+            vV0.insert(0, str(fV0))
         if (is_num(fA)):
-            vV0.insert(fA)
+            vA.insert(0, str(fA))
         if (is_num(fH)):
-            vV0.insert(fH)
+            vH.insert(0, str(fH))
         if (is_num(fT)):
-            vV0.insert(fT)
+            vT.insert(0, str(fT))
         if (is_num(fL)):
-            vV0.insert(fL)
+            vL.insert(0, str(fL))
+        vvod_by_angle_zero()
 
 def by_angle_zero():  # Бросок под углом с земли
     global vvod
@@ -371,6 +393,12 @@ def by_angle_zero():  # Бросок под углом с земли
     bopen.place(x=20, y=385)
     vvod.append(bopen)
     bopen.config(command=file_by_angle_zero)
+
+    bsave = Button(root, height=5, width=30)
+    change_button(bsave,'Сохранить значения')
+    bsave.place(x=300, y=385)
+    vvod.append(bsave)
+    bsave.config(command=save_by_angle_zero)
 
     l3 = Label(text="ИЛИ", font="Cricket 12")
     l3.config(bd=20, bg='#F7DDC4', fg='#0C136F')
