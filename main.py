@@ -26,14 +26,12 @@ def is_num(st):
             flag=False
     return(flag)
 
-
 def change_button (b1, st):  # Изменение конпки
     b1['text'] = st
     b1['bg'] = '#79A9F1'
     b1['activebackground'] = '#99BEF4'
     b1['fg'] = '#ffffff'
     b1['activeforeground'] = '#ffffff'
-
 
 def delete_main():  # Переход от главного окна к побочному
     c.delete("all")
@@ -45,6 +43,7 @@ def delete_main():  # Переход от главного окна к побо�
     change_button(b_home, 'HOME')
     b_home.place(x=633, y=457)
     b_home.config(command=start_window)
+
 
 
 def vvod_by_angle_zero():
@@ -232,7 +231,6 @@ def vvod_by_angle_zero():
             grafic.create_line((x) * k + 10, 220 - ((y) * k + 10), ((x1) * k + 10), 220 - ((y1) * k + 10),
                                fill="#000814")
 
-
 def del_by_angle_zero():
     vA.delete(0, END)
     vH.delete(0, END)
@@ -259,7 +257,6 @@ def save_by_angle_zero():
             file.write(st)
             st = "T (с) = " + str(vT.get()) + '\n'
             file.write(st)
-
 
 def file_by_angle_zero():
     colvo = 0
@@ -395,7 +392,7 @@ def by_angle_zero():  # Бросок под углом с земли
     bopen.config(command=file_by_angle_zero)
 
     bsave = Button(root, height=5, width=30)
-    change_button(bsave,'Сохранить значения')
+    change_button(bsave,'Сохранить значения\n в файл')
     bsave.place(x=300, y=385)
     vvod.append(bsave)
     bsave.config(command=save_by_angle_zero)
