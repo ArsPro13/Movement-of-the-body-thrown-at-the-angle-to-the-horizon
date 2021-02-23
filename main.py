@@ -885,6 +885,172 @@ def hor_h():
     vvod.append(l3)
 
 
+# вертикально вверх с высоты
+def vvod_vert_v_h():
+    grafic.delete("all")
+    V0 = vV0.get()
+    h = vh.get()
+    H = vH.get()
+    T = vT.get()
+    Vk = vVk.get()
+    col=0
+    V0d = False
+    hd = False
+    Hd = False
+    Td = False
+    Vkd = False
+    stroim = True
+    if (is_num(V0)):
+        col += 1
+        V0d = True
+        V0 = float(V0)
+    if (is_num(h)):
+        col += 1
+        hd = True
+        h = float(h)
+    if (is_num(H)):
+        col += 1
+        Hd = True
+        H = float(H)
+    if (is_num(T)):
+        col += 1
+        Td = True
+        T = float(T)
+    if (is_num(Vk)):
+        col += 1
+        Vkd = True
+        Vk = float(Vk)
+    if (V0d and Vkd):
+        if (Vk < V0):
+            mb.showerror("Неверные данные", "Рассчеты невозможны")
+        else:
+            h = (Vk**2-V0**2)/(2*g)
+            H = h + V0**2/(2*g)
+            T = (V0+sqrt(V0**2+2*g*h))/g
+            vh.delete(0, END)
+            vH.delete(0, END)
+            vT.delete(0, END)
+            vh.insert(0, round(h*1000)/1000)
+            vH.insert(0, round(H*1000)/1000)
+            vT.insert(0, round(T*1000)/1000)
+
+
+    if (stroim):
+        k = 190 / H
+        grafic.create_line(10, 10, 10, 210, arrow=FIRST)
+        grafic.create_line(10, 210, 395, 210, arrow=LAST)
+        grafic.create_text(15, 6, text="y(м)")
+        grafic.create_text(385, 200, text="x(м)")
+        grafic.create_line(10, 210, 10 + 30 * cos(A), 210 - 30 * sin(A), arrow=LAST)
+        grafic.create_text(10 + 30 * cos(A) - 2, 210 - 30 * sin(A) - 14, text="Vo")
+        grafic.create_line(30, 210, 10 + 20 * cos(A), 210 - 20 * sin(A))
+        grafic.create_text(35, 210 - 10 * sin(A) , text="A")
+        grafic.create_line(370, 10, 370, 40, arrow=LAST)
+        grafic.create_text(361, 33, text="g")
+        grafic.create_text(10, 220, text="0")
+        grafic.create_text(17+len(str(round(H * 100)/100))*5, 200 - (H * k), text=str(round(H * 100)/100))
+        grafic.create_line(5, 210 - (H * k), 390, 210 - (H * k), dash=True)
+        grafic.create_text(10 + L * k, 220, text=str(round(L * 100)/100))
+        grafic.create_line(10 + L * k, 10, 10 + L * k, 215, dash=True)
+        grafic.create_text(10 + (L * k) / 2, 220, text=str(round(L/2 * 100)/100))
+        grafic.create_line(10 + L * k / 2, 10, 10 + L * k / 2, 215, dash=True)
+        grafic.create_line(10, H*k, 10, 210, fill="#c00300")
+
+def vert_v_h():
+    global vvod
+    vvod = []
+    grafic.place(x=257, y=70)
+
+    l1 = Label(text="Введите любые \n два значения", font="Cricket 12")
+    l1.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l1.grid(row=1, column=0, columnspan=2, rowspan=1)
+    vvod.append(l1)
+
+    l2 = Label(text="Бросок под углом с земли", font="Cricket 18")
+    l2.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l2.grid(row=0, column=0, columnspan=100, rowspan=1)
+    vvod.append(l2)
+
+    delete_main()
+    global vV0
+    vV0 = Entry(width=13)
+    vV0.grid(row=2, column=2)
+    vvod.append(vV0)
+
+    bV0 = Label(text="Vo(м/с)   =", font="Cricket 10")
+    bV0.place(x=75, y=152)
+    bV0.config(bg='#F7DDC4', fg='#0C136F')
+    vvod.append(bV0)
+
+    global vh
+    vh = Entry(width=13)
+    vh.grid(row=3, column=2)
+    vvod.append(vh)
+
+    bh = Label(text="h(м)      =", font="Cricket 10")
+    bh.place(x=83, y=175)
+    bh.config(bg='#F7DDC4', fg='#0C136F')
+    vvod.append(bh)
+
+    global vH
+    vH = Entry(width=13)
+    vH.grid(row=4, column=2)
+    vvod.append(vH)
+
+    bH = Label(text="Hmax(м)       = ", font="Cricket 10")
+    bH.place(x=52, y=197)
+    bH.config(bg='#F7DDC4', fg='#0C136F')
+    vvod.append(bH)
+
+    global vT
+    vT = Entry(width=13)
+    vT.grid(row=5, column=2)
+    vvod.append(vT)
+
+    bT = Label(text="Tполёта(с)    = ", font="Cricket 10")
+    bT.place(x=53, y=219)
+    bT.config(bg='#F7DDC4', fg='#0C136F')
+    vvod.append(bT)
+
+    global vVk
+    vVk = Entry(width=13)
+    vVk.grid(row=6, column=2)
+    vvod.append(vVk)
+
+    bVk = Label(text="Vконечная(м/c)  = ", font="Cricket 10")
+    bVk.place(x=31, y=244)
+    bVk.config(bg='#F7DDC4', fg='#0C136F')
+    vvod.append(bVk)
+
+    bvvesti = Button(root, height=2, width=17)
+    change_button(bvvesti, "Ввести значения")
+    bvvesti.place(x=20, y=275)
+    vvod.append(bvvesti)
+    bvvesti.config(command=vvod_vert_v_h)
+
+    bdel = Button(root, height=2, width=10)
+    change_button(bdel, "Удалить\nзначения")
+    bdel.place(x=163, y=275)
+    vvod.append(bdel)
+    bdel.config(command=del_by_angle_zero)
+
+    bopen = Button(root, height=5, width=30)
+    change_button(bopen,
+                  'Считать значения из файла \n(введите 2 значения, на \nместе остальных "_" в\nследующем порядке: V0, A, H, T, L \n в файл "input.txt" в столбик)')
+    bopen.place(x=20, y=385)
+    vvod.append(bopen)
+
+
+    bsave = Button(root, height=5, width=30)
+    change_button(bsave, 'Сохранить значения\n в файл')
+    bsave.place(x=300, y=385)
+    vvod.append(bsave)
+    bsave.config(command=save_by_angle_zero)
+
+    l3 = Label(text="ИЛИ", font="Cricket 12")
+    l3.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l3.place(x=90, y=320)
+    vvod.append(l3)
 
 def start_window():  # Основное меню
     grafic.delete("all")
@@ -919,6 +1085,7 @@ def start_window():  # Основное меню
 
     b5 = Button(root, text="5",  width=25, height=6)
     b5.place(x=250, y=240)
+    b5.config(command=vert_v_h)
     change_button(b5, "Бросок с высоты со \n скоростью, направленной \nвертикально вверх")
 
 
