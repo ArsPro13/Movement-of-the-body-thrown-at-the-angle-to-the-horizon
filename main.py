@@ -1897,6 +1897,12 @@ def vvod_by_angle_h(x=True):
             h = H - V0**2*sin(A)**2/(2*g)
             L = (V0 ** 2 * sin(A) * cos(A) + V0 * cos(A) * sqrt(V0 ** 2 * sin(A) ** 2 + 2 * g * h)) / g
             T = (V0 * sin(A) + sqrt(V0 ** 2 * sin(A) ** 2 + 2 * g * h)) / g
+        vL.delete(0, END)
+        vT.delete(0, END)
+        vh.delete(0, END)
+        vL.insert(0, round(L * 1000) / 1000)
+        vT.insert(0, round(T * 1000) / 1000)
+        vh.insert(0, round(h * 1000) / 1000)
     elif (V0d and Ad and Td):
         h = ((T*g-V0*sin(A))**2-V0**2*sin(A)**2)/(2*g)
         L = (V0 ** 2 * sin(A) * cos(A) + V0 * cos(A) * sqrt(V0 ** 2 * sin(A) ** 2 + 2 * g * h)) / g
@@ -1917,8 +1923,92 @@ def vvod_by_angle_h(x=True):
         vT.insert(0, round(T * 1000) / 1000)
         vH.insert(0, round(H * 1000) / 1000)
         vh.insert(0, round(h * 1000) / 1000)
-    elif():
-        
+    elif (Ad and Hd and Td):
+        V0 = (g*T - sqrt(2*g*H))/g
+        h = H - V0**2*sin(A)**2/(2*g)
+        L = V0*cos(A)*T
+        vV0.delete(0, END)
+        vL.delete(0, END)
+        vh.delete(0, END)
+        vV0.insert(0, round(V0 * 1000) / 1000)
+        vL.insert(0, round(L * 1000) / 1000)
+        vh.insert(0, round(h * 1000) / 1000)
+    elif (Ad and Hd and Ld):
+        D = (cos(A)*sqrt(2*g*H))**2 + 4*L*sin(A)*cos(A)*g
+        V0 = max((-1*cos(A)*sqrt(2*g*H) + sqrt(D))/(2*sin(A)*cos(A)), (-1*cos(A)*sqrt(2*g*H) - sqrt(D))/(2*sin(A)*cos(A)))
+        h = H - V0 ** 2 * sin(A) ** 2 / (2 * g)
+        T = L/(V0 * cos(A))
+        vV0.delete(0, END)
+        vT.delete(0, END)
+        vh.delete(0, END)
+        vV0.insert(0, round(V0 * 1000) / 1000)
+        vT.insert(0, round(T * 1000) / 1000)
+        vh.insert(0, round(h * 1000) / 1000)
+    elif (Td and Ld and Hd):
+        A = atan(T*(T*g- sqrt(2*g*H))/L)
+        V0 = L/(T*cos(A))
+        h = H - V0**2 * sin(A)**2/(2*g)
+        vh.delete(0, END)
+        vA.delete(0, END)
+        vV0.delete(0, END)
+        vh.insert(0, round(h * 1000) / 1000)
+        vA.insert(0, round(A * 180 / pi * 1000) / 1000)
+        vV0.insert(0, round(H * 1000) / 1000)
+    elif (hd and Td and Ld):
+        V0 =sqrt((L**2 + (g*T**2/2 - h)**2)/T**2)
+        x = L/(V0*T)
+        if (x>-1) and (x<1):
+            A = acos(x)
+            H = (V0 ** 2 * sin(A) ** 2 + 2 * g * h) / (2 * g)
+            vH.delete(0, END)
+            vA.delete(0, END)
+            vV0.delete(0, END)
+            vH.insert(0, round(H * 1000) / 1000)
+            vA.insert(0, round(A * 180 / pi * 1000) / 1000)
+            vV0.insert(0, round(H * 1000) / 1000)
+        else:
+            stroim = False
+            mb.showerror("Неверные данные", "Рассчеты невозможны")
+    elif (V0d and Hd and Td):
+        x = (T*g-sqrt(2*g*H))/V0
+        if (x>-1)and (x<1):
+            A = asin(x)
+            h = H - (V0**2*sin(A)**2)/(2*g)
+            L =T*V0*cos(A)
+            vH.delete(0, END)
+            vA.delete(0, END)
+            vL.delete(0, END)
+            vH.insert(0, round(H * 1000) / 1000)
+            vA.insert(0, round(A * 180 / pi * 1000) / 1000)
+            vL.insert(0, round(L * 1000) / 1000)
+        else:
+            stroim = False
+            mb.showerror("Неверные данные", "Рассчеты невозможны")
+    elif (V0d and Hd and Td):
+        x = (T*g - sqrt(2*g*H))/V0
+        if (x>-1)and(x<1):
+            A = asin(x)
+            h = H - V0**2*sin(A)**2/(2*g)
+            L = V0*cos(A)*T
+            vh.delete(0, END)
+            vA.delete(0, END)
+            vL.delete(0, END)
+            vh.insert(0, round(h * 1000) / 1000)
+            vA.insert(0, round(A * 180 / pi * 1000) / 1000)
+            vL.insert(0, round(L * 1000) / 1000)
+        else:
+            stroim = False
+            mb.showerror("Неверные данные", "Рассчеты невозможны")
+    elif (Ad and Td and Ld):
+        V0 = L/(T*cos(A))
+        H = (T*g - V0*sin(A))**2/(2*g)
+        h = H - V0**2*sin(A)**2/(2*g)
+        vV0.delete(0, END)
+        vh.delete(0, END)
+        vH.delete(0, END)
+        vV0.insert(0, round(V0 * 1000) / 1000)
+        vH.insert(0, round(H * 1000) / 1000)
+        vh.insert(0, round(h * 1000) / 1000)
     else:
         vV0.delete(0, END)
         vA.delete(0, END)
