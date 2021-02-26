@@ -2,6 +2,7 @@ from tkinter import *
 from math import sin, cos, pi, asin, acos, atan, sqrt, tan
 import datetime
 from tkinter import messagebox as mb
+from tkinter import filedialog as fd
 
 root = Tk()
 root.title("Movement of the body thrown at the angle to the horizon")
@@ -14,6 +15,8 @@ stroim1=True
 b_home = Button(root)
 vvod = []
 g = 9.81
+
+files=[]
 
 cifr = "1234567890.-"
 r = 4
@@ -632,7 +635,7 @@ def save_vert_zero():
         with open("saved_files.txt", "a") as file:
             file.write(cur_time+"\n")
         with open(cur_time, "w") as file:
-            st = 'Бросок под углом к горизонту с земли \n'
+            st = 'Бросок вертикально вверх с земли \n'
             file.write(st)
             st = "Vo (м/с) = " + str(vV0.get()) + '\n'
             file.write(st)
@@ -2287,6 +2290,81 @@ def by_angle_h():
 
 
 
+def saved_files():
+    f_name = fd.askopenfilename()
+    f = open(f_name, "r")
+    global vV0, vA, vh
+    st = f.readline().strip()
+    if (st.find('Бросок под углом к горизонту с земли')!=-1):
+        while (st):
+            st = f.readline().strip()
+            if (st.find('Vo') != -1):
+                global V0
+                V0 = float(st[10:])
+
+            if (st.find('A (градусов)') != -1):
+                global A
+                A = float(st[14:])
+        by_angle_zero()
+        vV0.insert(0, V0)
+        vA.insert(0, A)
+        vvod_by_angle_zero()
+    elif (st.find('Бросок вертикально вверх с земли')!=-1):
+        while (st):
+            st = f.readline().strip()
+            if (st.find('Vo') != -1):
+                V0 = float(st[10:])
+        vert_zero()
+        vV0.insert(0, V0)
+        vvod_vert_zero()
+    elif (st.find('Бросок горизонтально с высоты')!=-1):
+        while (st):
+            st = f.readline().strip()
+            if (st.find('Vo (м/с)') != -1):
+                V0 = float(st[10:])
+            if (st.find('h (м)') != -1):
+                h = float(st[7:])
+        hor_h()
+        vV0.insert(0, V0)
+        vh.insert(0, h)
+        vvod_hor_h()
+    elif (st.find('Бросок под углом к горизонту с высоты h')!=-1):
+        while (st):
+            st = f.readline().strip()
+            if (st.find('Vo (м/с)') != -1):
+                V0 = float(st[10:])
+            if (st.find('h (м)') != -1):
+                h = float(st[7:])
+            if (st.find('A (градусов)') != -1):
+                A = float(st[14:])
+        by_angle_h()
+        vV0.insert(0, V0)
+        vh.insert(0, h)
+        vA.insert(0, A)
+        vvod_by_angle_h()
+    elif (st.find('Бросок вертикально вверх с высоты')!=-1):
+        while (st):
+            st = f.readline().strip()
+            if (st.find('Vo (м/с)') != -1):
+                V0 = float(st[10:])
+            if (st.find('h (м)') != -1):
+                h = float(st[7:])
+        vert_v_h()
+        vV0.insert(0, V0)
+        vh.insert(0, h)
+        vvod_vert_v_h()
+    elif (st.find('Бросок вертикально вниз с высоты')!=-1):
+        while (st):
+            st = f.readline().strip()
+            if (st.find('Vo (м/с)') != -1):
+                V0 = float(st[10:])
+            if (st.find('h (м)') != -1):
+                h = float(st[7:])
+        vert_vniz_h()
+        vV0.insert(0, V0)
+        vh.insert(0, h)
+        vvod_vert_vniz_h()
+
 def start_window():  # Основное меню
     grafic.delete("all")
     grafic.place(x=100000, y=70)
@@ -2341,6 +2419,7 @@ def start_window():  # Основное меню
     b8 = Button(root, text="8",  width=25, height=6)
     b8.place(x=460, y=240)
     change_button(b8, "СОХРАНЕННЫЕ \n РЕЗУЛЬТАТЫ")
+    b8.config(command=saved_files)
 
 
     b9 = Button(root, text="9",  width=25, height=6)
