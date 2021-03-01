@@ -5,7 +5,7 @@ from tkinter import messagebox as mb
 from tkinter import filedialog as fd
 
 root = Tk()
-root.title("Movement of the body thrown at the angle to the horizon")
+root.title("Движение тела, брошенного под углом к горизонту")
 c = Canvas(root, bg='#F7DDC4', width=680, height=500)
 root.geometry("680x500")
 c.grid(row=0, column=0, columnspan=200, rowspan=70)
@@ -17,7 +17,7 @@ vvod = []
 g = 9.81
 
 files=[]
-
+BB=[]
 cifr = "1234567890.-"
 r = 4
 
@@ -61,6 +61,8 @@ def vvod_by_angle_zero(x=True):
     grafic.delete("all")
     global V0
     global A
+    for a in XY:
+        a.destroy()
     global H
     global T
     global L
@@ -263,7 +265,7 @@ def vvod_by_angle_zero(x=True):
             grafic.create_line(10 + L * k / 2, 10, 10 + L * k / 2, 215, dash=True)
             global i
             global telo
-            global xy, XY
+            global xy
             xy = Label(text="x=0.000 , y=0.000", font="Cricket 12")
             xy.config(bd=20, bg='#F7DDC4', fg='#0C136F')
             xy.place(x= 400, y=320)
@@ -350,7 +352,8 @@ def save_by_angle_zero():
 def file_by_angle_zero():
     colvo = 0
     n = 0
-    with open('input.txt', "r") as file:
+    f_name = fd.askopenfilename()
+    with open(f_name, "r") as file:
         st = file.readline()
         while st:
             colvo+=1
@@ -393,6 +396,8 @@ def file_by_angle_zero():
         if (is_num(fL)):
             vL.insert(0, str(fL))
         vvod_by_angle_zero()
+    else:
+        mb.showerror("Ошибка", "Неверный формат входных данных")
 
 def by_angle_zero():  # Бросок под углом с земли
     global vvod
@@ -501,6 +506,8 @@ def vvod_vert_zero(x=True):
     T = vT.get()
     col = 0
     V0d = False
+    for a in XY:
+        a.destroy()
     Ad = True
     A = pi/2
     Hd = False
@@ -578,7 +585,7 @@ def vvod_vert_zero(x=True):
             global telo
             telo = grafic.create_oval(10 - r, 210 - r, 10 + r, 210 + r, fill="#c00300")
             i = 0
-            global xy, XY
+            global xy
             xy = Label(text="x=0.000 , y=0.000", font="Cricket 12")
             xy.config(bd=20, bg='#F7DDC4', fg='#0C136F')
             xy.place(x=400, y=320)
@@ -630,7 +637,8 @@ def del_vert_zero():
 def file_vert_zero():
     colvo = 0
     n = 0
-    with open('input.txt', "r") as file:
+    f_name = fd.askopenfilename()
+    with open(f_name, "r") as file:
         st = file.readline()
         while st:
             colvo+=1
@@ -659,6 +667,8 @@ def file_vert_zero():
         if (is_num(fT)):
             vT.insert(0, str(fT))
         vvod_vert_zero()
+    else:
+        mb.showerror("Ошибка", "Неверный формат входных данных")
 
 def save_vert_zero():
     vvod_vert_zero(False)
@@ -775,6 +785,8 @@ def vvod_hor_h(x=True):
     T = vT.get()
     L = vL.get()
     col = 0
+    for a in XY:
+        a.destroy()
     V0d = False
     hd = False
     Td = False
@@ -875,7 +887,6 @@ def vvod_hor_h(x=True):
             xy.place(x=400, y=320)
             telo = grafic.create_oval(10 - r, 210 - h*k - r, 10 + r, 210 - h*k  + r, fill="#c00300")
             i = 0
-            global XY
             XY.append(xy)
             root.after(10, draw_hor_h)
     else:
@@ -929,7 +940,8 @@ def del_hor_h():
 def file_hor_h():
     colvo = 0
     n = 0
-    with open('input.txt', "r") as file:
+    f_name = fd.askopenfilename()
+    with open(f_name, "r") as file:
         st = file.readline()
         while st:
             colvo+=1
@@ -1086,6 +1098,8 @@ def vvod_vert_v_h(x=True):
     global V0, h, H, T, Vk
     V0 = vV0.get()
     h = vh.get()
+    for a in XY:
+        a.destroy()
     H = vH.get()
     T = vT.get()
     Vk = vVk.get()
@@ -1262,7 +1276,7 @@ def vvod_vert_v_h(x=True):
             global telo
             telo = grafic.create_oval(10 - r, 210-h*k - r, 10 + r, 210-h*k + r, fill="#c00300")
             i = 0
-            global xy, XY
+            global xy
             xy = Label(text="x=0.000 , y="+str(h), font="Cricket 12")
             xy.config(bd=20, bg='#F7DDC4', fg='#0C136F')
             xy.place(x=400, y=320)
@@ -1320,7 +1334,8 @@ def del_vert_v_h():
 def file_vert_v_h():
     colvo = 0
     n = 0
-    with open('input.txt', "r") as file:
+    f_name = fd.askopenfilename()
+    with open(f_name, "r") as file:
         st = file.readline()
         while st:
             colvo += 1
@@ -1496,6 +1511,9 @@ def vvod_vert_vniz_h(x=True):
     grafic.delete("all")
     global V0, h, T, Vk
     V0 = vV0.get()
+    global XY
+    for a in XY:
+        a.destroy()
     h = vh.get()
     T = vT.get()
     Vk = vVk.get()
@@ -1613,7 +1631,7 @@ def vvod_vert_vniz_h(x=True):
             global telo
             telo = grafic.create_oval(10 - r, 210-h*k - r, 10 + r, 210-h*k + r, fill="#c00300")
             i = 0
-            global xy, XY
+            global xy
             xy = Label(text="x=0.000 , y="+str(h), font="Cricket 12")
             xy.config(bd=20, bg='#F7DDC4', fg='#0C136F')
             xy.place(x=400, y=320)
@@ -1671,7 +1689,8 @@ def del_vert_vniz_h():
 def file_vert_vniz_h():
     colvo = 0
     n = 0
-    with open('input.txt', "r") as file:
+    f_name = fd.askopenfilename()
+    with open(f_name, "r") as file:
         st = file.readline()
         while st:
             colvo += 1
@@ -1834,6 +1853,10 @@ def vvod_by_angle_h(x=True):
     global T
     global L
     global h
+    global XY
+    for a in XY:
+        a.destroy()
+    global V0, h, A, B, T, L
     h = vh.get()
     V0 = vV0.get()
     A = vA.get()
@@ -2150,7 +2173,7 @@ def vvod_by_angle_h(x=True):
             grafic.create_line(10 + (V0**2*sin(A)*cos(A)/g)*k, 10, 10 + (V0**2*sin(A)*cos(A)/g)*k, 215, dash=True)
             global i
             global telo
-            global xy, XY
+            global xy
             xy = Label(text="x=0.000 , y=0.000", font="Cricket 12")
             xy.config(bd=20, bg='#F7DDC4', fg='#0C136F')
             xy.place(x= 400, y=320)
@@ -2214,7 +2237,8 @@ def del_by_angle_h():
 def file_by_angle_h():
     colvo = 0
     n = 0
-    with open('input.txt', "r") as file:
+    f_name = fd.askopenfilename()
+    with open(f_name, "r") as file:
         st = file.readline()
         while st:
             colvo+=1
@@ -2264,6 +2288,8 @@ def file_by_angle_h():
         if (is_num(fL)):
             vL.insert(0, str(fL))
         vvod_by_angle_h()
+    else:
+        mb.showerror("Ошибка", "Неверный формат входных данных")
 
 def save_by_angle_h():
     vvod_by_angle_zero(False)
@@ -2404,6 +2430,9 @@ def by_angle_h():
 
 def vvod_dop(x=True):
     grafic.delete("all")
+    global XY
+    for a in XY:
+        a.destroy()
     global V0, h, A, B, T, L
     V0 = vV0.get()
     h = vh.get()
@@ -2448,6 +2477,14 @@ def vvod_dop(x=True):
             D = (tan(A)-tan(B))**2 + 2*g*h/(V0**2*cos(A)**2)
             L = ((tan(A)-tan(B) + sqrt(D)))/(g/(V0**2 * cos(A)**2))
             T = L/(V0*cos(A))
+            vLx.delete(0, END)
+            vLpl.delete(0, END)
+            vT.delete(0, END)
+            vLx.insert(0, round(L * 1000) / 1000)
+            vT.insert(0, round(T * 1000) / 1000)
+            vLpl.insert(0, round(L/cos(B) * 1000) / 1000)
+
+            
         else:
             vV0.delete(0, END)
             vh.delete(0, END)
@@ -2469,9 +2506,9 @@ def vvod_dop(x=True):
             grafic.create_text(385, 200, text="x(м)")
             grafic.create_line(10, 210-h*k, 10 , 210 - 30-h*k, arrow=LAST)
             grafic.create_text(19, 210 - 30 - h*k, text="Vo")
-            grafic.create_line(370, 10, 370, 40, arrow=LAST)
-            grafic.create_line(10, 210, 380, 210-370*tan(B))
-            grafic.create_text(361, 33, text="g")
+            grafic.create_line(390, 10, 390, 40, arrow=LAST)
+            grafic.create_polygon([10, 210], [370, 210-370*tan(B)], [370, 210], fill='#048B22', outline='#044412')
+            grafic.create_text(376, 33, text="g")
             grafic.create_text(24, 210-h*k, text=str(round(h*1000)/1000))
             grafic.create_text(10, 220, text="0")
             grafic.create_text(17 + len(str(round(H * 100) / 100)) * 5, 200 - (H * k), text=str(round(H * 100) / 100))
@@ -2480,7 +2517,7 @@ def vvod_dop(x=True):
             global telo
             telo = grafic.create_oval(10 - r, 210-h*k - r, 10 + r, 210-h*k + r, fill="#c00300")
             i = 0
-            global xy, XY
+            global xy
             xy = Label(text="x=0.000 , y="+str(h), font="Cricket 12")
             xy.config(bd=20, bg='#F7DDC4', fg='#0C136F')
             xy.place(x=400, y=320)
@@ -2497,6 +2534,92 @@ def vvod_dop(x=True):
         vT.insert(0, "Другое")
         stroim = False
 
+def del_dop():
+    vh.delete(0, END)
+    vT.delete(0, END)
+    vV0.delete(0, END)
+    vA.delete(0, END)
+    vB.delete(0, END)
+    vLx.delete(0, END)
+    vLpl.delete(0, END)
+    global stroim, XY
+    stroim = False
+    for a in XY:
+        a.destroy()
+    grafic.delete("all")
+
+def file_dop():
+    colvo = 0
+    n = 0
+    f_name = fd.askopenfilename()
+    with open(f_name, "r") as file:
+        st = file.readline()
+        while st:
+            colvo+=1
+            st=st.rstrip('\n')
+            if (colvo==1):
+                fh = st
+                if (is_num(fh)):
+                    n+=1
+            if (colvo==2):
+                fV0 = st
+                if (is_num(fV0)):
+                    n+=1
+            if (colvo==3):
+                fA = st
+                if (is_num(fA)):
+                    n+=1
+            if (colvo==4):
+                fB = st
+                if (is_num(fB)):
+                    n+=1
+            st = file.readline()
+    if (colvo==4) and (n==4):
+        vh.delete(0, END)
+        vB.delete(0, END)
+        vV0.delete(0, END)
+        vA.delete(0, END)
+        if (is_num(fh)):
+            vh.insert(0, str(fh))
+        if (is_num(fV0)):
+            vV0.insert(0, str(fV0))
+        if (is_num(fA)):
+            vA.insert(0, str(fA))
+        if (is_num(fB)):
+            vB.insert(0, str(fB))
+        vvod_dop()
+    else:
+        mb.showerror("Ошибка", "Неверный формат входных данных")
+
+def save_dop():
+    vvod_dop(False)
+    global stroim, XY
+    stroim = False
+    for a in XY:
+        a.destroy()
+    grafic.delete("all")
+    if (is_num(vV0.get()) and is_num(vA.get())):
+        f_name = fd.asksaveasfilename(filetypes=(("TXT files", "*.txt"),))
+        with open(f_name, "w") as file:
+            st = 'Бросок под углом А к горизонту с высоты h на плоскость под углом B \n'
+            file.write(st)
+            st = "h (м) = " + str(vh.get()) + '\n'
+            file.write(st)
+            st = "Vo (м/с) = " + str(vV0.get()) + '\n'
+            file.write(st)
+            st = "A (градусов) = " + str(vA.get()) + '\n'
+            file.write(st)
+            st = "B (градусов) = " + str(vB.get()) + '\n'
+            file.write(st)
+            st = "T (с) = " + str(vT.get()) + '\n'
+            file.write(st)
+            st = "L по оси ох (м) = " + str(vLx.get()) + '\n'
+            file.write(st)
+            st = "L по плоскости (м) = " + str(vLpl.get()) + '\n'
+            file.write(st)
+            mb.showinfo(
+                "Успешно",
+                "Данные сохранены")
 
 def dop():
     global vvod
@@ -2512,6 +2635,11 @@ def dop():
     l2.config(bd=20, bg='#F7DDC4', fg='#0C136F')
     l2.grid(row=0,  column=0, columnspan=100, rowspan=1)
     vvod.append(l2)
+
+    l4 = Label(text="Бросок под углом А к горизонту с высоты на наклонную плоскость под углом B \n(0°; 90°) с основанием в точке (0;0)", font="Cricket 13")
+    l4.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l4.place(x=3, y=3)
+    vvod.append(l4)
 
     delete_main()
 
@@ -2595,25 +2723,171 @@ def dop():
     change_button(bdel, "Удалить\nзначения")
     bdel.place(x=163, y=275)
     vvod.append(bdel)
-    bdel.config(command=del_by_angle_h)
+    bdel.config(command=del_dop)
 
     bopen = Button(root, height=5, width=30)
     change_button(bopen, 'Считать значения из файла \n(введите 4 значения \n в следующем порядке: h, V0, A, B \n в файл "input.txt" в столбик)' )
     bopen.place(x=20, y=385)
     vvod.append(bopen)
-    bopen.config(command=file_by_angle_h)
+    bopen.config(command=file_dop)
 
     bsave = Button(root, height=5, width=30)
-    change_button(bsave,'Сохранить значения\n в файл')
+    change_button(bsave, 'Сохранить значения\n в файл')
     bsave.place(x=300, y=385)
     vvod.append(bsave)
-    bsave.config(command=save_by_angle_h)
+    bsave.config(command=save_dop)
 
     l3 = Label(text="ИЛИ", font="Cricket 12")
     l3.config(bd=20, bg='#F7DDC4', fg='#0C136F')
     l3.place(x=90, y=320)
     vvod.append(l3)
 
+
+# теория
+def delete_th():
+        c.delete("all")
+        for a in vvod:
+            a.destroy()
+
+        global BB
+        b_home = Button(root, height=2, width=5)
+        change_button(b_home, 'HOME')
+        b_home.place(x=633, y=457)
+        b_home.config(command=start_window)
+        BB.append(b_home)
+
+def th_by_angle_zero():
+    delete_th()
+    global BB
+    l0 = Label(text="Бросок тела под углом к горизонту с земли", font="Cricket 18")
+    l0.place(x=75, y=10)
+    l0.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l0)
+    l1 = Label(text="Vy(t) = Vo*sinA - gt - скорость по оси оу через t секунд полёта", font="Cricket 14")
+    l1.place(x=10, y=80)
+    l1.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l1)
+    l2 = Label(text="Vx(t) = Vo*cosA - скорость по оси ох через t секунд полёта", font="Cricket 14")
+    l2.place(x=10, y=130)
+    l2.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l2)
+    l3 = Label(text="y(t) = yo + Vo*sinA*t - g*t^2/2 - координата по оси оу через t секунд полёта", font="Cricket 14")
+    l3.place(x=10, y=180)
+    l3.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l3)
+    l4 = Label(text="x(t) = xo + Vo*cosA*t - координата по оси ох через t секунд полёта", font="Cricket 14")
+    l4.place(x=10, y=230)
+    l4.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l4)
+    l5 = Label(text="Hmax = Vo^2*(sinA)^2/(2*g) - максимальная высота полёта", font="Cricket 14")
+    l5.place(x=10, y=280)
+    l5.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l5)
+    l6 = Label(text="Lmax = Vo^2*sin(2A)/g - дальность полёта", font="Cricket 14")
+    l6.place(x=10, y=320)
+    l6.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l6)
+    l7 = Label(text="Tполёта = 2*Vo*sinA/g - время полёта", font="Cricket 14")
+    l7.place(x=10, y=370)
+    l7.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l7)
+    l8 = Label(text="Траектория движения тела, брошенного под углом к горизонту - парабола", font="Cricket 13")
+    l8.place(x=10, y=420)
+    l8.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l8)
+
+def th_vert_v_zero():
+    delete_th()
+    global BB
+    l0 = Label(text="Бросок тела под углом к горизонту с земли", font="Cricket 18")
+    l0.place(x=75, y=10)
+    l0.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l0)
+    l1 = Label(text="Vy(t) = Vo - gt - скорость по оси оу через t секунд полёта", font="Cricket 14")
+    l1.place(x=10, y=80)
+    l1.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l1)
+    l2 = Label(text="Vx(t) = 0 - скорость по оси ох через t секунд полёта", font="Cricket 14")
+    l2.place(x=10, y=130)
+    l2.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l2)
+    l3 = Label(text="y(t) = yo + Vo*t - g*t^2/2 - координата по оси оу через t секунд полёта", font="Cricket 14")
+    l3.place(x=10, y=180)
+    l3.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l3)
+    l4 = Label(text="x(t) = xo - координата по оси ох через t секунд полёта", font="Cricket 14")
+    l4.place(x=10, y=230)
+    l4.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l4)
+    l5 = Label(text="Hmax = Vo^2*/(2*g) - максимальная высота полёта", font="Cricket 14")
+    l5.place(x=10, y=275)
+    l5.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l5)
+    l6 = Label(text="Lmax = 0 - дальность полёта", font="Cricket 14")
+    l6.place(x=10, y=320)
+    l6.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l6)
+    l7 = Label(text="Tполёта = 2*Vo/g - время полёта", font="Cricket 14")
+    l7.place(x=10, y=370)
+    l7.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l7)
+    l8 = Label(text="Траектория движения тела, брошенного вертикально вверх - прямая линия", font="Cricket 13")
+    l8.place(x=10, y=420)
+    l8.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l8)
+
+def theory():
+    delete_main()
+    global vvod
+    vvod = []
+    for a in vvod:
+        a.destroy()
+    lth = Label(text="Теория", font="Cricket 22")
+    lth.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    lth.place(x=290, y=21)
+    vvod.append(lth)
+
+    lx = Label(text="Выберите раздел,\n по которому хотите \nузнать больше:", font="Cricket 14")
+    lx.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    lx.place(x=33, y=111)
+    vvod.append(lx)
+
+    b1 = Button(root, text="1", width=25, height=6)
+    b1.place(x=460, y=240)
+    change_button(b1, "Бросок под углом \n с земли")
+    vvod.append(b1)
+    b1.config(command=th_by_angle_zero)
+
+    b2 = Button(root, text="2", width=25, height=6)
+    b2.place(x=40, y=240)
+    change_button(b2, "Бросок вертикально \n вверх с земли")
+    vvod.append(b2)
+    b2.config(command=th_vert_v_zero)
+
+    b3 = Button(root, text="3", width=25, height=6)
+    b3.place(x=40, y=360)
+    change_button(b3, "Бросок со скоростью, \n направленной горизонтально, \n с высоты ")
+    vvod.append(b3)
+
+    b4 = Button(root, text="4", width=25, height=6)
+    b4.place(x=250, y=120)
+    change_button(b4, "Бросок со скоростью, \n направленной под углом \n к горизонту, с высоты ")
+    vvod.append(b4)
+
+    b5 = Button(root, text="5", width=25, height=6)
+    b5.place(x=250, y=240)
+    change_button(b5, "Бросок с высоты со \n скоростью, направленной \nвертикально вверх")
+    vvod.append(b5)
+
+    b6 = Button(root, text="6", width=25, height=6)
+    b6.place(x=250, y=360)
+    change_button(b6, "Бросок с высоты со \n скоростью, направленной \nвертикально вниз")
+    vvod.append(b6)
+
+    b7 = Button(root, text="7", width=25, height=6)
+    b7.place(x=460, y=120)
+    change_button(b7, "Бросок под углом А к горизонту\n с высоты h на наклонную\n плоскость под углом B")
+    vvod.append(b7)
 
 def saved_files():
     f_name = fd.askopenfilename()
@@ -2689,9 +2963,30 @@ def saved_files():
         vV0.insert(0, V0)
         vh.insert(0, h)
         vvod_vert_vniz_h()
+    elif (st.find('Бросок под углом А к горизонту с высоты h на плоскость под углом B')!=-1):
+        while (st):
+            st = f.readline().strip()
+            if (st.find('Vo (м/с)') != -1):
+                V0 = float(st[10:])
+            if (st.find('h (м)') != -1):
+                h = float(st[7:])
+            if (st.find('A (градусов)') != -1):
+                A = float(st[14:])
+            if (st.find('B (градусов)') != -1):
+                B = float(st[14:])
+        dop()
+        global vB
+        vV0.insert(0, V0)
+        vh.insert(0, h)
+        vA.insert(0, A)
+        vB.insert(0, B)
+        vvod_dop()
 
 def start_window():  # Основное меню
     grafic.delete("all")
+    global BB
+    for a in BB:
+        a.destroy()
     grafic.place(x=100000, y=70)
     global stroim
     stroim = False
@@ -2750,9 +3045,11 @@ def start_window():  # Основное меню
     b9 = Button(root, text="9",  width=25, height=6)
     b9.place(x=460, y=360)
     change_button(b9, "ТЕОРИЯ")
+    b9.config(command=theory)
 
     global main_buttons
     main_buttons = {b1, b2, b3, b4, b5, b6, b7, b8, b9}
+
 
 
 
