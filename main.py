@@ -3040,6 +3040,8 @@ def th_dop():
     l8.config(bd=20, bg='#F7DDC4', fg='#0C136F')
     BB.append(l8)
 
+
+
 def theory():
     delete_main()
     global vvod
