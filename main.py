@@ -2871,7 +2871,7 @@ def th_hor():
     l7.place(x=10, y=370)
     l7.config(bd=20, bg='#F7DDC4', fg='#0C136F')
     BB.append(l7)
-    l8 = Label(text="Траектория движения тела, брошенного горизонтально с высоты h - парабола", font="Cricket 13")
+    l8 = Label(text="Траектория движения тела, брошенного горизонтально с высоты \nh - парабола", font="Cricket 13")
     l8.place(x=10, y=420)
     l8.config(bd=20, bg='#F7DDC4', fg='#0C136F')
     BB.append(l8)
