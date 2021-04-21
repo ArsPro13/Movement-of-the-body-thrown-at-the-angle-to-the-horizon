@@ -4,8 +4,10 @@ import datetime
 from tkinter import messagebox as mb
 from tkinter import filedialog as fd
 
+
 root = Tk()
 root.title("Движение тела, брошенного под углом к горизонту")
+root.resizable(width=False, height=False)
 c = Canvas(root, bg='#F7DDC4', width=680, height=500)
 root.geometry("680x500")
 c.grid(row=0, column=0, columnspan=200, rowspan=70)
@@ -80,7 +82,6 @@ def vvod_by_angle_zero(x=True):
     global stroim
     stroim = x
     flag = True
-
     if (is_num(V0)):
         col += 1
         V0d = True
@@ -114,7 +115,7 @@ def vvod_by_angle_zero(x=True):
             flag = False
     if (flag):
         if (V0d and Ad):
-            if (A > 0) and (A < 90):
+            if (A >= 0) and (A <= 90):
                 L = (V0 ** 2) * sin(2 * A) / g
                 H = (V0 ** 2) * (sin(A) ** 2) / (2 * g)
                 T = 2 * V0 * sin(A) / g
@@ -125,16 +126,10 @@ def vvod_by_angle_zero(x=True):
                 vH.insert(0, round(H * 1000) / 1000)
                 vT.insert(0, round(T * 1000) / 1000)
             else:
-                mb.showerror("Неверные данные","Рассчеты невозможны")
+                mb.showerror("Неверные данные","Расчёты невозможны")
                 stroim = False
         elif (V0d and Ld):
-            if ((L*g)/(V0**2)) > 1:
-                mb.showerror("Неверные данные","Рассчеты невозможны")
-                stroim = False
-            elif ((L*g)/(V0**2)) < -1:
-                mb.showerror("Неверные данные", "Рассчеты невозможны")
-                stroim = False
-            else:
+            try:
                 A = asin((L*g)/(V0**2)) / 2
                 H = (V0 ** 2) * (sin(A) ** 2) / (2 * g)
                 T = 2 * V0 * sin(A) / g
@@ -144,12 +139,15 @@ def vvod_by_angle_zero(x=True):
                 vA.insert(0, round(A*180/pi*1000)/1000)
                 vH.insert(0, round(H*1000)/1000)
                 vT.insert(0, round(T*1000)/1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
         elif (V0d and Hd):
             if (sqrt(H*2*g/V0**2)) > 1:
-                mb.showerror("Неверные данные","Рассчеты невозможны")
+                mb.showerror("Неверные данные","Расчёты невозможны")
                 stroim = False
             elif (sqrt(H*2*g/V0**2)) < -1:
-                mb.showerror("Неверные данные","Рассчеты невозможны")
+                mb.showerror("Неверные данные","Расчёты невозможны")
                 stroim = False
             else:
                 A = asin(sqrt(H*2*g/V0**2))
@@ -162,11 +160,8 @@ def vvod_by_angle_zero(x=True):
                 vL.insert(0, round(L * 1000) / 1000)
                 vT.insert(0, round(T * 1000) / 1000)
         elif (V0d and Td):
-            if (T*g/(2*V0)) > 1:
-                mb.showerror("Неверные данные", "Рассчеты невозможны")
-                stroim = False
-            elif (T*g/(2*V0)) < -1:
-                mb.showerror("Неверные данные", "Рассчеты невозможны")
+            if ((T*g/(2*V0)) > 1) or ((T*g/(2*V0)) < -1):
+                mb.showerror("Неверные данные", "Расчёты невозможны")
                 stroim = False
             else:
                 A = asin(T*g/(2*V0))
@@ -179,16 +174,20 @@ def vvod_by_angle_zero(x=True):
                 vL.insert(0, round(L*1000)/1000)
                 vH.insert(0, round(H*1000)/1000)
         elif (Ad and Ld):
-            A=A*180/pi
-            V0 = sqrt(L*g/sin(2*A))
-            H = (V0 ** 2) * (sin(A) ** 2) / (2 * g)
-            T = 2 * V0 * sin(A) / g
-            vV0.delete(0, END)
-            vH.delete(0, END)
-            vT.delete(0, END)
-            vV0.insert(0, round(V0 * 1000) / 1000)
-            vH.insert(0, round(H*1000)/1000)
-            vT.insert(0, round(T*1000)/1000)
+            try:
+                A=A*180/pi
+                V0 = sqrt(L*g/sin(2*A))
+                H = (V0 ** 2) * (sin(A) ** 2) / (2 * g)
+                T = 2 * V0 * sin(A) / g
+                vV0.delete(0, END)
+                vH.delete(0, END)
+                vT.delete(0, END)
+                vV0.insert(0, round(V0 * 1000) / 1000)
+                vH.insert(0, round(H*1000)/1000)
+                vT.insert(0, round(T*1000)/1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
         elif (Ad and Hd):
             V0 = sqrt(H*2*g/(sin(A))**2)
             T = 2 * V0 * sin(A) / g
@@ -231,16 +230,7 @@ def vvod_by_angle_zero(x=True):
             vA.insert(0, round(A*180/pi*1000)/1000)
             vT.insert(0, round(T*1000)/1000)
         else:
-            vV0.delete(0, END)
-            vA.delete(0, END)
-            vT.delete(0, END)
-            vL.delete(0, END)
-            vH.delete(0, END)
-            vV0.insert(0,"Рассчеты")
-            vA.insert(0, "Невозможны")
-            vH.insert(0, "Рассчеты")
-            vT.insert(0, "Введите")
-            vL.insert(0, "Другое")
+            mb.showerror("Неверные данные", "Расчёты невозможны")
             stroim = False
 
         if (stroim):
@@ -274,16 +264,7 @@ def vvod_by_angle_zero(x=True):
             i=0
             root.after(10, draw_angle_by_zero)
     else:
-        vV0.delete(0, END)
-        vA.delete(0, END)
-        vT.delete(0, END)
-        vL.delete(0, END)
-        vH.delete(0, END)
-        vV0.insert(0, "Рассчеты")
-        vA.insert(0, "Невозможны")
-        vH.insert(0, "Рассчеты")
-        vT.insert(0, "Введите")
-        vL.insert(0, "Другое")
+        mb.showerror("Неверные данные", "Расчёты невозможны")
         stroim = False
 
 def draw_angle_by_zero():
@@ -559,7 +540,7 @@ def vvod_vert_zero(x=True):
             vV0.delete(0, END)
             vT.delete(0, END)
             vH.delete(0, END)
-            vV0.insert(0, "Рассчеты")
+            vV0.insert(0, "Расчёты")
             vH.insert(0, "Невозможны")
             vT.insert(0, "")
             stroim = False
@@ -595,7 +576,7 @@ def vvod_vert_zero(x=True):
         vV0.delete(0, END)
         vT.delete(0, END)
         vH.delete(0, END)
-        vV0.insert(0, "Рассчеты")
+        vV0.insert(0, "Расчёты")
         vH.insert(0, "Невозможны")
         vT.insert(0, "")
         stroim = False
@@ -717,7 +698,7 @@ def vert_zero():  # Бросок под углом с земли
     vV0.grid(row=2, column=2)
     vvod.append(vV0)
 
-    bV0 = Label(text="Vo      =", font="Cricket 10")
+    bV0 = Label(text="Vo (м/с)   =", font="Cricket 10")
     bV0.place(x=76, y=152)
     bV0.config(bg='#F7DDC4', fg='#0C136F')
     vvod.append(bV0)
@@ -728,8 +709,8 @@ def vert_zero():  # Бросок под углом с земли
     vH.grid(row=4, column=2)
     vvod.append(vH)
 
-    bH = Label(text="Hmax       = ", font="Cricket 10")
-    bH.place(x=54, y=197)
+    bH = Label(text="Hmax (м)      = ", font="Cricket 10")
+    bH.place(x=56, y=197)
     bH.config(bg='#F7DDC4', fg='#0C136F')
     vvod.append(bH)
 
@@ -738,7 +719,7 @@ def vert_zero():  # Бросок под углом с земли
     vT.grid(row=3, column=2)
     vvod.append(vT)
 
-    bT = Label(text="Tполёта    = ", font="Cricket 10")
+    bT = Label(text="Tполёта (с)    = ", font="Cricket 10")
     bT.place(x=53, y=174)
     bT.config(bg='#F7DDC4', fg='#0C136F')
     vvod.append(bT)
@@ -1145,7 +1126,7 @@ def vvod_vert_v_h(x=True):
     if (flag):
         if (V0d and Vkd):
             if (Vk < V0):
-                mb.showerror("Неверные данные", "Рассчеты невозможны")
+                mb.showerror("Неверные данные", "Расчёты невозможны")
                 stroim = False
             else:
                 h = (Vk**2-V0**2)/(2*g)
@@ -1251,7 +1232,7 @@ def vvod_vert_v_h(x=True):
             vH.delete(0, END)
             vT.delete(0, END)
             vVk.delete(0, END)
-            vV0.insert(0, "Рассчеты")
+            vV0.insert(0, "Расчёты")
             vH.insert(0, "Невозможны")
             vh.insert(0, "Введите")
             vT.insert(0, "Другие")
@@ -1288,7 +1269,7 @@ def vvod_vert_v_h(x=True):
         vH.delete(0, END)
         vT.delete(0, END)
         vVk.delete(0, END)
-        vV0.insert(0, "Рассчеты")
+        vV0.insert(0, "Расчёты")
         vH.insert(0, "Невозможны")
         vh.insert(0, "Введите")
         vT.insert(0, "Другие")
@@ -1552,7 +1533,7 @@ def vvod_vert_vniz_h(x=True):
     if (flag):
         if (V0d and Vkd):
             if (Vk < V0):
-                mb.showerror("Неверные данные", "Рассчеты невозможны")
+                mb.showerror("Неверные данные", "Расчёты невозможны")
                 stroim = False
             else:
                 h = (Vk**2-V0**2)/(2*g)
@@ -1605,7 +1586,7 @@ def vvod_vert_vniz_h(x=True):
             vh.delete(0, END)
             vT.delete(0, END)
             vVk.delete(0, END)
-            vV0.insert(0, "Рассчеты")
+            vV0.insert(0, "Расчёты")
             vh.insert(0, "Невозможны")
             vVk.insert(0, "Введите")
             vT.insert(0, "Другое")
@@ -1642,7 +1623,7 @@ def vvod_vert_vniz_h(x=True):
         vh.delete(0, END)
         vT.delete(0, END)
         vVk.delete(0, END)
-        vV0.insert(0, "Рассчеты")
+        vV0.insert(0, "Расчёты")
         vh.insert(0, "Невозможны")
         vVk.insert(0, "Введите")
         vT.insert(0, "Другое")
@@ -1922,7 +1903,7 @@ def vvod_by_angle_h(x=True):
                 vT.insert(0, round(T*1000)/1000)
             else:
                 stroim = False
-                mb.showerror("Неверные данные", "Рассчеты невозможны")
+                mb.showerror("Неверные данные", "Расчёты невозможны")
         elif (V0d and hd and Hd):
             if (h <= H) and (V0 != 0):
                 A=asin(sqrt(2*g*(H-h)/V0**2))
@@ -1936,7 +1917,7 @@ def vvod_by_angle_h(x=True):
                 vT.insert(0, round(T * 1000) / 1000)
             else:
                 stroim = False
-                mb.showerror("Неверные данные", "Рассчеты невозможны")
+                mb.showerror("Неверные данные", "Расчёты невозможны")
         elif (V0d and hd and Td):
             x=(T**2*g - 2*h)/ (2*T*V0)
             if (x>-1) and (x<1):
@@ -1951,7 +1932,7 @@ def vvod_by_angle_h(x=True):
                 vH.insert(0, round(H * 1000) / 1000)
             else:
                 stroim = False
-                mb.showerror("Неверные данные", "Рассчеты невозможны")
+                mb.showerror("Неверные данные", "Расчёты невозможны")
         elif (V0d and hd and Ld):
             D = (V0**2+g*h)**2 - g**2*(h**2+L**2)
             if (D>0):
@@ -1967,10 +1948,10 @@ def vvod_by_angle_h(x=True):
                     vH.insert(0, round(H * 1000) / 1000)
                 else:
                     stroim = False
-                    mb.showerror("Неверные данные", "Рассчеты невозможны")
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
             else:
                 stroim = False
-                mb.showerror("Неверные данные", "Рассчеты невозможны")
+                mb.showerror("Неверные данные", "Расчёты невозможны")
         elif (hd and Ad and Hd):
             if (H>=h):
                 V0 = sqrt((H-h)*2*g/sin(A)**2)
@@ -1984,7 +1965,7 @@ def vvod_by_angle_h(x=True):
                 vL.insert(0, round(L * 1000) / 1000)
             else:
                 stroim = False
-                mb.showerror("Неверные данные", "Рассчеты невозможны")
+                mb.showerror("Неверные данные", "Расчёты невозможны")
         elif (hd and Ad and Td):
             V0 = (T**2*g-2*h)/(2*T*sin(A))
             if (V0>0):
@@ -1998,7 +1979,7 @@ def vvod_by_angle_h(x=True):
                 vH.insert(0, round(H * 1000) / 1000)
             else:
                 stroim = False
-                mb.showerror("Неверные данные", "Рассчеты невозможны")
+                mb.showerror("Неверные данные", "Расчёты невозможны")
         elif (hd and Ad and Ld):
             x = L**2*g**2/(2*(L*g*sin(A)*cos(A) + g*h*cos(A)**2))
             if (x>0):
@@ -2013,7 +1994,7 @@ def vvod_by_angle_h(x=True):
                 vH.insert(0, round(H * 1000) / 1000)
             else:
                 stroim = False
-                mb.showerror("Неверные данные", "Рассчеты невозможны")
+                mb.showerror("Неверные данные", "Расчёты невозможны")
         elif (V0d and Ad and Hd):
             if (A<=0):
                 h = H
@@ -2094,7 +2075,7 @@ def vvod_by_angle_h(x=True):
                 vV0.insert(0, round(H * 1000) / 1000)
             else:
                 stroim = False
-                mb.showerror("Неверные данные", "Рассчеты невозможны")
+                mb.showerror("Неверные данные", "Расчёты невозможны")
         elif (V0d and Hd and Td):
             x = (T*g-sqrt(2*g*H))/V0
             if (x>-1)and (x<1):
@@ -2109,7 +2090,7 @@ def vvod_by_angle_h(x=True):
                 vL.insert(0, round(L * 1000) / 1000)
             else:
                 stroim = False
-                mb.showerror("Неверные данные", "Рассчеты невозможны")
+                mb.showerror("Неверные данные", "Расчёты невозможны")
         elif (V0d and Hd and Td):
             x = (T*g - sqrt(2*g*H))/V0
             if (x>-1)and(x<1):
@@ -2124,7 +2105,7 @@ def vvod_by_angle_h(x=True):
                 vL.insert(0, round(L * 1000) / 1000)
             else:
                 stroim = False
-                mb.showerror("Неверные данные", "Рассчеты невозможны")
+                mb.showerror("Неверные данные", "Расчёты невозможны")
         elif (Ad and Td and Ld):
             V0 = L/(T*cos(A))
             H = (T*g - V0*sin(A))**2/(2*g)
@@ -2142,9 +2123,9 @@ def vvod_by_angle_h(x=True):
             vL.delete(0, END)
             vh.delete(0, END)
             vH.delete(0, END)
-            vh.insert(0,"Рассчеты")
+            vh.insert(0,"Расчёты")
             vV0.insert(0, "Невозможны")
-            vA.insert(0, "Рассчеты")
+            vA.insert(0, "Расчёты")
             vH.insert(0, "Введите")
             vT.insert(0, "Другие")
             vL.insert(0, "Значения")
@@ -2188,9 +2169,9 @@ def vvod_by_angle_h(x=True):
         vL.delete(0, END)
         vh.delete(0, END)
         vH.delete(0, END)
-        vh.insert(0, "Рассчеты")
+        vh.insert(0, "Расчёты")
         vV0.insert(0, "Невозможны")
-        vA.insert(0, "Рассчеты")
+        vA.insert(0, "Расчёты")
         vH.insert(0, "Введите")
         vT.insert(0, "Другие")
         vL.insert(0, "Значения")
@@ -2292,7 +2273,7 @@ def file_by_angle_h():
         mb.showerror("Ошибка", "Неверный формат входных данных")
 
 def save_by_angle_h():
-    vvod_by_angle_zero(False)
+    vvod_by_angle_h(False)
     global stroim, XY
     stroim = False
     for a in XY:
@@ -2341,8 +2322,8 @@ def by_angle_h():
     vh.place(x=163, y=134)
     vvod.append(vh)
 
-    bh = Label(text="h        =", font="Cricket 10")
-    bh.place(x=77, y=134)
+    bh = Label(text="h (м)    =", font="Cricket 10")
+    bh.place(x=88, y=134)
     bh.config(bg='#F7DDC4', fg='#0C136F')
     vvod.append(bh)
 
@@ -2351,7 +2332,7 @@ def by_angle_h():
     vV0.grid(row=2, column=2)
     vvod.append(vV0)
 
-    bV0 = Label(text="Vo      =", font="Cricket 10")
+    bV0 = Label(text="Vo (м/c)  =", font="Cricket 10")
     bV0.place(x=76, y=152)
     bV0.config(bg='#F7DDC4', fg='#0C136F')
     vvod.append(bV0)
@@ -2361,8 +2342,8 @@ def by_angle_h():
     vA.grid(row=3, column=2)
     vvod.append(vA)
 
-    bA = Label(text="Угол (В градусах) = ", font="Cricket 10")
-    bA.place(x=5, y=175)
+    bA = Label(text="Угол (В градусах)  = ", font="Cricket 10")
+    bA.place(x=17, y=175)
     bA.config(bg='#F7DDC4', fg='#0C136F')
     vvod.append(bA)
 
@@ -2371,8 +2352,8 @@ def by_angle_h():
     vH.grid(row=4, column=2)
     vvod.append(vH)
 
-    bH = Label(text="Hmax       = ", font="Cricket 10")
-    bH.place(x=54, y=197)
+    bH = Label(text="Hmax (м)    = ", font="Cricket 10")
+    bH.place(x=61, y=197)
     bH.config(bg='#F7DDC4', fg='#0C136F')
     vvod.append(bH)
 
@@ -2381,8 +2362,8 @@ def by_angle_h():
     vT.grid(row=5, column=2)
     vvod.append(vT)
 
-    bT = Label(text="Tполёта    = ", font="Cricket 10")
-    bT.place(x=53, y=219)
+    bT = Label(text="Tполёта (с)  = ", font="Cricket 10")
+    bT.place(x=58, y=219)
     bT.config(bg='#F7DDC4', fg='#0C136F')
     vvod.append(bT)
 
@@ -2391,8 +2372,8 @@ def by_angle_h():
     vL.grid(row=6, column=2)
     vvod.append(vL)
 
-    bL = Label(text="Lполёта    = ", font="Cricket 10")
-    bL.place(x=53, y=244)
+    bL = Label(text="Lполёта (м)   = ", font="Cricket 10")
+    bL.place(x=52, y=244)
     bL.config(bg='#F7DDC4', fg='#0C136F')
     vvod.append(bL)
 
@@ -2423,6 +2404,777 @@ def by_angle_h():
     l3 = Label(text="ИЛИ", font="Cricket 12")
     l3.config(bd=20, bg='#F7DDC4', fg='#0C136F')
     l3.place(x=90, y=320)
+    vvod.append(l3)
+
+
+# Под углом с движущегося тела
+
+def vvod_by_angle_h_move(x=True):
+    grafic.delete("all")
+    global V0
+    global Vdop
+    global A
+    global H
+    global T
+    global L
+    global h
+    global XY
+    for a in XY:
+        a.destroy()
+    global V0, h, A, B, T, L, Vdop
+    h = vh.get()
+    V0 = vV0.get()
+    A = vA.get()
+    H = vH.get()
+    T = vT.get()
+    L = vL.get()
+    Vdop = vVdop.get()
+    col=0
+    V0d = False
+    Ad = False
+    Hd = False
+    Td = False
+    Ld = False
+    hd = False
+    flag = True
+    global stroim
+    stroim = x
+    if (is_num(V0)):
+        col += 1
+        V0d = True
+        V0 = float(V0)
+        if (V0 <= 0):
+            flag = False
+    if (is_num(h)):
+        col += 1
+        hd = True
+        h = float(h)
+        if (h <= 0):
+            flag = False
+    if (is_num(A)):
+        col += 1
+        Ad = True
+        A = float(A)
+        A = A * pi / 180
+    if (is_num(H)):
+        col += 1
+        Hd = True
+        H = float(H)
+        if (H <= 0):
+            flag = False
+    if (is_num(T)):
+        col += 1
+        Td = True
+        T = float(T)
+        if (T <= 0):
+            flag = False
+    if (is_num(L)):
+        col += 1
+        Ld = True
+        L = float(L)
+        if (L <= 0):
+            flag = False
+    if (is_num(Vdop)):
+        col += 1
+        Vdopd = True
+        Vdop = float(Vdop)
+        if (Vdop <= 0):
+            flag = False
+    if (flag):
+        if (V0d and Ad and hd and Vdopd):
+            if (A > -pi/2) and (A < pi/2):
+                T = (V0*sin(A)+sqrt(V0**2*sin(A)**2+2*g*h)) / g
+                L = (V0*cos(A) + Vdop)*T
+                H = (V0**2*sin(A)**2 + 2*g*h)/(2*g)
+                vL.delete(0, END)
+                vH.delete(0, END)
+                vT.delete(0, END)
+                vL.insert(0, round(L*1000)/1000)
+                vH.insert(0, round(H*1000)/1000)
+                vT.insert(0, round(T*1000)/1000)
+            else:
+                stroim = False
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+        else:
+            vV0.delete(0, END)
+            vA.delete(0, END)
+            vT.delete(0, END)
+            vL.delete(0, END)
+            vh.delete(0, END)
+            vH.delete(0, END)
+            vh.insert(0,"Расчёты")
+            vV0.insert(0, "Невозможны")
+            vH.insert(0, "Введите")
+            vT.insert(0, "Другие")
+            vL.insert(0, "Значения")
+            stroim = False
+
+        if (stroim):
+            global k
+            k = min(370 / L, 190 / H)
+            grafic.create_line(10, 10, 10, 210, arrow=FIRST)
+            grafic.create_line(10, 210, 395, 210, arrow=LAST)
+            grafic.create_text(15, 6, text="y(м)")
+            grafic.create_text(385, 200, text="x(м)")
+            grafic.create_line(10, 210 - h*k, 10 + 30 * cos(A), 210 - h*k - 30 * sin(A), arrow=LAST)
+            grafic.create_text(10 + 30 * cos(A) + 11, 210 - h*k - 30 * sin(A) + 5, text="Vo")
+            grafic.create_line(30, 210 - h*k, 10 + 20 * cos(A), 210 - h*k - 20 * sin(A))
+            grafic.create_line(10, 210 - h * k, 45, 210 - h * k, dash = True)
+            grafic.create_text(35, 210 - h*k - 10 * sin(A) , text="A")
+            grafic.create_line(370, 10, 370, 40, arrow=LAST)
+            grafic.create_text(361, 33, text="g")
+            grafic.create_text(10, 220, text="0")
+            grafic.create_text(17+len(str(round(H * 100)/100))*5, 200 - (H * k), text=str(round(H * 100)/100))
+            grafic.create_line(5, 210 - (H * k), 390, 210 - (H * k), dash=True)
+            grafic.create_text(10 + L * k, 220, text=str(round(L * 100)/100))
+            grafic.create_line(10 + L * k, 10, 10 + L * k, 215, dash=True)
+            grafic.create_text(10 + (V0**2*sin(A)*cos(A)/g)*k, 220, text=str(round(V0**2*sin(A)*cos(A)/g * 100)/100))
+            t1 = V0*sin(A)/g
+            grafic.create_line(10 + t1*k * (V0*cos(A) + Vdop), 10, 10 + t1*k * (V0*cos(A) + Vdop), 215, dash=True)
+            global i
+            global telo
+            global xy
+            xy = Label(text="x=0.000 , y=0.000", font="Cricket 12")
+            xy.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+            xy.place(x= 400, y=320)
+            XY.append(xy)
+            telo = grafic.create_oval(10 - r, 210-h*k - r, 10 + r, 210-h*k + r, fill="#c00300")
+            i=0
+            global telo1
+            telo1 = grafic.create_rectangle(10-8, 210-3-h*k, 10+8, 210+3-h*k, fill="#00003d")
+            root.after(10, draw_angle_by_h_move)
+    else:
+        vV0.delete(0, END)
+        vA.delete(0, END)
+        vT.delete(0, END)
+        vL.delete(0, END)
+        vh.delete(0, END)
+        vH.delete(0, END)
+        vh.insert(0, "Расчёты")
+        vV0.insert(0, "Невозможны")
+        vA.insert(0, "Расчёты")
+        vH.insert(0, "Введите")
+        vT.insert(0, "Другие")
+        vL.insert(0, "Значения")
+        stroim = False
+
+def del_by_angle_h_move():
+    vA.delete(0, END)
+    vh.delete(0, END)
+    vH.delete(0, END)
+    vV0.delete(0, END)
+    vT.delete(0, END)
+    vL.delete(0, END)
+    vVdop.delete(0, END)
+    global stroim, XY
+    stroim = False
+    for a in XY:
+        a.destroy()
+    grafic.delete("all")
+
+def draw_angle_by_h_move():
+    global i
+    global telo, telo1
+    global xy, XY
+    if (stroim):
+        grafic.delete(telo)
+        grafic.delete(telo1)
+        xy.destroy()
+        XY=[]
+        x = L / 2000 * i
+        t = x/(V0*cos(A) + Vdop)
+        y = h + V0*sin(A)*t - g*t**2/2
+        x1 = L / 2000 * (i + 1)
+        t1 = x1 / (V0 * cos(A) + Vdop)
+        y1 = h + V0 * sin(A) * t1 - g * t1 ** 2 / 2
+        telo = grafic.create_oval(((x1) * k + 10) - r, 220 - ((y1) * k + 10) - r, ((x1) * k + 10) + r, 220 - ((y1) * k + 10) + r, fill="#c00300")
+        telo1 = grafic.create_rectangle(10 - 15 + t1*(Vdop), 210 - 3 - h * k, 10 + 15+ t1*(Vdop), 210 + 3 - h * k, fill="#00003d")
+        grafic.create_line((x) * k + 10, 220 - ((y) * k + 10), ((x1) * k + 10), 220 - ((y1) * k + 10), fill="#c00300")
+        i+=1
+        xy = Label(text="x="+str(col_znak(round(x*1000)/1000, 3))+", y="+str(col_znak(round(y*1000)/1000, 3)), font="Cricket 12")
+        xy.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+        xy.place(x=400, y=320)
+        XY.append(xy)
+        global vvod
+        vvod.append(xy)
+        if (i<=2000):
+            root.after(1, draw_angle_by_h_move)
+
+def file_by_angle_h_move():
+    colvo = 0
+    n = 0
+    f_name = fd.askopenfilename()
+    with open(f_name, "r") as file:
+        st = file.readline()
+        while st:
+            colvo+=1
+            st=st.rstrip('\n')
+            if (colvo==1):
+                fh = st
+                if (is_num(fh)):
+                    n+=1
+            if (colvo==2):
+                fV0 = st
+                if (is_num(fV0)):
+                    n+=1
+            if (colvo==3):
+                fA = st
+                if (is_num(fA)):
+                    n+=1
+            if (colvo==4):
+                fVdop = st
+                if (is_num(fVdop)):
+                    n+=1
+            st = file.readline()
+    if (colvo==4) and (n==4):
+        vh.delete(0, END)
+        vL.delete(0, END)
+        vH.delete(0, END)
+        vT.delete(0, END)
+        vV0.delete(0, END)
+        vVdop.delete(0, END)
+        vA.delete(0, END)
+        if (is_num(fh)):
+            vh.insert(0, str(fh))
+        if (is_num(fV0)):
+            vV0.insert(0, str(fV0))
+        if (is_num(fA)):
+            vA.insert(0, str(fA))
+        if (is_num(fVdop)):
+            vVdop.insert(0, str(fVdop))
+        vvod_by_angle_h_move()
+    else:
+        mb.showerror("Ошибка", "Неверный формат входных данных")
+
+def save_by_angle_h_move():
+    vvod_by_angle_h_move(False)
+    global stroim, XY
+    stroim = False
+    for a in XY:
+        a.destroy()
+    grafic.delete("all")
+    if (is_num(vV0.get()) and is_num(vA.get())):
+        f_name = fd.asksaveasfilename(filetypes=(("TXT files", "*.txt"),))
+        with open(f_name, "w") as file:
+            st = 'Бросок под углом к горизонту с учетом ветра \n'
+            file.write(st)
+            st = "h (м) = " + str(vh.get()) + '\n'
+            file.write(st)
+            st = "Vo (м/с) = " + str(vV0.get()) + '\n'
+            file.write(st)
+            st = "Vплатформы (м/с) = " + str(vVdop.get()) + '\n'
+            file.write(st)
+            st = "A (градусов) = " + str(vA.get()) + '\n'
+            file.write(st)
+            st = "H (м) = " + str(vH.get()) + '\n'
+            file.write(st)
+            st = "L (м) = " + str(vL.get()) + '\n'
+            file.write(st)
+            st = "T (с) = " + str(vT.get()) + '\n'
+            file.write(st)
+            mb.showinfo(
+                "Успешно",
+                "Данные сохранены")
+
+def by_angle_h_move():
+    global vvod
+    vvod = []
+    grafic.place(x=257, y=70)
+
+    l1 = Label(text="Введите первые \n четыре значения", font="Cricket 12")
+    l1.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l1.grid(row=1, column=0, columnspan=2, rowspan=1)
+    vvod.append(l1)
+
+    l2 = Label(text="Бросок под углом к горизонту с движущегося тела на высоте", font="Cricket 16")
+    l2.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l2.grid(row=0,  column=0, columnspan=100, rowspan=1)
+    vvod.append(l2)
+
+    delete_main()
+
+    global vh
+    vh = Entry(width=13)
+    vh.place(x=172, y=129)
+    vvod.append(vh)
+
+    bh = Label(text="h (м)        =", font="Cricket 10")
+    bh.place(x=84, y=128)
+    bh.config(bg='#F7DDC4', fg='#0C136F')
+    vvod.append(bh)
+
+    global vV0
+    vV0= Entry(width=13)
+    vV0.grid(row=2, column=2)
+    vvod.append(vV0)
+
+    bV0 = Label(text="Vo (м/с)     =", font="Cricket 10")
+    bV0.place(x=76, y=152)
+    bV0.config(bg='#F7DDC4', fg='#0C136F')
+    vvod.append(bV0)
+
+    global vA
+    vA= Entry(width=13)
+    vA.grid(row=3, column=2)
+    vvod.append(vA)
+
+    bA = Label(text="Угол (В градусах)      = ", font="Cricket 10")
+    bA.place(x=13, y=175)
+    bA.config(bg='#F7DDC4', fg='#0C136F')
+    vvod.append(bA)
+
+    global vVdop
+    vVdop = Entry(width=13)
+    vVdop.grid(row=4, column=2)
+    vvod.append(vVdop)
+
+    bVdop = Label(text="Vdop (м/с)       = ", font="Cricket 10")
+    bVdop.place(x=54 , y=197)
+    bVdop.config(bg='#F7DDC4', fg='#0C136F')
+    vvod.append(bVdop)
+
+    global vH
+    vH = Entry(width=13)
+    vH.grid(row=5, column=2)
+    vvod.append(vH)
+
+    bH = Label(text="Hmax (м)    = ", font="Cricket 10")
+    bH.place(x=73, y=219)
+    bH.config(bg='#F7DDC4', fg='#0C136F')
+    vvod.append(bH)
+
+    global vT
+    vT = Entry(width=13)
+    vT.grid(row=6, column=2)
+    vvod.append(vT)
+
+    bT = Label(text="Tполёта (с)  = ", font="Cricket 10")
+    bT.place(x=71, y=240)
+    bT.config(bg='#F7DDC4', fg='#0C136F')
+    vvod.append(bT)
+
+    global vL
+    vL = Entry(width=13)
+    vL.grid(row=7, column=2)
+    vvod.append(vL)
+
+    bL = Label(text="Lполёта (м)  = ", font="Cricket 10")
+    bL.place(x=70, y=260)
+    bL.config(bg='#F7DDC4', fg='#0C136F')
+    vvod.append(bL)
+
+    bvvesti = Button(root, height=2, width=17)
+    change_button(bvvesti, "Ввести значения")
+    bvvesti.place(x=20, y=303)
+    vvod.append(bvvesti)
+    bvvesti.config(command=vvod_by_angle_h_move)
+
+    bdel = Button(root, height=2, width=10)
+    change_button(bdel, "Удалить\nзначения")
+    bdel.place(x=163, y=303)
+    vvod.append(bdel)
+    bdel.config(command=del_by_angle_h_move)
+
+    bopen = Button(root, height=5, width=30)
+    change_button(bopen, 'Считать значения из файла \n(введите 4 значения\n в следующем порядке: h, V0, A, \nVплатформы в файл "input.txt"\n в столбик)' )
+    bopen.place(x=20, y=390)
+    vvod.append(bopen)
+    bopen.config(command=file_by_angle_h_move)
+
+    bsave = Button(root, height=5, width=30)
+    change_button(bsave,'Сохранить значения\n в файл')
+    bsave.place(x=300, y=390)
+    vvod.append(bsave)
+    bsave.config(command=save_by_angle_h_move)
+
+    l3 = Label(text="ИЛИ", font="Cricket 12", height=1)
+    l3.config(bd=12, bg='#F7DDC4', fg='#0C136F')
+    l3.place(x=90, y=345)
+    vvod.append(l3)
+
+# Под углом с высоты под углом к горизонту с учетом ветра
+
+def vvod_by_angle_h_wind(x=True):
+    grafic.delete("all")
+    global V0
+    global Vdop
+    global A
+    global H
+    global T
+    global L
+    global h
+    global XY
+    for a in XY:
+        a.destroy()
+    global V0, h, A, B, T, L, Vdop
+    h = vh.get()
+    V0 = vV0.get()
+    A = vA.get()
+    H = vH.get()
+    T = vT.get()
+    L = vL.get()
+    Vdop = vVdop.get()
+    col=0
+    V0d = False
+    Ad = False
+    Hd = False
+    Td = False
+    Ld = False
+    hd = False
+    flag = True
+    global stroim
+    stroim = x
+    if (is_num(V0)):
+        col += 1
+        V0d = True
+        V0 = float(V0)
+        if (V0 <= 0):
+            flag = False
+    if (is_num(h)):
+        col += 1
+        hd = True
+        h = float(h)
+        if (h <= 0):
+            flag = False
+    if (is_num(A)):
+        col += 1
+        Ad = True
+        A = float(A)
+        A = A * pi / 180
+    if (is_num(H)):
+        col += 1
+        Hd = True
+        H = float(H)
+        if (H <= 0):
+            flag = False
+    if (is_num(T)):
+        col += 1
+        Td = True
+        T = float(T)
+        if (T <= 0):
+            flag = False
+    if (is_num(L)):
+        col += 1
+        Ld = True
+        L = float(L)
+        if (L <= 0):
+            flag = False
+    if (is_num(Vdop)):
+        col += 1
+        Vdopd = True
+        Vdop = float(Vdop)
+        if (Vdop <= 0):
+            flag = False
+    if (flag):
+        if (V0d and Ad and hd and Vdopd):
+            if (A > -pi/2) and (A < pi/2):
+                T = (V0*sin(A)+sqrt(V0**2*sin(A)**2+2*g*h)) / g
+                L = (V0*cos(A) + Vdop)*T
+                H = (V0**2*sin(A)**2 + 2*g*h)/(2*g)
+                vL.delete(0, END)
+                vH.delete(0, END)
+                vT.delete(0, END)
+                vL.insert(0, round(L*1000)/1000)
+                vH.insert(0, round(H*1000)/1000)
+                vT.insert(0, round(T*1000)/1000)
+            else:
+                stroim = False
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+        else:
+            vV0.delete(0, END)
+            vA.delete(0, END)
+            vT.delete(0, END)
+            vL.delete(0, END)
+            vh.delete(0, END)
+            vH.delete(0, END)
+            vh.insert(0,"Расчёты")
+            vV0.insert(0, "Невозможны")
+            vH.insert(0, "Введите")
+            vT.insert(0, "Другие")
+            vL.insert(0, "Значения")
+            stroim = False
+
+        if (stroim):
+            global k
+            k = min(370 / L, 190 / H)
+            grafic.create_line(10, 10, 10, 210, arrow=FIRST)
+            grafic.create_line(10, 210, 395, 210, arrow=LAST)
+            grafic.create_text(15, 6, text="y(м)")
+            grafic.create_text(385, 200, text="x(м)")
+            grafic.create_line(10, 210 - h*k, 10 + 30 * cos(A), 210 - h*k - 30 * sin(A), arrow=LAST)
+            grafic.create_text(10 + 30 * cos(A) + 11, 210 - h*k - 30 * sin(A) + 5, text="Vo")
+            grafic.create_line(30, 210 - h*k, 10 + 20 * cos(A), 210 - h*k - 20 * sin(A))
+            grafic.create_line(10, 210 - h * k, 45, 210 - h * k, dash = True)
+            grafic.create_text(35, 210 - h*k - 10 * sin(A) , text="A")
+            grafic.create_line(370, 10, 370, 40, arrow=LAST)
+            grafic.create_text(361, 33, text="g")
+            grafic.create_text(10, 220, text="0")
+            grafic.create_text(17+len(str(round(H * 100)/100))*5, 200 - (H * k), text=str(round(H * 100)/100))
+            grafic.create_line(5, 210 - (H * k), 390, 210 - (H * k), dash=True)
+            grafic.create_text(10 + L * k, 220, text=str(round(L * 100)/100))
+            grafic.create_line(10 + L * k, 10, 10 + L * k, 215, dash=True)
+            grafic.create_text(10 + (V0**2*sin(A)*cos(A)/g)*k, 220, text=str(round(V0**2*sin(A)*cos(A)/g * 100)/100))
+            t1 = V0*sin(A)/g
+            grafic.create_line(10 + t1*k * (V0*cos(A) + Vdop), 10, 10 + t1*k * (V0*cos(A) + Vdop), 215, dash=True)
+            global i
+            global telo
+            global xy
+            xy = Label(text="x=0.000 , y=0.000", font="Cricket 12")
+            xy.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+            xy.place(x=400, y=320)
+            XY.append(xy)
+            telo = grafic.create_oval(10 - r, 210-h*k - r, 10 + r, 210-h*k + r, fill="#c00300")
+            i=0
+            global telo1
+            telo1 = grafic.create_line(10-8, 210 - h * k, 10 + 8, 210 - h * k, arrow=LAST)
+            root.after(10, draw_angle_by_h_wind)
+    else:
+        vV0.delete(0, END)
+        vA.delete(0, END)
+        vT.delete(0, END)
+        vL.delete(0, END)
+        vh.delete(0, END)
+        vH.delete(0, END)
+        vh.insert(0, "Расчёты")
+        vV0.insert(0, "Невозможны")
+        vA.insert(0, "Расчёты")
+        vH.insert(0, "Введите")
+        vT.insert(0, "Другие")
+        vL.insert(0, "Значения")
+        stroim = False
+
+def del_by_angle_h_wind():
+    vA.delete(0, END)
+    vh.delete(0, END)
+    vH.delete(0, END)
+    vV0.delete(0, END)
+    vT.delete(0, END)
+    vL.delete(0, END)
+    vVdop.delete(0, END)
+    global stroim, XY
+    stroim = False
+    for a in XY:
+        a.destroy()
+    grafic.delete("all")
+
+def draw_angle_by_h_wind():
+    global i
+    global telo, telo1
+    global xy, XY
+    if (stroim):
+        grafic.delete(telo)
+        grafic.delete(telo1)
+        xy.destroy()
+        XY=[]
+        x = L / 2000 * i
+        t = x/(V0*cos(A) + Vdop)
+        y = h + V0*sin(A)*t - g*t**2/2
+        x1 = L / 2000 * (i + 1)
+        t1 = x1 / (V0 * cos(A) + Vdop)
+        y1 = h + V0 * sin(A) * t1 - g * t1 ** 2 / 2
+        telo = grafic.create_oval(((x1) * k + 10) - r, 220 - ((y1) * k + 10) - r, ((x1) * k + 10) + r, 220 - ((y1) * k + 10) + r, fill="#c00300")
+        telo1 = grafic.create_line(10 - 8 + t1*(Vdop), 210 - h * k, 10 + 8 + t1*(Vdop), 210 - h * k, arrow=LAST)
+        grafic.create_line((x) * k + 10, 220 - ((y) * k + 10), ((x1) * k + 10), 220 - ((y1) * k + 10), fill="#c00300")
+        i+=1
+        xy = Label(text="x="+str(col_znak(round(x*1000)/1000, 3))+", y="+str(col_znak(round(y*1000)/1000, 3)), font="Cricket 12")
+        xy.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+        xy.place(x=400, y=320)
+        XY.append(xy)
+        global vvod
+        vvod.append(xy)
+        if (i<=2000):
+            root.after(1, draw_angle_by_h_wind)
+
+def file_by_angle_h_wind():
+    colvo = 0
+    n = 0
+    f_name = fd.askopenfilename()
+    with open(f_name, "r") as file:
+        st = file.readline()
+        while st:
+            colvo+=1
+            st=st.rstrip('\n')
+            if (colvo==1):
+                fh = st
+                if (is_num(fh)):
+                    n+=1
+            if (colvo==2):
+                fV0 = st
+                if (is_num(fV0)):
+                    n+=1
+            if (colvo==3):
+                fA = st
+                if (is_num(fA)):
+                    n+=1
+            if (colvo==4):
+                fVdop = st
+                if (is_num(fVdop)):
+                    n+=1
+            st = file.readline()
+    if (colvo==4) and (n==4):
+        vh.delete(0, END)
+        vL.delete(0, END)
+        vH.delete(0, END)
+        vT.delete(0, END)
+        vV0.delete(0, END)
+        vVdop.delete(0, END)
+        vA.delete(0, END)
+        if (is_num(fh)):
+            vh.insert(0, str(fh))
+        if (is_num(fV0)):
+            vV0.insert(0, str(fV0))
+        if (is_num(fA)):
+            vA.insert(0, str(fA))
+        if (is_num(fVdop)):
+            vVdop.insert(0, str(fVdop))
+        vvod_by_angle_h_wind()
+    else:
+        mb.showerror("Ошибка", "Неверный формат входных данных")
+
+def save_by_angle_h_wind():
+    vvod_by_angle_zero(False)
+    global stroim, XY
+    stroim = False
+    for a in XY:
+        a.destroy()
+    grafic.delete("all")
+    if (is_num(vV0.get()) and is_num(vA.get())):
+        f_name = fd.asksaveasfilename(filetypes=(("TXT files", "*.txt"),))
+        with open(f_name, "w") as file:
+            st = 'Бросок под углом к горизонту с движущейся платформы \n'
+            file.write(st)
+            st = "h (м) = " + str(vh.get()) + '\n'
+            file.write(st)
+            st = "Vo (м/с) = " + str(vV0.get()) + '\n'
+            file.write(st)
+            st = "Vплатформы (м/с) = " + str(vVdop.get()) + '\n'
+            file.write(st)
+            st = "A (градусов) = " + str(vA.get()) + '\n'
+            file.write(st)
+            st = "H (м) = " + str(vH.get()) + '\n'
+            file.write(st)
+            st = "L (м) = " + str(vL.get()) + '\n'
+            file.write(st)
+            st = "T (с) = " + str(vT.get()) + '\n'
+            file.write(st)
+            mb.showinfo(
+                "Успешно",
+                "Данные сохранены")
+
+def by_angle_h_wind():
+    global vvod
+    vvod = []
+    grafic.place(x=257, y=70)
+
+    l1 = Label(text="Введите первые \n четыре значения", font="Cricket 12")
+    l1.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l1.grid(row=1, column=0, columnspan=2, rowspan=1)
+    vvod.append(l1)
+
+    l2 = Label(text="Бросок под углом к горизонту с высоты с учетом ветра", font="Cricket 16")
+    l2.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l2.grid(row=0,  column=0, columnspan=100, rowspan=1)
+    vvod.append(l2)
+
+    delete_main()
+
+    global vh
+    vh = Entry(width=13)
+    vh.place(x=172, y=129)
+    vvod.append(vh)
+
+    bh = Label(text="h (м)        =", font="Cricket 10")
+    bh.place(x=84, y=128)
+    bh.config(bg='#F7DDC4', fg='#0C136F')
+    vvod.append(bh)
+
+    global vV0
+    vV0= Entry(width=13)
+    vV0.grid(row=2, column=2)
+    vvod.append(vV0)
+
+    bV0 = Label(text="Vo (м/с)     =", font="Cricket 10")
+    bV0.place(x=76, y=152)
+    bV0.config(bg='#F7DDC4', fg='#0C136F')
+    vvod.append(bV0)
+
+    global vA
+    vA= Entry(width=13)
+    vA.grid(row=3, column=2)
+    vvod.append(vA)
+
+    bA = Label(text="Угол (В градусах)      = ", font="Cricket 10")
+    bA.place(x=13, y=175)
+    bA.config(bg='#F7DDC4', fg='#0C136F')
+    vvod.append(bA)
+
+    global vVdop
+    vVdop = Entry(width=13)
+    vVdop.grid(row=4, column=2)
+    vvod.append(vVdop)
+
+    bVdop = Label(text="Vdop (м/с)       = ", font="Cricket 10")
+    bVdop.place(x=54 , y=197)
+    bVdop.config(bg='#F7DDC4', fg='#0C136F')
+    vvod.append(bVdop)
+
+    global vH
+    vH = Entry(width=13)
+    vH.grid(row=5, column=2)
+    vvod.append(vH)
+
+    bH = Label(text="Hmax (м)    = ", font="Cricket 10")
+    bH.place(x=73, y=219)
+    bH.config(bg='#F7DDC4', fg='#0C136F')
+    vvod.append(bH)
+
+    global vT
+    vT = Entry(width=13)
+    vT.grid(row=6, column=2)
+    vvod.append(vT)
+
+    bT = Label(text="Tполёта (с)  = ", font="Cricket 10")
+    bT.place(x=70, y=240)
+    bT.config(bg='#F7DDC4', fg='#0C136F')
+    vvod.append(bT)
+
+    global vL
+    vL = Entry(width=13)
+    vL.grid(row=7, column=2)
+    vvod.append(vL)
+
+    bL = Label(text="Lполёта (м)  = ", font="Cricket 10")
+    bL.place(x=68, y=260)
+    bL.config(bg='#F7DDC4', fg='#0C136F')
+    vvod.append(bL)
+
+    bvvesti = Button(root, height=2, width=17)
+    change_button(bvvesti, "Ввести значения")
+    bvvesti.place(x=20, y=303)
+    vvod.append(bvvesti)
+    bvvesti.config(command=vvod_by_angle_h_wind)
+
+    bdel = Button(root, height=2, width=10)
+    change_button(bdel, "Удалить\nзначения")
+    bdel.place(x=163, y=303)
+    vvod.append(bdel)
+    bdel.config(command=del_by_angle_h_wind)
+
+    bopen = Button(root, height=5, width=30)
+    change_button(bopen, 'Считать значения из файла \n(введите 4 значения\n в следующем порядке: h, V0, A, \nVплатформы в файл "input.txt"\n в столбик)' )
+    bopen.place(x=20, y=390)
+    vvod.append(bopen)
+    bopen.config(command=file_by_angle_h_wind)
+
+    bsave = Button(root, height=5, width=30)
+    change_button(bsave,'Сохранить значения\n в файл')
+    bsave.place(x=300, y=390)
+    vvod.append(bsave)
+    bsave.config(command=save_by_angle_h_wind)
+
+    l3 = Label(text="ИЛИ", font="Cricket 12", height=1)
+    l3.config(bd=12, bg='#F7DDC4', fg='#0C136F')
+    l3.place(x=90, y=345)
     vvod.append(l3)
 
 
@@ -2490,7 +3242,7 @@ def vvod_dop(x=True):
             vh.delete(0, END)
             vT.delete(0, END)
             vVk.delete(0, END)
-            vV0.insert(0, "Рассчеты")
+            vV0.insert(0, "Расчёты")
             vh.insert(0, "Невозможны")
             vVk.insert(0, "Введите")
             vT.insert(0, "Другое")
@@ -2528,7 +3280,7 @@ def vvod_dop(x=True):
         vh.delete(0, END)
         vT.delete(0, END)
         vVk.delete(0, END)
-        vV0.insert(0, "Рассчеты")
+        vV0.insert(0, "Расчёты")
         vh.insert(0, "Невозможны")
         vVk.insert(0, "Введите")
         vT.insert(0, "Другое")
@@ -3040,7 +3792,85 @@ def th_dop():
     l8.config(bd=20, bg='#F7DDC4', fg='#0C136F')
     BB.append(l8)
 
+def th_angle_h_wind():
+    delete_th()
+    global BB
+    l0 = Label(text="Бросок тела под углом к горизонту с высоты h с учетом ветра", font="Cricket 18")
+    l0.place(x=75, y=10)
+    l0.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l0)
+    l1 = Label(text="Vy(t) = Vo*sinA - gt - скорость по оси оу через t секунд полёта", font="Cricket 14")
+    l1.place(x=10, y=80)
+    l1.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l1)
+    l2 = Label(text="Vx(t) = Vo*cosA + Vdop - скорость по оси ох через t секунд полёта", font="Cricket 14")
+    l2.place(x=10, y=130)
+    l2.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l2)
+    l3 = Label(text="y(t) = h + Vo*sinA*t - g*t^2/2 - координата по оси оу через t секунд полёта", font="Cricket 14")
+    l3.place(x=10, y=180)
+    l3.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l3)
+    l4 = Label(text="x(t) = xo + (Vo*cosA+Vdop)*t - координата по оси ох через t секунд полёта", font="Cricket 14")
+    l4.place(x=10, y=230)
+    l4.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l4)
+    l5 = Label(text="Hmax = (V0^2 * (sin(A))^2 + 2 * g * h) / (2 * g) - максимальная высота полёта", font="Cricket 14")
+    l5.place(x=10, y=280)
+    l5.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l5)
+    l6 = Label(text="Lmax = (V0*sin(A)+sqrt(V0^2*(sin(A))^2+2*g*h))/g * (Vo*cosA+Vdop) - дальность полёта", font="Cricket 12")
+    l6.place(x=10, y=320)
+    l6.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l6)
+    l7 = Label(text="Tполёта = (V0 * sin(A) + sqrt(V0^2 * (sin(A))^2 + 2 * g * h)) / g - время полёта", font="Cricket 14")
+    l7.place(x=10, y=370)
+    l7.config(bd=14, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l7)
+    l8 = Label(text="Траектория движения тела, брошенного под углом к горизонту с \n высоты с учемом ветра - парабола", font="Cricket 13")
+    l8.place(x=10, y=410)
+    l8.config(bd=14, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l8)
 
+def th_angle_h_move():
+    delete_th()
+    global BB
+    l0 = Label(text="Бросок тела под углом к горизонту с движущейся платформы на высоте h", font="Cricket 18")
+    l0.place(x=75, y=10)
+    l0.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l0)
+    l1 = Label(text="Vy(t) = Vo*sinA - gt - скорость по оси оу через t секунд полёта", font="Cricket 14")
+    l1.place(x=10, y=80)
+    l1.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l1)
+    l2 = Label(text="Vx(t) = Vo*cosA + Vdop - скорость по оси ох через t секунд полёта", font="Cricket 14")
+    l2.place(x=10, y=130)
+    l2.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l2)
+    l3 = Label(text="y(t) = h + Vo*sinA*t - g*t^2/2 - координата по оси оу через t секунд полёта", font="Cricket 14")
+    l3.place(x=10, y=180)
+    l3.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l3)
+    l4 = Label(text="x(t) = xo + (Vo*cosA+Vdop)*t - координата по оси ох через t секунд полёта", font="Cricket 14")
+    l4.place(x=10, y=230)
+    l4.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l4)
+    l5 = Label(text="Hmax = (V0^2 * (sin(A))^2 + 2 * g * h) / (2 * g) - максимальная высота полёта", font="Cricket 14")
+    l5.place(x=10, y=280)
+    l5.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l5)
+    l6 = Label(text="Lmax = (V0*sin(A)+sqrt(V0^2*(sin(A))^2+2*g*h))/g * (Vo*cosA+Vdop) - дальность полёта", font="Cricket 12")
+    l6.place(x=10, y=320)
+    l6.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l6)
+    l7 = Label(text="Tполёта = (V0 * sin(A) + sqrt(V0^2 * (sin(A))^2 + 2 * g * h)) / g - время полёта", font="Cricket 14")
+    l7.place(x=10, y=370)
+    l7.config(bd=14, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l7)
+    l8 = Label(text="Траектория движения тела, брошенного под углом к горизонту с \nплатформы - парабола", font="Cricket 13")
+    l8.place(x=10, y=410)
+    l8.config(bd=14, bg='#F7DDC4', fg='#0C136F')
+    BB.append(l8)
 
 def theory():
     delete_main()
@@ -3055,55 +3885,67 @@ def theory():
 
     lx = Label(text="Выберите раздел,\n по которому хотите \nузнать больше:", font="Cricket 14")
     lx.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-    lx.place(x=33, y=111)
+    #lx.place(x=33, y=111)
     vvod.append(lx)
 
     b1 = Button(root, text="1", width=25, height=6)
-    b1.place(x=460, y=240)
+    b1.place(x=460, y=230)
     change_button(b1, "Бросок под углом \n с земли")
     vvod.append(b1)
     b1.config(command=th_by_angle_zero)
 
     b2 = Button(root, text="2", width=25, height=6)
-    b2.place(x=40, y=240)
+    b2.place(x=40, y=230)
     change_button(b2, "Бросок вертикально \n вверх с земли")
     vvod.append(b2)
     b2.config(command=th_vert_v_zero)
 
     b3 = Button(root, text="3", width=25, height=6)
-    b3.place(x=40, y=360)
+    b3.place(x=40, y=350)
     change_button(b3, "Бросок со скоростью, \n направленной горизонтально, \n с высоты ")
     vvod.append(b3)
     b3.config(command=th_hor)
 
     b4 = Button(root, text="4", width=25, height=6)
-    b4.place(x=250, y=120)
+    b4.place(x=250, y=110)
     change_button(b4, "Бросок со скоростью, \n направленной под углом \n к горизонту, с высоты ")
     vvod.append(b4)
     b4.config(command=th_angle_h)
 
     b5 = Button(root, text="5", width=25, height=6)
-    b5.place(x=250, y=240)
+    b5.place(x=250, y=230)
     change_button(b5, "Бросок с высоты со \n скоростью, направленной \nвертикально вверх")
     vvod.append(b5)
     b5.config(command=th_vert_vverh)
 
     b6 = Button(root, text="6", width=25, height=6)
-    b6.place(x=250, y=360)
+    b6.place(x=250, y=350)
     change_button(b6, "Бросок с высоты со \n скоростью, направленной \nвертикально вниз")
     vvod.append(b6)
     b6.config(command=th_vert_vniz)
 
     b7 = Button(root, text="7", width=25, height=6)
-    b7.place(x=460, y=120)
+    b7.place(x=460, y=110)
     change_button(b7, "Бросок под углом А к горизонту\n с высоты h на наклонную\n плоскость под углом B")
     vvod.append(b7)
     b7.config(command=th_dop)
 
+    b8 = Button(root, text="8", width=25, height=6)
+    b8.place(x=40, y=110)
+    change_button(b8, "Бросок под углом А к горизонту\n c движущейся платформы\n на высоте h")
+    vvod.append(b8)
+    b8.config(command=th_angle_h_move)
+
+    b9 = Button(root, text="8", width=25, height=6)
+    b9.place(x=460, y=350)
+    change_button(b9, "Бросок под углом А к горизонту\n c высоты с учетом\n ветра")
+    vvod.append(b9)
+    b9.config(command=th_angle_h_wind)
+
 def saved_files():
     f_name = fd.askopenfilename()
     f = open(f_name, "r")
-    global vV0, vA, vh
+    global vV0, vA, vh, vVdop
     st = f.readline().strip()
     if (st.find('Бросок под углом к горизонту с земли')!=-1):
         while (st):
@@ -3192,6 +4034,23 @@ def saved_files():
         vA.insert(0, A)
         vB.insert(0, B)
         vvod_dop()
+    elif (st.find('Бросок под углом к горизонту с движущейся платформы')!=-1):
+        while (st):
+            st = f.readline().strip()
+            if (st.find('Vo (м/с)') != -1):
+                V0 = float(st[10:])
+            if (st.find('h (м)') != -1):
+                h = float(st[7:])
+            if (st.find('A (градусов)') != -1):
+                A = float(st[14:])
+            if (st.find('Vплатформы (м/с) = ') != -1):
+                Vdop = float(st[19:])
+        by_angle_h_move()
+        vV0.insert(0, V0)
+        vh.insert(0, h)
+        vA.insert(0, A)
+        vVdop.insert(0, Vdop)
+        vvod_by_angle_h_move()
 
 def start_window():  # Основное меню
     grafic.delete("all")
@@ -3230,17 +4089,26 @@ def start_window():  # Основное меню
     change_button(b4, "Бросок со скоростью, \n направленной под углом \n к горизонту, с высоты ")
 
 
-    b5 = Button(root, text="5",  width=25, height=6)
+    b5 = Button(root, text="5",  width=11, height=6)
     b5.place(x=250, y=240)
     b5.config(command=vert_v_h)
-    change_button(b5, "Бросок с высоты со \n скоростью, направленной \nвертикально вверх")
+    change_button(b5, "Бросок \nс высоты \nвертикально\n вверх")
 
 
-    b6 = Button(root, text="6",  width=25, height=6)
-    b6.place(x=250, y=360)
+    b6 = Button(root, text="6",  width=11, height=6)
+    b6.place(x=348, y=240)
     b6.config(command=vert_vniz_h)
-    change_button(b6, "Бросок с высоты со \n скоростью, направленной \nвертикально вниз")
+    change_button(b6, "Бросок \nс высоты \nвертикально\n вниз")
 
+    b10 = Button(root, text="6", width=11, height=6)
+    b10.place(x=348, y=360)
+    b10.config(command=by_angle_h_move)
+    change_button(b10, "Бросок \n под углом \nс движу-\nщегося \nтела")
+
+    b11 = Button(root, text="6", width=11, height=6)
+    b11.place(x=250, y=360)
+    b11.config(command=by_angle_h_wind)
+    change_button(b11, "Бросок \n под углом \nс учетом \nветра")
 
     b7 = Button(root, text="7",  width=25, height=6)
     b7.place(x=460, y=120)
@@ -3259,7 +4127,7 @@ def start_window():  # Основное меню
     b9.config(command=theory)
 
     global main_buttons
-    main_buttons = {b1, b2, b3, b4, b5, b6, b7, b8, b9}
+    main_buttons = {b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11}
 
 
 
