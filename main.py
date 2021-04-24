@@ -8,8 +8,8 @@ from tkinter import filedialog as fd
 root = Tk()
 root.title("Движение тела, брошенного под углом к горизонту")
 root.resizable(width=False, height=False)
-c = Canvas(root, bg='#F7DDC4', width=680, height=500)
-root.geometry("680x500")
+c = Canvas(root, bg='#F7DDC4', width=830, height=650)
+root.geometry("830x650")
 c.grid(row=0, column=0, columnspan=200, rowspan=70)
 
 grafic = Canvas(root, bg='#D7E6FE', width=400, height=240)
@@ -25,6 +25,9 @@ r = 4
 
 telo=''
 XY=[]
+
+def change_theme():
+    pass
 
 def col_znak(numObj, digits=0):
     return f"{numObj:.{digits}f}"
@@ -93,7 +96,7 @@ def vvod_by_angle_zero(x=True):
         Ad = True
         A = float(A)
         A = A * pi / 180
-        if (A <= 0):
+        if (A <= 0) or (A >= pi / 2):
             flag = False
     if (is_num(H)):
         col += 1
@@ -115,7 +118,7 @@ def vvod_by_angle_zero(x=True):
             flag = False
     if (flag):
         if (V0d and Ad):
-            if (A >= 0) and (A <= 90):
+            try:
                 L = (V0 ** 2) * sin(2 * A) / g
                 H = (V0 ** 2) * (sin(A) ** 2) / (2 * g)
                 T = 2 * V0 * sin(A) / g
@@ -125,8 +128,8 @@ def vvod_by_angle_zero(x=True):
                 vL.insert(0, round(L * 1000) / 1000)
                 vH.insert(0, round(H * 1000) / 1000)
                 vT.insert(0, round(T * 1000) / 1000)
-            else:
-                mb.showerror("Неверные данные","Расчёты невозможны")
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
                 stroim = False
         elif (V0d and Ld):
             try:
@@ -143,13 +146,7 @@ def vvod_by_angle_zero(x=True):
                 mb.showerror("Неверные данные", "Расчёты невозможны")
                 stroim = False
         elif (V0d and Hd):
-            if (sqrt(H*2*g/V0**2)) > 1:
-                mb.showerror("Неверные данные","Расчёты невозможны")
-                stroim = False
-            elif (sqrt(H*2*g/V0**2)) < -1:
-                mb.showerror("Неверные данные","Расчёты невозможны")
-                stroim = False
-            else:
+            try:
                 A = asin(sqrt(H*2*g/V0**2))
                 L=V0**2 * sin(2*A) / g
                 T = 2 * V0 * sin(A) / g
@@ -159,11 +156,11 @@ def vvod_by_angle_zero(x=True):
                 vA.insert(0, round(A * 180 / pi * 1000) / 1000)
                 vL.insert(0, round(L * 1000) / 1000)
                 vT.insert(0, round(T * 1000) / 1000)
-        elif (V0d and Td):
-            if ((T*g/(2*V0)) > 1) or ((T*g/(2*V0)) < -1):
+            except:
                 mb.showerror("Неверные данные", "Расчёты невозможны")
                 stroim = False
-            else:
+        elif (V0d and Td):
+            try:
                 A = asin(T*g/(2*V0))
                 L = V0 ** 2 * sin(2 * A)  / g
                 H = (V0 ** 2) * (sin(A) ** 2) / (2 * g)
@@ -173,6 +170,9 @@ def vvod_by_angle_zero(x=True):
                 vA.insert(0, round(A*180/pi*1000)/1000)
                 vL.insert(0, round(L*1000)/1000)
                 vH.insert(0, round(H*1000)/1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
         elif (Ad and Ld):
             try:
                 A=A*180/pi
@@ -189,80 +189,97 @@ def vvod_by_angle_zero(x=True):
                 mb.showerror("Неверные данные", "Расчёты невозможны")
                 stroim = False
         elif (Ad and Hd):
-            V0 = sqrt(H*2*g/(sin(A))**2)
-            T = 2 * V0 * sin(A) / g
-            L = V0 ** 2 * sin(2 * A) ** 2 / g
-            vV0.delete(0, END)
-            vL.delete(0, END)
-            vT.delete(0, END)
-            vV0.insert(0, round(V0*1000)/1000)
-            vL.insert(0, round(L*1000)/1000)
-            vT.insert(0, round(T*1000)/1000)
+            try:
+                V0 = sqrt(H*2*g/(sin(A))**2)
+                T = 2 * V0 * sin(A) / g
+                L = V0 ** 2 * sin(2 * A) ** 2 / g
+                vV0.delete(0, END)
+                vL.delete(0, END)
+                vT.delete(0, END)
+                vV0.insert(0, round(V0*1000)/1000)
+                vL.insert(0, round(L*1000)/1000)
+                vT.insert(0, round(T*1000)/1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
         elif (Ad and Td):
-            V0 = T*g/(2*sin(A))
-            L = V0 ** 2 * sin(2 * A)  / g
-            H = (V0 ** 2) * (sin(A) ** 2) / (2 * g)
-            vV0.delete(0, END)
-            vL.delete(0, END)
-            vH.delete(0, END)
-            vV0.insert(0, round(V0 * 1000) / 1000)
-            vL.insert(0, round(L * 1000) / 1000)
-            vH.insert(0, round(H * 1000) / 1000)
+            try:
+                V0 = T*g/(2*sin(A))
+                L = V0 ** 2 * sin(2 * A)  / g
+                H = (V0 ** 2) * (sin(A) ** 2) / (2 * g)
+                vV0.delete(0, END)
+                vL.delete(0, END)
+                vH.delete(0, END)
+                vV0.insert(0, round(V0 * 1000) / 1000)
+                vL.insert(0, round(L * 1000) / 1000)
+                vH.insert(0, round(H * 1000) / 1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
         elif (Td and Ld):
-            A = atan(g*T**2/(2*L))
-            V0 = T*g/(2*sin(A))
-            H = (V0 ** 2) * (sin(A) ** 2) / (2 * g)
-            vV0.delete(0, END)
-            vA.delete(0, END)
-            vH.delete(0, END)
-            vV0.insert(0, round(V0*1000)/1000)
-            vA.insert(0, round(A*180/pi*1000)/1000)
-            vH.insert(0, round(H*1000)/1000)
+            try:
+                A = atan(g*T**2/(2*L))
+                V0 = T*g/(2*sin(A))
+                H = (V0 ** 2) * (sin(A) ** 2) / (2 * g)
+                vV0.delete(0, END)
+                vA.delete(0, END)
+                vH.delete(0, END)
+                vV0.insert(0, round(V0*1000)/1000)
+                vA.insert(0, round(A*180/pi*1000)/1000)
+                vH.insert(0, round(H*1000)/1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
         elif (Hd and Ld):
-            A=atan(4*H/L)
-            V0 = sqrt(H*2*g/(sin(A))**2)
-            L = V0 ** 2 * sin(2 * A) / g
-            T = 2 * V0 * sin(A) / g
-            vV0.delete(0, END)
-            vA.delete(0, END)
-            vT.delete(0, END)
-            vV0.insert(0, round(V0*1000)/1000)
-            vA.insert(0, round(A*180/pi*1000)/1000)
-            vT.insert(0, round(T*1000)/1000)
+            try:
+                A=atan(4*H/L)
+                V0 = sqrt(H*2*g/(sin(A))**2)
+                L = V0 ** 2 * sin(2 * A) / g
+                T = 2 * V0 * sin(A) / g
+                vV0.delete(0, END)
+                vA.delete(0, END)
+                vT.delete(0, END)
+                vV0.insert(0, round(V0*1000)/1000)
+                vA.insert(0, round(A*180/pi*1000)/1000)
+                vT.insert(0, round(T*1000)/1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
         else:
             mb.showerror("Неверные данные", "Расчёты невозможны")
             stroim = False
 
         if (stroim):
-            global k
-            k = min(370 / L, 190 / H)
-            grafic.create_line(10, 10, 10, 210, arrow=FIRST)
-            grafic.create_line(10, 210, 395, 210, arrow=LAST)
-            grafic.create_text(15, 6, text="y(м)")
-            grafic.create_text(385, 200, text="x(м)")
-            grafic.create_line(10, 210, 10 + 30 * cos(A), 210 - 30 * sin(A), arrow=LAST)
-            grafic.create_text(10 + 30 * cos(A) - 2, 210 - 30 * sin(A) - 14, text="Vo")
-            grafic.create_line(30, 210, 10 + 20 * cos(A), 210 - 20 * sin(A))
-            grafic.create_text(35, 210 - 10 * sin(A) , text="A")
-            grafic.create_line(370, 10, 370, 40, arrow=LAST)
-            grafic.create_text(361, 33, text="g")
-            grafic.create_text(10, 220, text="0")
-            grafic.create_text(17+len(str(round(H * 100)/100))*5, 200 - (H * k), text=str(round(H * 100)/100))
-            grafic.create_line(5, 210 - (H * k), 390, 210 - (H * k), dash=True)
-            grafic.create_text(10 + L * k, 220, text=str(round(L * 100)/100))
-            grafic.create_line(10 + L * k, 10, 10 + L * k, 215, dash=True)
-            grafic.create_text(10 + (L * k) / 2, 220, text=str(round(L/2 * 100)/100))
-            grafic.create_line(10 + L * k / 2, 10, 10 + L * k / 2, 215, dash=True)
-            global i
-            global telo
-            global xy
-            xy = Label(text="x=0.000 , y=0.000", font="Cricket 12")
-            xy.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-            xy.place(x= 400, y=320)
-            XY.append(xy)
-            telo = grafic.create_oval(10 - r, 210 - r, 10 + r, 210 + r, fill="#c00300")
-            i=0
-            root.after(10, draw_angle_by_zero)
+                global k
+                k = min(370 / L, 190 / H)
+                grafic.create_line(10, 10, 10, 210, arrow=FIRST)
+                grafic.create_line(10, 210, 395, 210, arrow=LAST)
+                grafic.create_text(15, 6, text="y(м)")
+                grafic.create_text(385, 200, text="x(м)")
+                grafic.create_line(10, 210, 10 + 30 * cos(A), 210 - 30 * sin(A), arrow=LAST)
+                grafic.create_text(10 + 30 * cos(A) - 2, 210 - 30 * sin(A) - 14, text="Vo")
+                grafic.create_line(30, 210, 10 + 20 * cos(A), 210 - 20 * sin(A))
+                grafic.create_text(35, 210 - 10 * sin(A) , text="A")
+                grafic.create_line(370, 10, 370, 40, arrow=LAST)
+                grafic.create_text(361, 33, text="g")
+                grafic.create_text(10, 220, text="0")
+                grafic.create_text(17+len(str(round(H * 100)/100))*5, 200 - (H * k), text=str(round(H * 100)/100))
+                grafic.create_line(5, 210 - (H * k), 390, 210 - (H * k), dash=True)
+                grafic.create_text(10 + L * k, 220, text=str(round(L * 100)/100))
+                grafic.create_line(10 + L * k, 10, 10 + L * k, 215, dash=True)
+                grafic.create_text(10 + (L * k) / 2, 220, text=str(round(L/2 * 100)/100))
+                grafic.create_line(10 + L * k / 2, 10, 10 + L * k / 2, 215, dash=True)
+                global i
+                global telo
+                global xy
+                xy = Label(text="x=0.000 , y=0.000", font="Cricket 12")
+                xy.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+                xy.place(x= 400, y=320)
+                XY.append(xy)
+                telo = grafic.create_oval(10 - r, 210 - r, 10 + r, 210 + r, fill="#c00300")
+                i=0
+                root.after(10, draw_angle_by_zero)
+
     else:
         mb.showerror("Неверные данные", "Расчёты невозможны")
         stroim = False
@@ -516,33 +533,43 @@ def vvod_vert_zero(x=True):
             flag = False
     if (flag):
         if (V0d and Ad):
-            H = (V0 ** 2) * (sin(A) ** 2) / (2 * g)
-            T = 2 * V0 * sin(A) / g
-            vH.delete(0, END)
-            vT.delete(0, END)
-            vH.insert(0, round(H * 1000) / 1000)
-            vT.insert(0, round(T * 1000) / 1000)
+            try:
+                H = (V0 ** 2) * (sin(A) ** 2) / (2 * g)
+                T = 2 * V0 * sin(A) / g
+                vH.delete(0, END)
+                vT.delete(0, END)
+                vH.insert(0, round(H * 1000) / 1000)
+                vT.insert(0, round(T * 1000) / 1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
         elif (Ad and Hd):
-            V0 = sqrt(H * 2 * g / (sin(A)) ** 2)
-            T = 2 * V0 * sin(A) / g
-            vV0.delete(0, END)
-            vT.delete(0, END)
-            vV0.insert(0, round(V0 * 1000) / 1000)
-            vT.insert(0, round(T * 1000) / 1000)
+            try:
+                V0 = sqrt(H * 2 * g / (sin(A)) ** 2)
+                T = 2 * V0 * sin(A) / g
+                vV0.delete(0, END)
+                vT.delete(0, END)
+                vV0.insert(0, round(V0 * 1000) / 1000)
+                vT.insert(0, round(T * 1000) / 1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
         elif (Ad and Td):
-            V0 = T * g / (2 * sin(A))
-            H = (V0 ** 2) * (sin(A) ** 2) / (2 * g)
-            vV0.delete(0, END)
-            vH.delete(0, END)
-            vV0.insert(0, round(V0 * 1000) / 1000)
-            vH.insert(0, round(H * 1000) / 1000)
+            try:
+                V0 = T * g / (2 * sin(A))
+                H = (V0 ** 2) * (sin(A) ** 2) / (2 * g)
+                vV0.delete(0, END)
+                vH.delete(0, END)
+                vV0.insert(0, round(V0 * 1000) / 1000)
+                vH.insert(0, round(H * 1000) / 1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
         else:
             vV0.delete(0, END)
             vT.delete(0, END)
             vH.delete(0, END)
-            vV0.insert(0, "Расчёты")
-            vH.insert(0, "Невозможны")
-            vT.insert(0, "")
+            mb.showerror("Неверные данные", "Расчёты невозможны")
             stroim = False
 
 
@@ -572,13 +599,12 @@ def vvod_vert_zero(x=True):
             xy.place(x=400, y=320)
             XY.append(xy)
             root.after(10, draw_vert_zero)
+            
     else:
         vV0.delete(0, END)
         vT.delete(0, END)
         vH.delete(0, END)
-        vV0.insert(0, "Расчёты")
-        vH.insert(0, "Невозможны")
-        vT.insert(0, "")
+        mb.showerror("Неверные данные", "Расчёты невозможны")
         stroim = False
 
 def draw_vert_zero():
@@ -800,49 +826,66 @@ def vvod_hor_h(x=True):
             flag = False
     if (flag):
         if (V0d and hd):
-            T = sqrt(2*h/g)
-            L = V0*T
-            vL.delete(0, END)
-            vT.delete(0, END)
-            vL.insert(0, round(L * 1000) / 1000)
-            vT.insert(0, round(T * 1000) / 1000)
+            try:
+                T = sqrt(2*h/g)
+                L = V0*T
+                vL.delete(0, END)
+                vT.delete(0, END)
+                vL.insert(0, round(L * 1000) / 1000)
+                vT.insert(0, round(T * 1000) / 1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
         elif (V0d and Td):
-            h = T**2 * g/2
-            L = V0*T
-            vL.delete(0, END)
-            vh.delete(0, END)
-            vL.insert(0, round(L * 1000) / 1000)
-            vh.insert(0, round(h * 1000) / 1000)
+            try:
+                h = T**2 * g/2
+                L = V0*T
+                vL.delete(0, END)
+                vh.delete(0, END)
+                vL.insert(0, round(L * 1000) / 1000)
+                vh.insert(0, round(h * 1000) / 1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
         elif (Ld and hd):
-            V0 = L*sqrt(g/(2*h))
-            T = sqrt(2 * h / g)
-            vV0.delete(0, END)
-            vT.delete(0, END)
-            vV0.insert(0, round(V0 * 1000) / 1000)
-            vT.insert(0, round(T * 1000) / 1000)
+            try:
+                V0 = L*sqrt(g/(2*h))
+                T = sqrt(2 * h / g)
+                vV0.delete(0, END)
+                vT.delete(0, END)
+                vV0.insert(0, round(V0 * 1000) / 1000)
+                vT.insert(0, round(T * 1000) / 1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
         elif (Td and Ld):
-            V0 = L/T
-            h=g*T**2 / 2
-            vV0.delete(0, END)
-            vh.delete(0, END)
-            vV0.insert(0, round(V0 * 1000) / 1000)
-            vh.insert(0, round(h * 1000) / 1000)
+            try:
+                V0 = L/T
+                h=g*T**2 / 2
+                vV0.delete(0, END)
+                vh.delete(0, END)
+                vV0.insert(0, round(V0 * 1000) / 1000)
+                vh.insert(0, round(h * 1000) / 1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
         elif (V0d and Ld):
-            h = g/2 * (L/V0)**2
-            T = sqrt(2 * h / g)
-            vT.delete(0, END)
-            vh.delete(0, END)
-            vT.insert(0, round(T * 1000) / 1000)
-            vh.insert(0, round(h * 1000) / 1000)
+            try:
+                h = g/2 * (L/V0)**2
+                T = sqrt(2 * h / g)
+                vT.delete(0, END)
+                vh.delete(0, END)
+                vT.insert(0, round(T * 1000) / 1000)
+                vh.insert(0, round(h * 1000) / 1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
         else:
             vV0.delete(0, END)
             vh.delete(0, END)
             vL.delete(0, END)
             vT.delete(0, END)
-            vV0.insert(0, "Невозможно")
-            vh.insert(0, "Вычислить")
-            vL.insert(0, "Введите")
-            vT.insert(0, "Другое")
+            mb.showerror("Неверные данные", "Расчёты невозможны")
             stroim=False
         if (stroim):
             global k
@@ -875,10 +918,7 @@ def vvod_hor_h(x=True):
         vh.delete(0, END)
         vL.delete(0, END)
         vT.delete(0, END)
-        vV0.insert(0, "Невозможно")
-        vh.insert(0, "Вычислить")
-        vL.insert(0, "Введите")
-        vT.insert(0, "Другое")
+        mb.showerror("Неверные данные", "Расчёты невозможны")
         stroim = False
 
 def draw_hor_h():
@@ -1129,114 +1169,146 @@ def vvod_vert_v_h(x=True):
                 mb.showerror("Неверные данные", "Расчёты невозможны")
                 stroim = False
             else:
-                h = (Vk**2-V0**2)/(2*g)
-                H = h + V0**2/(2*g)
-                T = (V0+sqrt(V0**2+2*g*h))/g
-                vh.delete(0, END)
+                try:
+                    h = (Vk**2-V0**2)/(2*g)
+                    H = h + V0**2/(2*g)
+                    T = (V0+sqrt(V0**2+2*g*h))/g
+                    vh.delete(0, END)
+                    vH.delete(0, END)
+                    vT.delete(0, END)
+                    vh.insert(0, round(h*1000)/1000)
+                    vH.insert(0, round(H*1000)/1000)
+                    vT.insert(0, round(T*1000)/1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
+        elif (V0d and hd):
+            try:
+                T=(V0+sqrt(V0**2+2*g*h))/g
+                H = h + V0 ** 2 / (2 * g)
+                Vk=sqrt(V0**2+2*g*h)
+                vVk.delete(0, END)
                 vH.delete(0, END)
                 vT.delete(0, END)
-                vh.insert(0, round(h*1000)/1000)
-                vH.insert(0, round(H*1000)/1000)
-                vT.insert(0, round(T*1000)/1000)
-        elif (V0d and hd):
-            T=(V0+sqrt(V0**2+2*g*h))/g
-            H = h + V0 ** 2 / (2 * g)
-            Vk=sqrt(V0**2+2*g*h)
-            vVk.delete(0, END)
-            vH.delete(0, END)
-            vT.delete(0, END)
-            vVk.insert(0, round(Vk * 1000) / 1000)
-            vH.insert(0, round(H * 1000) / 1000)
-            vT.insert(0, round(T * 1000) / 1000)
-        elif (V0d and Hd):
-            h = H-V0**2/(2*g)
-            T = (V0 + sqrt(V0 ** 2 + 2 * g * h)) / g
-            Vk = sqrt(V0 ** 2 + 2 * g * h)
-            vVk.delete(0, END)
-            vh.delete(0, END)
-            vT.delete(0, END)
-            vVk.insert(0, round(Vk * 1000) / 1000)
-            vh.insert(0, round(h * 1000) / 1000)
-            vT.insert(0, round(T * 1000) / 1000)
-        elif (V0d and Td):
-            h = (g**2*(T-V0/g)**2-V0**2)/(2*g)
-            H = h + V0 ** 2 / (2 * g)
-            Vk = sqrt(V0 ** 2 + 2 * g * h)
-            vVk.delete(0, END)
-            vh.delete(0, END)
-            vH.delete(0, END)
-            vVk.insert(0, round(Vk * 1000) / 1000)
-            vh.insert(0, round(h * 1000) / 1000)
-            vH.insert(0, round(H * 1000) / 1000)
-        elif (hd and Hd):
-            if (H-h<0):
-                mb.showerror("Ошибка",  "Расчеты невзможны")
+                vVk.insert(0, round(Vk * 1000) / 1000)
+                vH.insert(0, round(H * 1000) / 1000)
+                vT.insert(0, round(T * 1000) / 1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
                 stroim = False
-            else:
-                V0 = sqrt((H - h) * 2 * g)
+        elif (V0d and Hd):
+            try:
+                h = H-V0**2/(2*g)
                 T = (V0 + sqrt(V0 ** 2 + 2 * g * h)) / g
                 Vk = sqrt(V0 ** 2 + 2 * g * h)
                 vVk.delete(0, END)
+                vh.delete(0, END)
                 vT.delete(0, END)
+                vVk.insert(0, round(Vk * 1000) / 1000)
+                vh.insert(0, round(h * 1000) / 1000)
+                vT.insert(0, round(T * 1000) / 1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
+        elif (V0d and Td):
+            try:
+                h = (g**2*(T-V0/g)**2-V0**2)/(2*g)
+                H = h + V0 ** 2 / (2 * g)
+                Vk = sqrt(V0 ** 2 + 2 * g * h)
+                vVk.delete(0, END)
+                vh.delete(0, END)
+                vH.delete(0, END)
+                vVk.insert(0, round(Vk * 1000) / 1000)
+                vh.insert(0, round(h * 1000) / 1000)
+                vH.insert(0, round(H * 1000) / 1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
+        elif (hd and Hd):
+            if (H-h<0):
+                mb.showerror("Ошибка",  "Расчеты невозможны")
+                stroim = False
+            else:
+                try:
+                    V0 = sqrt((H - h) * 2 * g)
+                    T = (V0 + sqrt(V0 ** 2 + 2 * g * h)) / g
+                    Vk = sqrt(V0 ** 2 + 2 * g * h)
+                    vVk.delete(0, END)
+                    vT.delete(0, END)
+                    vV0.delete(0, END)
+                    vVk.insert(0, round(Vk * 1000) / 1000)
+                    vT.insert(0, round(T * 1000) / 1000)
+                    vV0.insert(0, round(V0 * 1000) / 1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
+        elif (hd and Td):
+            try:
+                V0 = (T**2*g-2*h)/(2*T)
+                Vk = sqrt(V0 ** 2 + 2 * g * h)
+                H = h + V0 ** 2 / (2 * g)
+                vVk.delete(0, END)
+                vH.delete(0, END)
                 vV0.delete(0, END)
                 vVk.insert(0, round(Vk * 1000) / 1000)
-                vT.insert(0, round(T * 1000) / 1000)
+                vH.insert(0, round(H * 1000) / 1000)
                 vV0.insert(0, round(V0 * 1000) / 1000)
-        elif (hd and Td):
-            V0 = (T**2*g-2*h)/(2*T)
-            Vk = sqrt(V0 ** 2 + 2 * g * h)
-            H = h + V0 ** 2 / (2 * g)
-            vVk.delete(0, END)
-            vH.delete(0, END)
-            vV0.delete(0, END)
-            vVk.insert(0, round(Vk * 1000) / 1000)
-            vH.insert(0, round(H * 1000) / 1000)
-            vV0.insert(0, round(V0 * 1000) / 1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
         elif (hd and Vkd):
             if (Vk**2-2*g*h <0):
                 mb.showerror("Ошибка", "Расчеты невзможны")
                 stroim = False
             else:
-                V0 = sqrt(Vk**2-2*g*h)
-                H = h + V0 ** 2 / (2 * g)
-                T = (V0 + sqrt(V0 ** 2 + 2 * g * h)) / g
-                vT.delete(0, END)
-                vH.delete(0, END)
-                vV0.delete(0, END)
-                vT.insert(0, round(T * 1000) / 1000)
-                vH.insert(0, round(H * 1000) / 1000)
-                vV0.insert(0, round(V0 * 1000) / 1000)
+                try:
+                    V0 = sqrt(Vk**2-2*g*h)
+                    H = h + V0 ** 2 / (2 * g)
+                    T = (V0 + sqrt(V0 ** 2 + 2 * g * h)) / g
+                    vT.delete(0, END)
+                    vH.delete(0, END)
+                    vV0.delete(0, END)
+                    vT.insert(0, round(T * 1000) / 1000)
+                    vH.insert(0, round(H * 1000) / 1000)
+                    vV0.insert(0, round(V0 * 1000) / 1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
         elif (Hd and Td):
-            V0 = T*g-sqrt(2*g*H)
-            h = (2*g*H-V0**2)/(2*g)
-            Vk = sqrt(V0**2+2*g*h)
-            vVk.delete(0, END)
-            vh.delete(0, END)
-            vV0.delete(0, END)
-            vVk.insert(0, round(Vk * 1000) / 1000)
-            vh.insert(0, round(h * 1000) / 1000)
-            vV0.insert(0, round(V0 * 1000) / 1000)
+            try:
+                V0 = T*g-sqrt(2*g*H)
+                h = (2*g*H-V0**2)/(2*g)
+                Vk = sqrt(V0**2+2*g*h)
+                vVk.delete(0, END)
+                vh.delete(0, END)
+                vV0.delete(0, END)
+                vVk.insert(0, round(Vk * 1000) / 1000)
+                vh.insert(0, round(h * 1000) / 1000)
+                vV0.insert(0, round(V0 * 1000) / 1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
         elif (Td and Vkd):
-            V0 = T*g-Vk
-            h = (Vk**2-V0**2)/(2*g)
-            H = h + V0 ** 2 / (2 * g)
-            vH.delete(0, END)
-            vh.delete(0, END)
-            vV0.delete(0, END)
-            vH.insert(0, round(H * 1000) / 1000)
-            vh.insert(0, round(h * 1000) / 1000)
-            vV0.insert(0, round(V0 * 1000) / 1000)
+            try:
+                V0 = T*g-Vk
+                h = (Vk**2-V0**2)/(2*g)
+                H = h + V0 ** 2 / (2 * g)
+                vH.delete(0, END)
+                vh.delete(0, END)
+                vV0.delete(0, END)
+                vH.insert(0, round(H * 1000) / 1000)
+                vh.insert(0, round(h * 1000) / 1000)
+                vV0.insert(0, round(V0 * 1000) / 1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
         else:
             vV0.delete(0, END)
             vh.delete(0, END)
             vH.delete(0, END)
             vT.delete(0, END)
             vVk.delete(0, END)
-            vV0.insert(0, "Расчёты")
-            vH.insert(0, "Невозможны")
-            vh.insert(0, "Введите")
-            vT.insert(0, "Другие")
-            vVk.insert(0, "Значения")
+            mb.showerror("Неверные данные", "Расчёты невозможны")
             stroim = False
         if (stroim):
             global k
@@ -1269,11 +1341,7 @@ def vvod_vert_v_h(x=True):
         vH.delete(0, END)
         vT.delete(0, END)
         vVk.delete(0, END)
-        vV0.insert(0, "Расчёты")
-        vH.insert(0, "Невозможны")
-        vh.insert(0, "Введите")
-        vT.insert(0, "Другие")
-        vVk.insert(0, "Значения")
+        mb.showerror("Неверные данные", "Расчёты невозможны")
         stroim = False
 
 def draw_vert_v_h():
@@ -1536,60 +1604,81 @@ def vvod_vert_vniz_h(x=True):
                 mb.showerror("Неверные данные", "Расчёты невозможны")
                 stroim = False
             else:
-                h = (Vk**2-V0**2)/(2*g)
-                T = (-V0+sqrt(V0**2+2*g*h))/g
-                vh.delete(0, END)
-                vT.delete(0, END)
-                vh.insert(0, round(h*1000)/1000)
-                vT.insert(0, round(T*1000)/1000)
+                try:
+                    h = (Vk**2-V0**2)/(2*g)
+                    T = (-V0+sqrt(V0**2+2*g*h))/g
+                    vh.delete(0, END)
+                    vT.delete(0, END)
+                    vh.insert(0, round(h*1000)/1000)
+                    vT.insert(0, round(T*1000)/1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
         elif (V0d and hd):
-            T=(-V0+sqrt(V0**2+2*g*h))/g
-            Vk=sqrt(V0**2+2*g*h)
-            vVk.delete(0, END)
-            vT.delete(0, END)
-            vVk.insert(0, round(Vk * 1000) / 1000)
-            vT.insert(0, round(T * 1000) / 1000)
+            try:
+                T=(-V0+sqrt(V0**2+2*g*h))/g
+                Vk=sqrt(V0**2+2*g*h)
+                vVk.delete(0, END)
+                vT.delete(0, END)
+                vVk.insert(0, round(Vk * 1000) / 1000)
+                vT.insert(0, round(T * 1000) / 1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
         elif (V0d and Td):
-            h = (g**2*(T+V0/g)**2-V0**2)/(2*g)
-            Vk = sqrt(V0 ** 2 + 2 * g * h)
-            vVk.delete(0, END)
-            vh.delete(0, END)
-            vVk.insert(0, round(Vk * 1000) / 1000)
-            vh.insert(0, round(h * 1000) / 1000)
+            try:
+                h = (g**2*(T+V0/g)**2-V0**2)/(2*g)
+                Vk = sqrt(V0 ** 2 + 2 * g * h)
+                vVk.delete(0, END)
+                vh.delete(0, END)
+                vVk.insert(0, round(Vk * 1000) / 1000)
+                vh.insert(0, round(h * 1000) / 1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
         elif (hd and Td):
-            V0 = -1 * (T**2*g-2*h)/(2*T)
-            Vk = sqrt(V0 ** 2 + 2 * g * h)
-            vVk.delete(0, END)
-            vV0.delete(0, END)
-            vVk.insert(0, round(Vk * 1000) / 1000)
-            vV0.insert(0, round(V0 * 1000) / 1000)
+            try:
+                V0 = -1 * (T**2*g-2*h)/(2*T)
+                Vk = sqrt(V0 ** 2 + 2 * g * h)
+                vVk.delete(0, END)
+                vV0.delete(0, END)
+                vVk.insert(0, round(Vk * 1000) / 1000)
+                vV0.insert(0, round(V0 * 1000) / 1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
         elif (hd and Vkd):
             if (Vk**2-2*g*h <0):
                 mb.showerror("Ошибка", "Расчеты невзможны")
                 stroim = False
             else:
-                V0 = sqrt(Vk**2-2*g*h)
-                T=(-V0+sqrt(V0**2+2*g*h))/g
-                vT.delete(0, END)
-                vV0.delete(0, END)
-                vT.insert(0, round(T * 1000) / 1000)
-                vV0.insert(0, round(V0 * 1000) / 1000)
+                try:
+                    V0 = sqrt(Vk**2-2*g*h)
+                    T=(-V0+sqrt(V0**2+2*g*h))/g
+                    vT.delete(0, END)
+                    vV0.delete(0, END)
+                    vT.insert(0, round(T * 1000) / 1000)
+                    vV0.insert(0, round(V0 * 1000) / 1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
         elif (Td and Vkd):
-            V0 = -(T*g-Vk)
-            h = (Vk**2-V0**2)/(2*g)
-            vh.delete(0, END)
-            vV0.delete(0, END)
-            vh.insert(0, round(h * 1000) / 1000)
-            vV0.insert(0, round(V0 * 1000) / 1000)
+            try:
+                V0 = -(T*g-Vk)
+                h = (Vk**2-V0**2)/(2*g)
+                vh.delete(0, END)
+                vV0.delete(0, END)
+                vh.insert(0, round(h * 1000) / 1000)
+                vV0.insert(0, round(V0 * 1000) / 1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
         else:
             vV0.delete(0, END)
             vh.delete(0, END)
             vT.delete(0, END)
             vVk.delete(0, END)
-            vV0.insert(0, "Расчёты")
-            vh.insert(0, "Невозможны")
-            vVk.insert(0, "Введите")
-            vT.insert(0, "Другое")
+            mb.showerror("Неверные данные", "Расчёты невозможны")
             stroim = False
 
         if (stroim):
@@ -1623,10 +1712,7 @@ def vvod_vert_vniz_h(x=True):
         vh.delete(0, END)
         vT.delete(0, END)
         vVk.delete(0, END)
-        vV0.insert(0, "Расчёты")
-        vh.insert(0, "Невозможны")
-        vVk.insert(0, "Введите")
-        vT.insert(0, "Другое")
+        mb.showerror("Неверные данные", "Расчёты невозможны")
         stroim = False
 
 def draw_vert_vniz_h():
@@ -1892,44 +1978,56 @@ def vvod_by_angle_h(x=True):
     if (flag):
         if (V0d and Ad and hd):
             if (A > -pi/2) and (A < pi/2):
-                L = (V0**2*sin(A)*cos(A)+V0*cos(A)*sqrt(V0**2*sin(A)**2+2*g*h)) / g
-                H = (V0**2*sin(A)**2+2*g*h)/(2 * g)
-                T = (V0*sin(A)+sqrt(V0**2*sin(A)**2+2*g*h)) / g
-                vL.delete(0, END)
-                vH.delete(0, END)
-                vT.delete(0, END)
-                vL.insert(0, round(L*1000)/1000)
-                vH.insert(0, round(H*1000)/1000)
-                vT.insert(0, round(T*1000)/1000)
+                try:
+                    L = (V0**2*sin(A)*cos(A)+V0*cos(A)*sqrt(V0**2*sin(A)**2+2*g*h)) / g
+                    H = (V0**2*sin(A)**2+2*g*h)/(2 * g)
+                    T = (V0*sin(A)+sqrt(V0**2*sin(A)**2+2*g*h)) / g
+                    vL.delete(0, END)
+                    vH.delete(0, END)
+                    vT.delete(0, END)
+                    vL.insert(0, round(L*1000)/1000)
+                    vH.insert(0, round(H*1000)/1000)
+                    vT.insert(0, round(T*1000)/1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
             else:
                 stroim = False
                 mb.showerror("Неверные данные", "Расчёты невозможны")
         elif (V0d and hd and Hd):
             if (h <= H) and (V0 != 0):
-                A=asin(sqrt(2*g*(H-h)/V0**2))
-                L = (V0 ** 2 * sin(A) * cos(A) + V0 * cos(A) * sqrt(V0 ** 2 * sin(A) ** 2 + 2 * g * h)) / g
-                T = (V0 * sin(A) + sqrt(V0 ** 2 * sin(A) ** 2 + 2 * g * h)) / g
-                vL.delete(0, END)
-                vA.delete(0, END)
-                vT.delete(0, END)
-                vL.insert(0, round(L * 1000) / 1000)
-                vA.insert(0, round(A*180/pi * 1000) / 1000)
-                vT.insert(0, round(T * 1000) / 1000)
+                try:
+                    A=asin(sqrt(2*g*(H-h)/V0**2))
+                    L = (V0 ** 2 * sin(A) * cos(A) + V0 * cos(A) * sqrt(V0 ** 2 * sin(A) ** 2 + 2 * g * h)) / g
+                    T = (V0 * sin(A) + sqrt(V0 ** 2 * sin(A) ** 2 + 2 * g * h)) / g
+                    vL.delete(0, END)
+                    vA.delete(0, END)
+                    vT.delete(0, END)
+                    vL.insert(0, round(L * 1000) / 1000)
+                    vA.insert(0, round(A*180/pi * 1000) / 1000)
+                    vT.insert(0, round(T * 1000) / 1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
             else:
                 stroim = False
                 mb.showerror("Неверные данные", "Расчёты невозможны")
         elif (V0d and hd and Td):
             x=(T**2*g - 2*h)/ (2*T*V0)
             if (x>-1) and (x<1):
-                A=asin(x)
-                L = (V0 ** 2 * sin(A) * cos(A) + V0 * cos(A) * sqrt(V0 ** 2 * sin(A) ** 2 + 2 * g * h)) / g
-                H = (V0**2*sin(A)**2+2*g*h)/(2 * g)
-                vL.delete(0, END)
-                vA.delete(0, END)
-                vH.delete(0, END)
-                vL.insert(0, round(L * 1000) / 1000)
-                vA.insert(0, round(A * 180 / pi * 1000) / 1000)
-                vH.insert(0, round(H * 1000) / 1000)
+                try:
+                    A=asin(x)
+                    L = (V0 ** 2 * sin(A) * cos(A) + V0 * cos(A) * sqrt(V0 ** 2 * sin(A) ** 2 + 2 * g * h)) / g
+                    H = (V0**2*sin(A)**2+2*g*h)/(2 * g)
+                    vL.delete(0, END)
+                    vA.delete(0, END)
+                    vH.delete(0, END)
+                    vL.insert(0, round(L * 1000) / 1000)
+                    vA.insert(0, round(A * 180 / pi * 1000) / 1000)
+                    vH.insert(0, round(H * 1000) / 1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
             else:
                 stroim = False
                 mb.showerror("Неверные данные", "Расчёты невозможны")
@@ -1938,14 +2036,18 @@ def vvod_by_angle_h(x=True):
             if (D>0):
                 T = sqrt((V0**2 + g*h + sqrt(D))/(g**2/2))
                 if (L/(T*V0) > -1) and (L/(T*V0) < 1):
-                    A = acos(L/(T*V0))
-                    H = (V0 ** 2 * sin(A) ** 2 + 2 * g * h) / (2 * g)
-                    vT.delete(0, END)
-                    vA.delete(0, END)
-                    vH.delete(0, END)
-                    vT.insert(0, round(T * 1000) / 1000)
-                    vA.insert(0, round(A * 180 / pi * 1000) / 1000)
-                    vH.insert(0, round(H * 1000) / 1000)
+                    try:
+                        A = acos(L/(T*V0))
+                        H = (V0 ** 2 * sin(A) ** 2 + 2 * g * h) / (2 * g)
+                        vT.delete(0, END)
+                        vA.delete(0, END)
+                        vH.delete(0, END)
+                        vT.insert(0, round(T * 1000) / 1000)
+                        vA.insert(0, round(A * 180 / pi * 1000) / 1000)
+                        vH.insert(0, round(H * 1000) / 1000)
+                    except:
+                        mb.showerror("Неверные данные", "Расчёты невозможны")
+                        stroim = False
                 else:
                     stroim = False
                     mb.showerror("Неверные данные", "Расчёты невозможны")
@@ -1954,155 +2056,203 @@ def vvod_by_angle_h(x=True):
                 mb.showerror("Неверные данные", "Расчёты невозможны")
         elif (hd and Ad and Hd):
             if (H>=h):
-                V0 = sqrt((H-h)*2*g/sin(A)**2)
-                L = (V0 ** 2 * sin(A) * cos(A) + V0 * cos(A) * sqrt(V0 ** 2 * sin(A) ** 2 + 2 * g * h)) / g
-                T = (V0 * sin(A) + sqrt(V0 ** 2 * sin(A) ** 2 + 2 * g * h)) / g
-                vT.delete(0, END)
-                vA.delete(0, END)
-                vL.delete(0, END)
-                vT.insert(0, round(T * 1000) / 1000)
-                vV0.insert(0, round(V0 * 1000) / 1000)
-                vL.insert(0, round(L * 1000) / 1000)
+                try:
+                    V0 = sqrt((H-h)*2*g/sin(A)**2)
+                    L = (V0 ** 2 * sin(A) * cos(A) + V0 * cos(A) * sqrt(V0 ** 2 * sin(A) ** 2 + 2 * g * h)) / g
+                    T = (V0 * sin(A) + sqrt(V0 ** 2 * sin(A) ** 2 + 2 * g * h)) / g
+                    vT.delete(0, END)
+                    vA.delete(0, END)
+                    vL.delete(0, END)
+                    vT.insert(0, round(T * 1000) / 1000)
+                    vV0.insert(0, round(V0 * 1000) / 1000)
+                    vL.insert(0, round(L * 1000) / 1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
             else:
                 stroim = False
                 mb.showerror("Неверные данные", "Расчёты невозможны")
         elif (hd and Ad and Td):
             V0 = (T**2*g-2*h)/(2*T*sin(A))
             if (V0>0):
-                L = (V0 ** 2 * sin(A) * cos(A) + V0 * cos(A) * sqrt(V0 ** 2 * sin(A) ** 2 + 2 * g * h)) / g
-                H = (V0 ** 2 * sin(A) ** 2 + 2 * g * h) / (2 * g)
-                vL.delete(0, END)
-                vV0.delete(0, END)
-                vH.delete(0, END)
-                vL.insert(0, round(L * 1000) / 1000)
-                vV0.insert(0, round(V0 * 1000) / 1000)
-                vH.insert(0, round(H * 1000) / 1000)
+                try:
+                    L = (V0 ** 2 * sin(A) * cos(A) + V0 * cos(A) * sqrt(V0 ** 2 * sin(A) ** 2 + 2 * g * h)) / g
+                    H = (V0 ** 2 * sin(A) ** 2 + 2 * g * h) / (2 * g)
+                    vL.delete(0, END)
+                    vV0.delete(0, END)
+                    vH.delete(0, END)
+                    vL.insert(0, round(L * 1000) / 1000)
+                    vV0.insert(0, round(V0 * 1000) / 1000)
+                    vH.insert(0, round(H * 1000) / 1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
             else:
                 stroim = False
                 mb.showerror("Неверные данные", "Расчёты невозможны")
         elif (hd and Ad and Ld):
             x = L**2*g**2/(2*(L*g*sin(A)*cos(A) + g*h*cos(A)**2))
             if (x>0):
-                V0 = sqrt(x)
-                H = (V0 ** 2 * sin(A) ** 2 + 2 * g * h) / (2 * g)
-                T = (V0 * sin(A) + sqrt(V0 ** 2 * sin(A) ** 2 + 2 * g * h)) / g
-                vT.delete(0, END)
-                vV0.delete(0, END)
-                vH.delete(0, END)
-                vT.insert(0, round(T * 1000) / 1000)
-                vV0.insert(0, round(V0 * 1000) / 1000)
-                vH.insert(0, round(H * 1000) / 1000)
+                try:
+                    V0 = sqrt(x)
+                    H = (V0 ** 2 * sin(A) ** 2 + 2 * g * h) / (2 * g)
+                    T = (V0 * sin(A) + sqrt(V0 ** 2 * sin(A) ** 2 + 2 * g * h)) / g
+                    vT.delete(0, END)
+                    vV0.delete(0, END)
+                    vH.delete(0, END)
+                    vT.insert(0, round(T * 1000) / 1000)
+                    vV0.insert(0, round(V0 * 1000) / 1000)
+                    vH.insert(0, round(H * 1000) / 1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
             else:
                 stroim = False
                 mb.showerror("Неверные данные", "Расчёты невозможны")
         elif (V0d and Ad and Hd):
-            if (A<=0):
-                h = H
-                L = (V0 ** 2 * sin(A) * cos(A) + V0 * cos(A) * sqrt(V0 ** 2 * sin(A) ** 2 + 2 * g * h)) / g
-                T = (V0 * sin(A) + sqrt(V0 ** 2 * sin(A) ** 2 + 2 * g * h)) / g
-            else:
-                h = H - V0**2*sin(A)**2/(2*g)
-                L = (V0 ** 2 * sin(A) * cos(A) + V0 * cos(A) * sqrt(V0 ** 2 * sin(A) ** 2 + 2 * g * h)) / g
-                T = (V0 * sin(A) + sqrt(V0 ** 2 * sin(A) ** 2 + 2 * g * h)) / g
-            vL.delete(0, END)
-            vT.delete(0, END)
-            vh.delete(0, END)
-            vL.insert(0, round(L * 1000) / 1000)
-            vT.insert(0, round(T * 1000) / 1000)
-            vh.insert(0, round(h * 1000) / 1000)
+            try:
+                if (A<=0):
+                    h = H
+                    L = (V0 ** 2 * sin(A) * cos(A) + V0 * cos(A) * sqrt(V0 ** 2 * sin(A) ** 2 + 2 * g * h)) / g
+                    T = (V0 * sin(A) + sqrt(V0 ** 2 * sin(A) ** 2 + 2 * g * h)) / g
+                else:
+                    h = H - V0**2*sin(A)**2/(2*g)
+                    L = (V0 ** 2 * sin(A) * cos(A) + V0 * cos(A) * sqrt(V0 ** 2 * sin(A) ** 2 + 2 * g * h)) / g
+                    T = (V0 * sin(A) + sqrt(V0 ** 2 * sin(A) ** 2 + 2 * g * h)) / g
+                vL.delete(0, END)
+                vT.delete(0, END)
+                vh.delete(0, END)
+                vL.insert(0, round(L * 1000) / 1000)
+                vT.insert(0, round(T * 1000) / 1000)
+                vh.insert(0, round(h * 1000) / 1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
         elif (V0d and Ad and Td):
-            h = ((T*g-V0*sin(A))**2-V0**2*sin(A)**2)/(2*g)
-            L = (V0 ** 2 * sin(A) * cos(A) + V0 * cos(A) * sqrt(V0 ** 2 * sin(A) ** 2 + 2 * g * h)) / g
-            H = (V0 ** 2 * sin(A) ** 2 + 2 * g * h) / (2 * g)
-            vL.delete(0, END)
-            vH.delete(0, END)
-            vh.delete(0, END)
-            vL.insert(0, round(L * 1000) / 1000)
-            vH.insert(0, round(H * 1000) / 1000)
-            vh.insert(0, round(h * 1000) / 1000)
+            try:
+                h = ((T*g-V0*sin(A))**2-V0**2*sin(A)**2)/(2*g)
+                L = (V0 ** 2 * sin(A) * cos(A) + V0 * cos(A) * sqrt(V0 ** 2 * sin(A) ** 2 + 2 * g * h)) / g
+                H = (V0 ** 2 * sin(A) ** 2 + 2 * g * h) / (2 * g)
+                vL.delete(0, END)
+                vH.delete(0, END)
+                vh.delete(0, END)
+                vL.insert(0, round(L * 1000) / 1000)
+                vH.insert(0, round(H * 1000) / 1000)
+                vh.insert(0, round(h * 1000) / 1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
         elif (V0d and Ad and Ld):
-            T = L/(V0*cos(A))
-            h = ((T*g-V0*sin(A))**2-V0**2*sin(A)**2)/(2*g)
-            H = (V0 ** 2 * sin(A) ** 2 + 2 * g * h) / (2 * g)
-            vT.delete(0, END)
-            vH.delete(0, END)
-            vh.delete(0, END)
-            vT.insert(0, round(T * 1000) / 1000)
-            vH.insert(0, round(H * 1000) / 1000)
-            vh.insert(0, round(h * 1000) / 1000)
+            try:
+                T = L/(V0*cos(A))
+                h = ((T*g-V0*sin(A))**2-V0**2*sin(A)**2)/(2*g)
+                H = (V0 ** 2 * sin(A) ** 2 + 2 * g * h) / (2 * g)
+                vT.delete(0, END)
+                vH.delete(0, END)
+                vh.delete(0, END)
+                vT.insert(0, round(T * 1000) / 1000)
+                vH.insert(0, round(H * 1000) / 1000)
+                vh.insert(0, round(h * 1000) / 1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
         elif (Ad and Hd and Td):
-            V0 = (g*T - sqrt(2*g*H))/g
-            h = H - V0**2*sin(A)**2/(2*g)
-            L = V0*cos(A)*T
-            vV0.delete(0, END)
-            vL.delete(0, END)
-            vh.delete(0, END)
-            vV0.insert(0, round(V0 * 1000) / 1000)
-            vL.insert(0, round(L * 1000) / 1000)
-            vh.insert(0, round(h * 1000) / 1000)
+            try:
+                V0 = (g*T - sqrt(2*g*H))/g
+                h = H - V0**2*sin(A)**2/(2*g)
+                L = V0*cos(A)*T
+                vV0.delete(0, END)
+                vL.delete(0, END)
+                vh.delete(0, END)
+                vV0.insert(0, round(V0 * 1000) / 1000)
+                vL.insert(0, round(L * 1000) / 1000)
+                vh.insert(0, round(h * 1000) / 1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
         elif (Ad and Hd and Ld):
-            D = (cos(A)*sqrt(2*g*H))**2 + 4*L*sin(A)*cos(A)*g
-            V0 = max((-1*cos(A)*sqrt(2*g*H) + sqrt(D))/(2*sin(A)*cos(A)), (-1*cos(A)*sqrt(2*g*H) - sqrt(D))/(2*sin(A)*cos(A)))
-            h = H - V0 ** 2 * sin(A) ** 2 / (2 * g)
-            T = L/(V0 * cos(A))
-            vV0.delete(0, END)
-            vT.delete(0, END)
-            vh.delete(0, END)
-            vV0.insert(0, round(V0 * 1000) / 1000)
-            vT.insert(0, round(T * 1000) / 1000)
-            vh.insert(0, round(h * 1000) / 1000)
+            try:
+                D = (cos(A)*sqrt(2*g*H))**2 + 4*L*sin(A)*cos(A)*g
+                V0 = max((-1*cos(A)*sqrt(2*g*H) + sqrt(D))/(2*sin(A)*cos(A)), (-1*cos(A)*sqrt(2*g*H) - sqrt(D))/(2*sin(A)*cos(A)))
+                h = H - V0 ** 2 * sin(A) ** 2 / (2 * g)
+                T = L/(V0 * cos(A))
+                vV0.delete(0, END)
+                vT.delete(0, END)
+                vh.delete(0, END)
+                vV0.insert(0, round(V0 * 1000) / 1000)
+                vT.insert(0, round(T * 1000) / 1000)
+                vh.insert(0, round(h * 1000) / 1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
         elif (Td and Ld and Hd):
-            A = atan(T*(T*g- sqrt(2*g*H))/L)
-            V0 = L/(T*cos(A))
-            h = H - V0**2 * sin(A)**2/(2*g)
-            vh.delete(0, END)
-            vA.delete(0, END)
-            vV0.delete(0, END)
-            vh.insert(0, round(h * 1000) / 1000)
-            vA.insert(0, round(A * 180 / pi * 1000) / 1000)
-            vV0.insert(0, round(H * 1000) / 1000)
+            try:
+                A = atan(T*(T*g- sqrt(2*g*H))/L)
+                V0 = L/(T*cos(A))
+                h = H - V0**2 * sin(A)**2/(2*g)
+                vh.delete(0, END)
+                vA.delete(0, END)
+                vV0.delete(0, END)
+                vh.insert(0, round(h * 1000) / 1000)
+                vA.insert(0, round(A * 180 / pi * 1000) / 1000)
+                vV0.insert(0, round(H * 1000) / 1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
         elif (hd and Td and Ld):
             V0 =sqrt((L**2 + (g*T**2/2 - h)**2)/T**2)
             x = L/(V0*T)
             if (x>-1) and (x<1):
-                A = acos(x)
-                H = (V0 ** 2 * sin(A) ** 2 + 2 * g * h) / (2 * g)
-                vH.delete(0, END)
-                vA.delete(0, END)
-                vV0.delete(0, END)
-                vH.insert(0, round(H * 1000) / 1000)
-                vA.insert(0, round(A * 180 / pi * 1000) / 1000)
-                vV0.insert(0, round(H * 1000) / 1000)
+                try:
+                    A = acos(x)
+                    H = (V0 ** 2 * sin(A) ** 2 + 2 * g * h) / (2 * g)
+                    vH.delete(0, END)
+                    vA.delete(0, END)
+                    vV0.delete(0, END)
+                    vH.insert(0, round(H * 1000) / 1000)
+                    vA.insert(0, round(A * 180 / pi * 1000) / 1000)
+                    vV0.insert(0, round(H * 1000) / 1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
             else:
                 stroim = False
                 mb.showerror("Неверные данные", "Расчёты невозможны")
         elif (V0d and Hd and Td):
             x = (T*g-sqrt(2*g*H))/V0
             if (x>-1)and (x<1):
-                A = asin(x)
-                h = H - (V0**2*sin(A)**2)/(2*g)
-                L =T*V0*cos(A)
-                vH.delete(0, END)
-                vA.delete(0, END)
-                vL.delete(0, END)
-                vH.insert(0, round(H * 1000) / 1000)
-                vA.insert(0, round(A * 180 / pi * 1000) / 1000)
-                vL.insert(0, round(L * 1000) / 1000)
+                try:
+                    A = asin(x)
+                    h = H - (V0**2*sin(A)**2)/(2*g)
+                    L =T*V0*cos(A)
+                    vH.delete(0, END)
+                    vA.delete(0, END)
+                    vL.delete(0, END)
+                    vH.insert(0, round(H * 1000) / 1000)
+                    vA.insert(0, round(A * 180 / pi * 1000) / 1000)
+                    vL.insert(0, round(L * 1000) / 1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
             else:
                 stroim = False
                 mb.showerror("Неверные данные", "Расчёты невозможны")
         elif (V0d and Hd and Td):
             x = (T*g - sqrt(2*g*H))/V0
             if (x>-1)and(x<1):
-                A = asin(x)
-                h = H - V0**2*sin(A)**2/(2*g)
-                L = V0*cos(A)*T
-                vh.delete(0, END)
-                vA.delete(0, END)
-                vL.delete(0, END)
-                vh.insert(0, round(h * 1000) / 1000)
-                vA.insert(0, round(A * 180 / pi * 1000) / 1000)
-                vL.insert(0, round(L * 1000) / 1000)
+                try:
+                    A = asin(x)
+                    h = H - V0**2*sin(A)**2/(2*g)
+                    L = V0*cos(A)*T
+                    vh.delete(0, END)
+                    vA.delete(0, END)
+                    vL.delete(0, END)
+                    vh.insert(0, round(h * 1000) / 1000)
+                    vA.insert(0, round(A * 180 / pi * 1000) / 1000)
+                    vL.insert(0, round(L * 1000) / 1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
             else:
                 stroim = False
                 mb.showerror("Неверные данные", "Расчёты невозможны")
@@ -2123,12 +2273,7 @@ def vvod_by_angle_h(x=True):
             vL.delete(0, END)
             vh.delete(0, END)
             vH.delete(0, END)
-            vh.insert(0,"Расчёты")
-            vV0.insert(0, "Невозможны")
-            vA.insert(0, "Расчёты")
-            vH.insert(0, "Введите")
-            vT.insert(0, "Другие")
-            vL.insert(0, "Значения")
+            mb.showerror("Неверные данные", "Расчёты невозможны")        
             stroim = False
 
         if (stroim):
@@ -2169,12 +2314,7 @@ def vvod_by_angle_h(x=True):
         vL.delete(0, END)
         vh.delete(0, END)
         vH.delete(0, END)
-        vh.insert(0, "Расчёты")
-        vV0.insert(0, "Невозможны")
-        vA.insert(0, "Расчёты")
-        vH.insert(0, "Введите")
-        vT.insert(0, "Другие")
-        vL.insert(0, "Значения")
+        mb.showerror("Неверные данные", "Расчёты невозможны")
         stroim = False
 
 def draw_angle_by_h():
@@ -2483,15 +2623,19 @@ def vvod_by_angle_h_move(x=True):
     if (flag):
         if (V0d and Ad and hd and Vdopd):
             if (A > -pi/2) and (A < pi/2):
-                T = (V0*sin(A)+sqrt(V0**2*sin(A)**2+2*g*h)) / g
-                L = (V0*cos(A) + Vdop)*T
-                H = (V0**2*sin(A)**2 + 2*g*h)/(2*g)
-                vL.delete(0, END)
-                vH.delete(0, END)
-                vT.delete(0, END)
-                vL.insert(0, round(L*1000)/1000)
-                vH.insert(0, round(H*1000)/1000)
-                vT.insert(0, round(T*1000)/1000)
+                try:
+                    T = (V0*sin(A)+sqrt(V0**2*sin(A)**2+2*g*h)) / g
+                    L = (V0*cos(A) + Vdop)*T
+                    H = (V0**2*sin(A)**2 + 2*g*h)/(2*g)
+                    vL.delete(0, END)
+                    vH.delete(0, END)
+                    vT.delete(0, END)
+                    vL.insert(0, round(L*1000)/1000)
+                    vH.insert(0, round(H*1000)/1000)
+                    vT.insert(0, round(T*1000)/1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
             else:
                 stroim = False
                 mb.showerror("Неверные данные", "Расчёты невозможны")
@@ -2502,11 +2646,7 @@ def vvod_by_angle_h_move(x=True):
             vL.delete(0, END)
             vh.delete(0, END)
             vH.delete(0, END)
-            vh.insert(0,"Расчёты")
-            vV0.insert(0, "Невозможны")
-            vH.insert(0, "Введите")
-            vT.insert(0, "Другие")
-            vL.insert(0, "Значения")
+            mb.showerror("Неверные данные", "Расчёты невозможны")
             stroim = False
 
         if (stroim):
@@ -2550,12 +2690,7 @@ def vvod_by_angle_h_move(x=True):
         vL.delete(0, END)
         vh.delete(0, END)
         vH.delete(0, END)
-        vh.insert(0, "Расчёты")
-        vV0.insert(0, "Невозможны")
-        vA.insert(0, "Расчёты")
-        vH.insert(0, "Введите")
-        vT.insert(0, "Другие")
-        vL.insert(0, "Значения")
+        mb.showerror("Неверные данные", "Расчёты невозможны")
         stroim = False
 
 def del_by_angle_h_move():
@@ -2868,15 +3003,19 @@ def vvod_by_angle_h_wind(x=True):
     if (flag):
         if (V0d and Ad and hd and Vdopd):
             if (A > -pi/2) and (A < pi/2):
-                T = (V0*sin(A)+sqrt(V0**2*sin(A)**2+2*g*h)) / g
-                L = (V0*cos(A) + Vdop)*T
-                H = (V0**2*sin(A)**2 + 2*g*h)/(2*g)
-                vL.delete(0, END)
-                vH.delete(0, END)
-                vT.delete(0, END)
-                vL.insert(0, round(L*1000)/1000)
-                vH.insert(0, round(H*1000)/1000)
-                vT.insert(0, round(T*1000)/1000)
+                try:
+                    T = (V0*sin(A)+sqrt(V0**2*sin(A)**2+2*g*h)) / g
+                    L = (V0*cos(A) + Vdop)*T
+                    H = (V0**2*sin(A)**2 + 2*g*h)/(2*g)
+                    vL.delete(0, END)
+                    vH.delete(0, END)
+                    vT.delete(0, END)
+                    vL.insert(0, round(L*1000)/1000)
+                    vH.insert(0, round(H*1000)/1000)
+                    vT.insert(0, round(T*1000)/1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
             else:
                 stroim = False
                 mb.showerror("Неверные данные", "Расчёты невозможны")
@@ -2887,11 +3026,7 @@ def vvod_by_angle_h_wind(x=True):
             vL.delete(0, END)
             vh.delete(0, END)
             vH.delete(0, END)
-            vh.insert(0,"Расчёты")
-            vV0.insert(0, "Невозможны")
-            vH.insert(0, "Введите")
-            vT.insert(0, "Другие")
-            vL.insert(0, "Значения")
+            mb.showerror("Неверные данные", "Расчёты невозможны")
             stroim = False
 
         if (stroim):
@@ -2935,12 +3070,7 @@ def vvod_by_angle_h_wind(x=True):
         vL.delete(0, END)
         vh.delete(0, END)
         vH.delete(0, END)
-        vh.insert(0, "Расчёты")
-        vV0.insert(0, "Невозможны")
-        vA.insert(0, "Расчёты")
-        vH.insert(0, "Введите")
-        vT.insert(0, "Другие")
-        vL.insert(0, "Значения")
+        mb.showerror("Неверные данные", "Расчёты невозможны")
         stroim = False
 
 def del_by_angle_h_wind():
@@ -3242,10 +3372,7 @@ def vvod_dop(x=True):
             vh.delete(0, END)
             vT.delete(0, END)
             vVk.delete(0, END)
-            vV0.insert(0, "Расчёты")
-            vh.insert(0, "Невозможны")
-            vVk.insert(0, "Введите")
-            vT.insert(0, "Другое")
+            mb.showerror("Неверные данные", "Расчёты невозможны")
             stroim = False
 
         if (stroim):
@@ -3280,10 +3407,7 @@ def vvod_dop(x=True):
         vh.delete(0, END)
         vT.delete(0, END)
         vVk.delete(0, END)
-        vV0.insert(0, "Расчёты")
-        vh.insert(0, "Невозможны")
-        vVk.insert(0, "Введите")
-        vT.insert(0, "Другое")
+        mb.showerror("Неверные данные", "Расчёты невозможны")
         stroim = False
 
 def del_dop():
@@ -4061,76 +4185,77 @@ def start_window():  # Основное меню
     global stroim
     stroim = False
     b_home.destroy()
-    c.create_text(340, 50, text="Движение тела, брошенного под углом к горизонту", font="Cricket 18", fill = '#0C136F')
+    c.create_text(415, 60, text="Движение тела, брошенного под углом к горизонту", font=('Cricket', 23), fill = '#0C136F')
     for a in vvod:
         a.destroy()
 
-    b1 = Button(root, text="1",  width=25, height=6)
+    b1 = Button(root, text="1", width=21, height=4, font=('Cricket', 14))
     b1.place(x=40, y=120)
     b1.config(command = by_angle_zero)
     change_button(b1, "Бросок под углом \n с земли")
 
 
-    b2 = Button(root, text="2",  width=25, height=6)
+    b2 = Button(root, text="2", width=21, height=4, font=('Cricket', 14))
     b2.place(x=40, y=240)
     b2.config(command=vert_zero)
     change_button(b2, "Бросок вертикально \n вверх с земли")
 
 
-    b3 = Button(root, text="3",  width=25, height=6)
+    b3 = Button(root, text="3", width=21, height=4, font=('Cricket', 14))
     b3.place(x=40, y=360)
     b3.config(command=hor_h)
-    change_button(b3, "Бросок со скоростью, \n направленной горизонтально, \n с высоты ")
+    change_button(b3, "Бросок со скоростью, \n направленной \nгоризонтально, с высоты ")
 
 
-    b4 = Button(root, text="4",  width=25, height=6)
-    b4.place(x=250, y=120)
+    b4 = Button(root, text="4", width=21, height=4, font=('Cricket', 14))
+    b4.place(x=295, y=120)
     b4.config(command=by_angle_h)
     change_button(b4, "Бросок со скоростью, \n направленной под углом \n к горизонту, с высоты ")
 
 
-    b5 = Button(root, text="5",  width=11, height=6)
-    b5.place(x=250, y=240)
+    b5 = Button(root, text="5", width=21, height=4, font=('Cricket', 14))
+    b5.place(x=295, y=240)
     b5.config(command=vert_v_h)
-    change_button(b5, "Бросок \nс высоты \nвертикально\n вверх")
+    change_button(b5, "Бросок с высоты \nвертикально вверх")
 
 
-    b6 = Button(root, text="6",  width=11, height=6)
-    b6.place(x=348, y=240)
+    b6 = Button(root, text="6", width=21, height=4, font=('Cricket', 14))
+    b6.place(x=550, y=240)
     b6.config(command=vert_vniz_h)
-    change_button(b6, "Бросок \nс высоты \nвертикально\n вниз")
+    change_button(b6, "Бросок с высоты \nвертикально вниз")
 
-    b10 = Button(root, text="6", width=11, height=6)
-    b10.place(x=348, y=360)
+    b10 = Button(root, text="6", width=21, height=4, font=('Cricket', 14))
+    b10.place(x=550, y=360)
     b10.config(command=by_angle_h_move)
-    change_button(b10, "Бросок \n под углом \nс движу-\nщегося \nтела")
+    change_button(b10, "Бросок под углом \nс движущегося тела")
 
-    b11 = Button(root, text="6", width=11, height=6)
-    b11.place(x=250, y=360)
+    b11 = Button(root, text="6", width=21, height=4, font=('Cricket', 14))
+    b11.place(x=295, y=360)
     b11.config(command=by_angle_h_wind)
-    change_button(b11, "Бросок \n под углом \nс учетом \nветра")
+    change_button(b11, "Бросок под углом \nс учетом ветра")
 
-    b7 = Button(root, text="7",  width=25, height=6)
-    b7.place(x=460, y=120)
-    change_button(b7, "Бросок под углом А к горизонту\n с высоты h на наклонную\n плоскость под углом B")
+    b7 = Button(root, text="7", width=21, height=4, font=('Cricket', 14))
+    b7.place(x=550, y=120)
+    change_button(b7, "Бросок под углом А к \nгоризонту с высоты h на \nнаклонную плоскость\n под углом B")
     b7.config(command=dop)
 
-    b8 = Button(root, text="8",  width=25, height=6)
-    b8.place(x=460, y=240)
+    b8 = Button(root, text="8", width=21, height=4, font=('Cricket', 14))
+    b8.place(x=295, y=480)
     change_button(b8, "СОХРАНЕННЫЕ \n РЕЗУЛЬТАТЫ")
     b8.config(command=saved_files)
 
-
-    b9 = Button(root, text="9",  width=25, height=6)
-    b9.place(x=460, y=360)
+    b9 = Button(root, text="9", width=21, height=4, font=('Cricket', 14))
+    b9.place(x=40, y=480)
     change_button(b9, "ТЕОРИЯ")
     b9.config(command=theory)
 
+    b12 = Button(root, text="bruh", width=21, height=4, font=('Cricket', 14))
+    b12.place(x=550, y=480)
+    change_button(b12, "СМЕНА ТЕМЫ")
+    b12.config(command=change_theme)
+
     global main_buttons
-    main_buttons = {b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11}
-
-
-
+    main_buttons = {b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12}
 
 start_window()
 
