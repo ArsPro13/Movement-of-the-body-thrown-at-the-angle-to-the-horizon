@@ -3212,7 +3212,7 @@ def by_angle_h_move():
     vvod = []
     grafic.place(x=graph_x, y=graph_y)
 
-    l1 = Label(text="Введите первые четыре значения", font="Cricket 16")
+    l1 = Label(text="Введите любые четыре значения", font="Cricket 16")
     l1.config(bd=20, bg=label_bg_color, fg=label_text_color)
     l1.place(x=7, y=70)
     vvod.append(l1)
@@ -3939,7 +3939,7 @@ def by_angle_h_wind():
     vvod = []
     grafic.place(x=graph_x, y=graph_y)
 
-    l1 = Label(text="Введите первые четыре значения", font="Cricket 16")
+    l1 = Label(text="Введите любые четыре значения", font="Cricket 16")
     l1.config(bd=20, bg=label_bg_color, fg=label_text_color)
     l1.place(x=7, y=70)
     vvod.append(l1)
