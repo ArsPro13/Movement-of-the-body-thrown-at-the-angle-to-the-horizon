@@ -4,10 +4,24 @@ import datetime
 from tkinter import messagebox as mb
 from tkinter import filedialog as fd
 
-
 root = Tk()
 root.title("Движение тела, брошенного под углом к горизонту")
 root.resizable(width=False, height=False)
+
+light_theme = True
+
+label_bg_color = '#F7DDC4'
+label_text_color = '#0C136F'
+
+button_passive_bg_color = '#79A9F1'
+button_passive_fg_color = '#ffffff'
+button_active_bg_color = '#99BEF4'
+button_active_fg_color = '#ffffff'
+
+graph_x = 380
+graph_y = 110
+
+
 c = Canvas(root, bg='#F7DDC4', width=830, height=650)
 root.geometry("830x650")
 c.grid(row=0, column=0, columnspan=200, rowspan=70)
@@ -27,7 +41,36 @@ telo=''
 XY=[]
 
 def change_theme():
-    pass
+    global light_theme
+    global main_buttons
+    global label_bg_color
+    global label_text_color
+    global button_passive_bg_color
+    global button_passive_fg_color
+    global button_active_bg_color
+    global button_active_fg_color
+
+    light_theme = not light_theme
+
+    if light_theme:
+        label_bg_color = '#F7DDC4'
+        label_text_color = '#0C136F'
+        button_passive_bg_color = '#79A9F1'
+        button_passive_fg_color = '#ffffff'
+        button_active_bg_color = '#99BEF4'
+        button_active_fg_color = '#ffffff'
+    else:
+        label_bg_color = 'gray'
+        label_text_color = 'red'
+        button_passive_bg_color = 'purple'
+        button_passive_fg_color = 'blue'
+        button_active_bg_color = 'yellow'
+        button_active_fg_color = 'green'
+
+    for a in main_buttons:
+        a.destroy()
+
+    start_window()
 
 def col_znak(numObj, digits=0):
     return f"{numObj:.{digits}f}"
@@ -43,21 +86,25 @@ def is_num(st):
     return(flag)
 
 def change_button (b1, st):  # Изменение конпки
+    global light_theme
+
     b1['text'] = st
-    b1['bg'] = '#79A9F1'
-    b1['activebackground'] = '#99BEF4'
-    b1['fg'] = '#ffffff'
-    b1['activeforeground'] = '#ffffff'
+    b1['bg'] = button_passive_bg_color
+    b1['activebackground'] = button_active_bg_color
+    b1['fg'] = button_passive_fg_color
+    b1['activeforeground'] = button_active_fg_color
+        
 
 def delete_main():  # Переход от главного окна к побочному
+    global main_buttons
     c.delete("all")
     for a in main_buttons:
         a.destroy()
 
     global b_home
-    b_home = Button(root, height=2, width=5)
+    b_home = Button(root, height=3, width=7)
     change_button(b_home, 'HOME')
-    b_home.place(x=633, y=457)
+    b_home.place(x=750, y=572)
     b_home.config(command=start_window)
 
 
@@ -251,6 +298,8 @@ def vvod_by_angle_zero(x=True):
 
         if (stroim):
                 global k
+                global graph_x
+                global graph_y
                 k = min(370 / L, 190 / H)
                 grafic.create_line(10, 10, 10, 210, arrow=FIRST)
                 grafic.create_line(10, 210, 395, 210, arrow=LAST)
@@ -273,8 +322,8 @@ def vvod_by_angle_zero(x=True):
                 global telo
                 global xy
                 xy = Label(text="x=0.000 , y=0.000", font="Cricket 12")
-                xy.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-                xy.place(x= 400, y=320)
+                xy.config(bd=20, bg=label_bg_color, fg=label_text_color)
+                xy.place(x=graph_x+175, y=graph_y+350)
                 XY.append(xy)
                 telo = grafic.create_oval(10 - r, 210 - r, 10 + r, 210 + r, fill="#c00300")
                 i=0
@@ -301,8 +350,8 @@ def draw_angle_by_zero():
         grafic.create_line((x) * k + 10, 220 - ((y) * k + 10), ((x1) * k + 10), 220 - ((y1) * k + 10), fill="#c00300")
         i+=1
         xy = Label(text="x="+str(col_znak(round(x*1000)/1000, 3))+", y="+str(col_znak(round(y*1000)/1000, 3)), font="Cricket 12")
-        xy.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-        xy.place(x=400, y=320)
+        xy.config(bd=20, bg=label_bg_color, fg=label_text_color)
+        xy.place(x=graph_x+120, y=graph_y+250)
         XY.append(xy)
         global vvod
         vvod.append(xy)
@@ -400,96 +449,96 @@ def file_by_angle_zero():
 def by_angle_zero():  # Бросок под углом с земли
     global vvod
     vvod = []
-    grafic.place(x=257, y=70)
+    grafic.place(x=graph_x, y=graph_y)
 
-    l1 = Label(text="Введите любые \n два значения", font="Cricket 12")
-    l1.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-    l1.grid(row=1, column=0, columnspan=2, rowspan=1)
+    l1 = Label(text="Введите любые два значения", font="Cricket 16")
+    l1.config(bd=20, bg=label_bg_color, fg=label_text_color)
+    l1.place(x=20, y=70)
     vvod.append(l1)
 
-    l2 = Label(text="Бросок под углом с земли", font="Cricket 18")
-    l2.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-    l2.grid(row=0,  column=0, columnspan=100, rowspan=1)
+    l2 = Label(text="Бросок под углом с земли", font="Cricket 23")
+    l2.config(bd=20, bg=label_bg_color, fg=label_text_color)
+    l2.place(x=20, y=10)
     vvod.append(l2)
 
     delete_main()
     global vV0
     vV0= Entry(width=13)
-    vV0.grid(row=2, column=2)
+    vV0.place(x=150, y=152)
     vvod.append(vV0)
 
     bV0 = Label(text="Vo (м/c) =", font="Cricket 10")
     bV0.place(x=64, y=152)
-    bV0.config(bg='#F7DDC4', fg='#0C136F')
+    bV0.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bV0)
 
     global vA
     vA= Entry(width=13)
-    vA.grid(row=3, column=2)
+    vA.place(x=150, y=175)
     vvod.append(vA)
 
     bA = Label(text="Угол (В градусах) = ", font="Cricket 10")
     bA.place(x=5, y=175)
-    bA.config(bg='#F7DDC4', fg='#0C136F')
+    bA.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bA)
 
     global vH
     vH = Entry(width=13)
-    vH.grid(row=4, column=2)
+    vH.place(x=150, y=197)
     vvod.append(vH)
 
     bH = Label(text="Hmax (м)   = ", font="Cricket 10")
     bH.place(x=49, y=197)
-    bH.config(bg='#F7DDC4', fg='#0C136F')
+    bH.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bH)
 
     global vT
     vT = Entry(width=13)
-    vT.grid(row=5, column=2)
+    vT.place(x=150, y=219)
     vvod.append(vT)
 
     bT = Label(text="Tполёта (с) = ", font="Cricket 10")
     bT.place(x=46, y=219)
-    bT.config(bg='#F7DDC4', fg='#0C136F')
+    bT.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bT)
 
     global vL
     vL = Entry(width=13)
-    vL.grid(row=6, column=2)
+    vL.place(x=150, y=244)
     vvod.append(vL)
 
     bL = Label(text="Lполёта (с) = ", font="Cricket 10")
     bL.place(x=46, y=244)
-    bL.config(bg='#F7DDC4', fg='#0C136F')
+    bL.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bL)
 
     bvvesti = Button(root, height=2, width=17)
     change_button(bvvesti, "Ввести значения")
-    bvvesti.place(x=20, y=275)
+    bvvesti.place(x=20, y=300)
     vvod.append(bvvesti)
     bvvesti.config(command=vvod_by_angle_zero)
 
     bdel = Button(root, height=2, width=10)
     change_button(bdel, "Удалить\nзначения")
-    bdel.place(x=163, y=275)
+    bdel.place(x=163, y=300)
     vvod.append(bdel)
     bdel.config(command=del_by_angle_zero)
 
-    bopen = Button(root, height=5, width=30)
-    change_button(bopen, 'Считать значения из файла \n(введите 2 значения, на \nместе остальных "_" в\nследующем порядке: V0, A, H, T, L \n в файл "input.txt" в столбик)' )
-    bopen.place(x=20, y=385)
+    bopen = Button(root, height=6, width=27, font=('Cricket', 10))
+    change_button(bopen, 'Считать значения из файла \n(введите 2 значения, на \nместе остальных "_" в\nследующем порядке: V0, A, H, T, L \n в файл "input.txt" в столбик)')
+    bopen.place(x=30, y=425)
     vvod.append(bopen)
     bopen.config(command=file_by_angle_zero)
 
-    bsave = Button(root, height=5, width=30)
+    bsave = Button(root, height=6, width=27, font=('Cricket', 10))
     change_button(bsave,'Сохранить значения\n в файл')
-    bsave.place(x=300, y=385)
+    bsave.place(x=350, y=425)
     vvod.append(bsave)
     bsave.config(command=save_by_angle_zero)
 
     l3 = Label(text="ИЛИ", font="Cricket 12")
-    l3.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-    l3.place(x=90, y=320)
+    l3.config(bd=20, bg=label_bg_color, fg=label_text_color)
+    l3.place(x=100, y=350)
     vvod.append(l3)
 
 
@@ -595,8 +644,8 @@ def vvod_vert_zero(x=True):
             i = 0
             global xy
             xy = Label(text="x=0.000 , y=0.000", font="Cricket 12")
-            xy.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-            xy.place(x=400, y=320)
+            xy.config(bd=20, bg=label_bg_color, fg=label_text_color)
+            xy.place(x=graph_x+120, y=graph_y+250)
             XY.append(xy)
             root.after(10, draw_vert_zero)
             
@@ -623,8 +672,8 @@ def draw_vert_zero():
         grafic.create_line(10, 210 - y*k, 10, 210 - y1*k, fill="#c00300")
         i+=1
         xy = Label(text="x=0.000"+ ", y=" + str(col_znak(round(y * 1000) / 1000, 3)), font="Cricket 12")
-        xy.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-        xy.place(x=400, y=320)
+        xy.config(bd=20, bg=label_bg_color, fg=label_text_color)
+        xy.place(x=graph_x+120, y=graph_y+250)
         global vvod
         XY.append(xy)
         vvod.append(xy)
@@ -706,48 +755,48 @@ def save_vert_zero():
 def vert_zero():  # Бросок под углом с земли
     global vvod
     vvod = []
-    grafic.place(x=257, y=70)
+    grafic.place(x=graph_x, y=graph_y)
 
-    l1 = Label(text="Введите любое \n значение", font="Cricket 12")
-    l1.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-    l1.grid(row=1, column=0, columnspan=2, rowspan=1)
+    l1 = Label(text="Введите любое значение", font="Cricket 16")
+    l1.config(bd=20, bg=label_bg_color, fg=label_text_color)
+    l1.place(x=20, y=70)
     vvod.append(l1)
 
-    l2 = Label(text="Бросок вертикально вверх с земли", font="Cricket 18")
-    l2.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-    l2.grid(row=0,  column=0, columnspan=100, rowspan=1)
+    l2 = Label(text="Бросок вертикально вверх с земли", font="Cricket 23")
+    l2.config(bd=20, bg=label_bg_color, fg=label_text_color)
+    l2.place(x=20, y=10)
     vvod.append(l2)
 
     delete_main()
     global vV0
     vV0= Entry(width=13)
-    vV0.grid(row=2, column=2)
+    vV0.place(x=164, y=152)
     vvod.append(vV0)
 
     bV0 = Label(text="Vo (м/с)   =", font="Cricket 10")
     bV0.place(x=76, y=152)
-    bV0.config(bg='#F7DDC4', fg='#0C136F')
+    bV0.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bV0)
 
 
     global vH
     vH = Entry(width=13)
-    vH.grid(row=4, column=2)
+    vH.place(x=164, y=197)
     vvod.append(vH)
 
     bH = Label(text="Hmax (м)      = ", font="Cricket 10")
     bH.place(x=56, y=197)
-    bH.config(bg='#F7DDC4', fg='#0C136F')
+    bH.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bH)
 
     global vT
     vT = Entry(width=13)
-    vT.grid(row=3, column=2)
+    vT.place(x=164, y=174)
     vvod.append(vT)
 
     bT = Label(text="Tполёта (с)    = ", font="Cricket 10")
     bT.place(x=53, y=174)
-    bT.config(bg='#F7DDC4', fg='#0C136F')
+    bT.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bT)
 
 
@@ -764,21 +813,21 @@ def vert_zero():  # Бросок под углом с земли
     vvod.append(bdel)
     bdel.config(command=del_vert_zero)
 
-    bopen = Button(root, height=5, width=30)
+    bopen = Button(root, height=5, width=30, font=('Cricket', 10))
     change_button(bopen, 'Считать значения из файла \n(введите 1 значение, на \nместе остальных "_" в\nследующем порядке: V0, H, T \n в файл "input.txt" в столбик)' )
-    bopen.place(x=20, y=385)
+    bopen.place(x=30, y=425)
     vvod.append(bopen)
     bopen.config(command=file_vert_zero)
 
-    bsave = Button(root, height=5, width=30)
+    bsave = Button(root, height=5, width=30, font=('Cricket', 10))
     change_button(bsave,'Сохранить значения\n в файл')
-    bsave.place(x=300, y=385)
+    bsave.place(x=350, y=425)
     vvod.append(bsave)
     bsave.config(command=save_vert_zero)
 
     l3 = Label(text="ИЛИ", font="Cricket 12")
-    l3.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-    l3.place(x=90, y=320)
+    l3.config(bd=20, bg=label_bg_color, fg=label_text_color)
+    l3.place(x=90, y=350)
     vvod.append(l3)
 
 
@@ -907,8 +956,8 @@ def vvod_hor_h(x=True):
             global telo
             global xy
             xy = Label(text="x=0.000 , y=0.000", font="Cricket 12")
-            xy.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-            xy.place(x=400, y=320)
+            xy.config(bd=20, bg=label_bg_color, fg=label_text_color)
+            xy.place(x=graph_x+120, y=graph_y+250)
             telo = grafic.create_oval(10 - r, 210 - h*k - r, 10 + r, 210 - h*k  + r, fill="#c00300")
             i = 0
             XY.append(xy)
@@ -939,8 +988,8 @@ def draw_hor_h():
         telo = grafic.create_oval(((x1) * k + 10) - r, 220 - ((y1) * k + 10) - r, ((x1) * k + 10) + r, 220 - ((y1) * k + 10) + r, fill="#c00300")
         i+=1
         xy = Label(text="x="+str(col_znak(round(x*1000)/1000, 3))+", y="+str(col_znak(round(y*1000)/1000, 3)), font="Cricket 12")
-        xy.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-        xy.place(x=400, y=320)
+        xy.config(bd=20, bg=label_bg_color, fg=label_text_color)
+        xy.place(x=graph_x+120, y=graph_y+250)
         global vvod
         XY.append(xy)
         vvod.append(xy)
@@ -1028,57 +1077,57 @@ def save_hor_h():
 def hor_h():
     global vvod
     vvod = []
-    grafic.place(x=257, y=70)
+    grafic.place(x=graph_x, y=graph_y)
 
-    l1 = Label(text="Введите любые \n два значения", font="Cricket 12")
-    l1.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-    l1.grid(row=1, column=0, columnspan=2, rowspan=1)
+    l1 = Label(text="Введите любые два значения", font="Cricket 16")
+    l1.config(bd=20, bg=label_bg_color, fg=label_text_color)
+    l1.place(x=20, y=70)
     vvod.append(l1)
 
-    l2 = Label(text="Бросок горизонтально с высоты", font="Cricket 18")
-    l2.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-    l2.grid(row=0, column=0, columnspan=100, rowspan=1)
+    l2 = Label(text="Бросок горизонтально с высоты", font="Cricket 23")
+    l2.config(bd=20, bg=label_bg_color, fg=label_text_color)
+    l2.place(x=20, y=10)
     vvod.append(l2)
 
     delete_main()
     global vV0
     vV0 = Entry(width=13)
-    vV0.grid(row=2, column=2)
+    vV0.place(x=164, y=152)
     vvod.append(vV0)
 
     bV0 = Label(text="Vo(м/с)      =", font="Cricket 10")
     bV0.place(x=76, y=152)
-    bV0.config(bg='#F7DDC4', fg='#0C136F')
+    bV0.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bV0)
 
     global vh
     vh = Entry(width=13)
-    vh.grid(row=3, column=2)
+    vh.place(x=164, y=175)
     vvod.append(vh)
 
     bh = Label(text="Начальная высота (м)  = ", font="Cricket 10")
     bh.place(x=4, y=175)
-    bh.config(bg='#F7DDC4', fg='#0C136F')
+    bh.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bh)
 
     global vL
     vL = Entry(width=13)
-    vL.grid(row=4, column=2)
+    vL.place(x=164, y=197)
     vvod.append(vL)
 
     bL = Label(text="       L(м)        =", font="Cricket 10")
     bL.place(x=60, y=197)
-    bL.config(bg='#F7DDC4', fg='#0C136F')
+    bL.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bL)
 
     global vT
     vT = Entry(width=13)
-    vT.grid(row=5, column=2)
+    vT.place(x=164, y=219)
     vvod.append(vT)
 
     bT = Label(text="Tполёта(с)       = ", font="Cricket 10")
     bT.place(x=54, y=219)
-    bT.config(bg='#F7DDC4', fg='#0C136F')
+    bT.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bT)
 
 
@@ -1094,22 +1143,22 @@ def hor_h():
     vvod.append(bdel)
     bdel.config(command=del_hor_h)
 
-    bopen = Button(root, height=5, width=30)
+    bopen = Button(root, height=5, width=30, font=('Cricket', 10))
     change_button(bopen,
                   'Считать значения из файла \n(введите 2 значения, на \nместе остальных "_" в\nследующем порядке: V0, h, L, T \n в файл "input.txt" в столбик)')
-    bopen.place(x=20, y=385)
+    bopen.place(x=30, y=425)
     vvod.append(bopen)
     bopen.config(command=file_hor_h)
 
-    bsave = Button(root, height=5, width=30)
+    bsave = Button(root, height=5, width=30, font=('Cricket', 10))
     change_button(bsave, 'Сохранить значения\n в файл')
-    bsave.place(x=300, y=385)
+    bsave.place(x=350, y=425)
     vvod.append(bsave)
     bsave.config(command=save_hor_h)
 
     l3 = Label(text="ИЛИ", font="Cricket 12")
-    l3.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-    l3.place(x=90, y=320)
+    l3.config(bd=20, bg=label_bg_color, fg=label_text_color)
+    l3.place(x=90, y=350)
     vvod.append(l3)
 
 
@@ -1331,8 +1380,8 @@ def vvod_vert_v_h(x=True):
             i = 0
             global xy
             xy = Label(text="x=0.000 , y="+str(h), font="Cricket 12")
-            xy.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-            xy.place(x=400, y=320)
+            xy.config(bd=20, bg=label_bg_color, fg=label_text_color)
+            xy.place(x=graph_x+120, y=graph_y+250)
             XY.append(xy)
             root.after(1, draw_vert_v_h)
     else:
@@ -1361,8 +1410,8 @@ def draw_vert_v_h():
         grafic.create_line(10, 210 - y*k, 10, 210 - y1*k, fill="#c00300")
         i+=1
         xy = Label(text="x=0.000"+ ", y=" + str(col_znak(y1, 3)), font="Cricket 12")
-        xy.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-        xy.place(x=400, y=320)
+        xy.config(bd=20, bg=label_bg_color, fg=label_text_color)
+        xy.place(x=graph_x+120, y=graph_y+250)
         global vvod
         vvod.append(xy)
         if (i<2000):
@@ -1459,68 +1508,68 @@ def save_vert_v_h():
 def vert_v_h():
     global vvod
     vvod = []
-    grafic.place(x=257, y=70)
+    grafic.place(x=graph_x, y=graph_y)
 
-    l1 = Label(text="Введите любые \n два значения", font="Cricket 12")
-    l1.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-    l1.grid(row=1, column=0, columnspan=2, rowspan=1)
+    l1 = Label(text="Введите любые два значения", font="Cricket 16")
+    l1.config(bd=20, bg=label_bg_color, fg=label_text_color)
+    l1.place(x=20, y=70)
     vvod.append(l1)
 
-    l2 = Label(text="Бросок вертикально вверх с высоты", font="Cricket 18")
-    l2.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-    l2.grid(row=0, column=0, columnspan=100, rowspan=1)
+    l2 = Label(text="Бросок вертикально вверх с высоты", font="Cricket 23")
+    l2.config(bd=20, bg=label_bg_color, fg=label_text_color)
+    l2.place(x=20, y=10)
     vvod.append(l2)
 
     delete_main()
     global vV0
     vV0 = Entry(width=13)
-    vV0.grid(row=2, column=2)
+    vV0.place(x=164, y=152)
     vvod.append(vV0)
 
     bV0 = Label(text="Vo(м/с)   =", font="Cricket 10")
     bV0.place(x=75, y=152)
-    bV0.config(bg='#F7DDC4', fg='#0C136F')
+    bV0.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bV0)
 
     global vh
     vh = Entry(width=13)
-    vh.grid(row=3, column=2)
+    vh.place(x=164, y=175)
     vvod.append(vh)
 
     bh = Label(text="h(м)      =", font="Cricket 10")
     bh.place(x=83, y=175)
-    bh.config(bg='#F7DDC4', fg='#0C136F')
+    bh.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bh)
 
     global vH
     vH = Entry(width=13)
-    vH.grid(row=4, column=2)
+    vH.place(x=164, y=197)
     vvod.append(vH)
 
     bH = Label(text="Hmax(м)       = ", font="Cricket 10")
     bH.place(x=52, y=197)
-    bH.config(bg='#F7DDC4', fg='#0C136F')
+    bH.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bH)
 
     global vT
     vT = Entry(width=13)
-    vT.grid(row=5, column=2)
+    vT.place(x=164, y=219)
     vvod.append(vT)
 
     bT = Label(text="Tполёта(с)    = ", font="Cricket 10")
     bT.place(x=53, y=219)
-    bT.config(bg='#F7DDC4', fg='#0C136F')
+    bT.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bT)
 
 
     global vVk
     vVk = Entry(width=13)
-    vVk.grid(row=6, column=2)
+    vVk.place(x=164, y=244)
     vvod.append(vVk)
 
     bVk = Label(text="Vконечная(м/c)  = ", font="Cricket 10")
     bVk.place(x=31, y=244)
-    bVk.config(bg='#F7DDC4', fg='#0C136F')
+    bVk.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bVk)
 
     bvvesti = Button(root, height=2, width=17)
@@ -1535,22 +1584,22 @@ def vert_v_h():
     vvod.append(bdel)
     bdel.config(command=del_vert_v_h)
 
-    bopen = Button(root, height=5, width=30)
+    bopen = Button(root, height=5, width=30, font=('Cricket', 10))
     change_button(bopen,
                   'Считать значения из файла \n(введите 2 значения, на \nместе остальных "_" в\nследующем порядке: V0, h, H, T, Vk \n в файл "input.txt" в столбик)')
-    bopen.place(x=20, y=385)
+    bopen.place(x=30, y=425)
     vvod.append(bopen)
     bopen.config(command=file_vert_v_h)
 
-    bsave = Button(root, height=5, width=30)
+    bsave = Button(root, height=5, width=30, font=('Cricket', 10))
     change_button(bsave, 'Сохранить значения\n в файл')
-    bsave.place(x=300, y=385)
+    bsave.place(x=350, y=425)
     vvod.append(bsave)
     bsave.config(command=save_vert_v_h)
 
     l3 = Label(text="ИЛИ", font="Cricket 12")
-    l3.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-    l3.place(x=90, y=320)
+    l3.config(bd=20, bg=label_bg_color, fg=label_text_color)
+    l3.place(x=90, y=350)
     vvod.append(l3)
 
 
@@ -1703,8 +1752,8 @@ def vvod_vert_vniz_h(x=True):
             i = 0
             global xy
             xy = Label(text="x=0.000 , y="+str(h), font="Cricket 12")
-            xy.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-            xy.place(x=400, y=320)
+            xy.config(bd=20, bg=label_bg_color, fg=label_text_color)
+            xy.place(x=graph_x+120, y=graph_y+250)
             XY.append(xy)
             root.after(1, draw_vert_vniz_h)
     else:
@@ -1734,8 +1783,8 @@ def draw_vert_vniz_h():
         grafic.create_line(10, 210 - y*k, 10, 210 - y1*k, fill="#c00300")
         i+=1
         xy = Label(text="x=0.000"+ ", y=" + str(col_znak(y1, 3)), font="Cricket 12")
-        xy.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-        xy.place(x=400, y=320)
+        xy.config(bd=20, bg=label_bg_color, fg=label_text_color)
+        xy.place(x=graph_x+120, y=graph_y+250)
         global vvod
         XY.append(xy)
         vvod.append(xy)
@@ -1824,59 +1873,59 @@ def save_vert_vniz_h():
 def vert_vniz_h():
     global vvod
     vvod = []
-    grafic.place(x=257, y=70)
+    grafic.place(x=graph_x, y=graph_y)
 
-    l1 = Label(text="Введите любые \n два значения", font="Cricket 12")
-    l1.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-    l1.grid(row=1, column=0, columnspan=2, rowspan=1)
+    l1 = Label(text="Введите любые два значения", font="Cricket 16")
+    l1.config(bd=20, bg=label_bg_color, fg=label_text_color)
+    l1.place(x=20, y=70)
     vvod.append(l1)
 
-    l2 = Label(text="Бросок вертикально вниз с высоты", font="Cricket 18")
-    l2.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-    l2.grid(row=0, column=0, columnspan=100, rowspan=1)
+    l2 = Label(text="Бросок вертикально вниз с высоты", font="Cricket 23")
+    l2.config(bd=20, bg=label_bg_color, fg=label_text_color)
+    l2.place(x=20, y=10)
     vvod.append(l2)
 
     delete_main()
     global vV0
     vV0 = Entry(width=13)
-    vV0.grid(row=2, column=2)
+    vV0.place(x=164, y=152)
     vvod.append(vV0)
 
     bV0 = Label(text="Vo(м/с)   =", font="Cricket 10")
     bV0.place(x=75, y=152)
-    bV0.config(bg='#F7DDC4', fg='#0C136F')
+    bV0.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bV0)
 
     global vh
     vh = Entry(width=13)
-    vh.grid(row=3, column=2)
+    vh.place(x=164, y=175)
     vvod.append(vh)
 
     bh = Label(text="h(м)      =", font="Cricket 10")
     bh.place(x=83, y=175)
-    bh.config(bg='#F7DDC4', fg='#0C136F')
+    bh.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bh)
 
 
     global vT
     vT = Entry(width=13)
-    vT.grid(row=5, column=2)
+    vT.place(x=164, y=219)
     vvod.append(vT)
 
     bT = Label(text="Tполёта(с)    = ", font="Cricket 10")
     bT.place(x=53, y=219)
-    bT.config(bg='#F7DDC4', fg='#0C136F')
+    bT.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bT)
 
 
     global vVk
     vVk = Entry(width=13)
-    vVk.grid(row=4, column=2)
+    vVk.place(x=164, y=197)
     vvod.append(vVk)
 
     bVk = Label(text="Vконечная(м/c)  = ", font="Cricket 10")
     bVk.place(x=31, y=197)
-    bVk.config(bg='#F7DDC4', fg='#0C136F')
+    bVk.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bVk)
 
     bvvesti = Button(root, height=2, width=17)
@@ -1891,22 +1940,22 @@ def vert_vniz_h():
     vvod.append(bdel)
     bdel.config(command=del_vert_vniz_h)
 
-    bopen = Button(root, height=5, width=30)
+    bopen = Button(root, height=5, width=30, font=('Cricket', 10))
     change_button(bopen,
                   'Считать значения из файла \n(введите 2 значения, на \nместе остальных "_" в\nследующем порядке: V0, h, Vk, T \n в файл "input.txt" в столбик)')
-    bopen.place(x=20, y=385)
+    bopen.place(x=30, y=425)
     vvod.append(bopen)
     bopen.config(command=file_vert_vniz_h)
 
-    bsave = Button(root, height=5, width=30)
+    bsave = Button(root, height=5, width=30, font=('Cricket', 10))
     change_button(bsave, 'Сохранить значения\n в файл')
-    bsave.place(x=300, y=385)
+    bsave.place(x=350, y=425)
     vvod.append(bsave)
     bsave.config(command=save_vert_vniz_h)
 
     l3 = Label(text="ИЛИ", font="Cricket 12")
-    l3.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-    l3.place(x=90, y=320)
+    l3.config(bd=20, bg=label_bg_color, fg=label_text_color)
+    l3.place(x=90, y=350)
     vvod.append(l3)
 
 
@@ -2301,7 +2350,7 @@ def vvod_by_angle_h(x=True):
             global telo
             global xy
             xy = Label(text="x=0.000 , y=0.000", font="Cricket 12")
-            xy.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+            xy.config(bd=20, bg=label_bg_color, fg=label_text_color)
             xy.place(x= 400, y=320)
             XY.append(xy)
             telo = grafic.create_oval(10 - r, 210-h*k - r, 10 + r, 210-h*k + r, fill="#c00300")
@@ -2334,8 +2383,8 @@ def draw_angle_by_h():
         grafic.create_line((x) * k + 10, 220 - ((y) * k + 10), ((x1) * k + 10), 220 - ((y1) * k + 10), fill="#c00300")
         i+=1
         xy = Label(text="x="+str(col_znak(round(x*1000)/1000, 3))+", y="+str(col_znak(round(y*1000)/1000, 3)), font="Cricket 12")
-        xy.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-        xy.place(x=400, y=320)
+        xy.config(bd=20, bg=label_bg_color, fg=label_text_color)
+        xy.place(x=graph_x+120, y=graph_y+250)
         XY.append(xy)
         global vvod
         vvod.append(xy)
@@ -2443,107 +2492,107 @@ def save_by_angle_h():
 def by_angle_h():
     global vvod
     vvod = []
-    grafic.place(x=257, y=70)
+    grafic.place(x=graph_x, y=graph_y)
 
-    l1 = Label(text="Введите любые \n три значения", font="Cricket 12")
-    l1.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-    l1.grid(row=1, column=0, columnspan=2, rowspan=1)
+    l1 = Label(text="Введите любые три значения", font="Cricket 16")
+    l1.config(bd=20, bg=label_bg_color, fg=label_text_color)
+    l1.place(x=20, y=70)
     vvod.append(l1)
 
-    l2 = Label(text="Бросок под углом к горизонту с высоты", font="Cricket 18")
-    l2.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-    l2.grid(row=0,  column=0, columnspan=100, rowspan=1)
+    l2 = Label(text="Бросок под углом к горизонту с высоты", font="Cricket 20")
+    l2.config(bd=20, bg=label_bg_color, fg=label_text_color)
+    l2.place(x=20, y=10)
     vvod.append(l2)
 
     delete_main()
 
     global vh
     vh = Entry(width=13)
-    vh.place(x=163, y=134)
+    vh.place(x=164, y=150)
     vvod.append(vh)
 
     bh = Label(text="h (м)    =", font="Cricket 10")
-    bh.place(x=88, y=134)
-    bh.config(bg='#F7DDC4', fg='#0C136F')
+    bh.place(x=70, y=150)
+    bh.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bh)
 
     global vV0
     vV0= Entry(width=13)
-    vV0.grid(row=2, column=2)
+    vV0.place(x=164, y=175)
     vvod.append(vV0)
 
     bV0 = Label(text="Vo (м/c)  =", font="Cricket 10")
-    bV0.place(x=76, y=152)
-    bV0.config(bg='#F7DDC4', fg='#0C136F')
+    bV0.place(x=70, y=175)
+    bV0.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bV0)
 
     global vA
     vA= Entry(width=13)
-    vA.grid(row=3, column=2)
+    vA.place(x=164, y=201)
     vvod.append(vA)
 
     bA = Label(text="Угол (В градусах)  = ", font="Cricket 10")
-    bA.place(x=17, y=175)
-    bA.config(bg='#F7DDC4', fg='#0C136F')
+    bA.place(x=17, y=201)
+    bA.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bA)
 
     global vH
     vH = Entry(width=13)
-    vH.grid(row=4, column=2)
+    vH.place(x=164, y=223)
     vvod.append(vH)
 
     bH = Label(text="Hmax (м)    = ", font="Cricket 10")
-    bH.place(x=61, y=197)
-    bH.config(bg='#F7DDC4', fg='#0C136F')
+    bH.place(x=61, y=223)
+    bH.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bH)
 
     global vT
     vT = Entry(width=13)
-    vT.grid(row=5, column=2)
+    vT.place(x=164, y=248)
     vvod.append(vT)
 
     bT = Label(text="Tполёта (с)  = ", font="Cricket 10")
-    bT.place(x=58, y=219)
-    bT.config(bg='#F7DDC4', fg='#0C136F')
+    bT.place(x=58, y=248)
+    bT.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bT)
 
     global vL
     vL = Entry(width=13)
-    vL.grid(row=6, column=2)
+    vL.place(x=164, y=275)
     vvod.append(vL)
 
     bL = Label(text="Lполёта (м)   = ", font="Cricket 10")
-    bL.place(x=52, y=244)
-    bL.config(bg='#F7DDC4', fg='#0C136F')
+    bL.place(x=52, y=275)
+    bL.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bL)
 
     bvvesti = Button(root, height=2, width=17)
     change_button(bvvesti, "Ввести значения")
-    bvvesti.place(x=20, y=275)
+    bvvesti.place(x=20, y=330)
     vvod.append(bvvesti)
     bvvesti.config(command=vvod_by_angle_h)
 
     bdel = Button(root, height=2, width=10)
     change_button(bdel, "Удалить\nзначения")
-    bdel.place(x=163, y=275)
+    bdel.place(x=163, y=330)
     vvod.append(bdel)
     bdel.config(command=del_by_angle_h)
 
-    bopen = Button(root, height=5, width=30)
+    bopen = Button(root, height=5, width=30, font=('Cricket', 10))
     change_button(bopen, 'Считать значения из файла \n(введите 2 значения, на \nместе остальных "_" в\nследующем порядке: h, V0, A, H, T, L \n в файл "input.txt" в столбик)' )
-    bopen.place(x=20, y=385)
+    bopen.place(x=30, y=450)
     vvod.append(bopen)
     bopen.config(command=file_by_angle_h)
 
-    bsave = Button(root, height=5, width=30)
+    bsave = Button(root, height=5, width=30, font=('Cricket', 10))
     change_button(bsave,'Сохранить значения\n в файл')
-    bsave.place(x=300, y=385)
+    bsave.place(x=350, y=450)
     vvod.append(bsave)
     bsave.config(command=save_by_angle_h)
 
     l3 = Label(text="ИЛИ", font="Cricket 12")
-    l3.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-    l3.place(x=90, y=320)
+    l3.config(bd=20, bg=label_bg_color, fg=label_text_color)
+    l3.place(x=90, y=380)
     vvod.append(l3)
 
 
@@ -2576,6 +2625,7 @@ def vvod_by_angle_h_move(x=True):
     Td = False
     Ld = False
     hd = False
+    Vdopd = False
     flag = True
     global stroim
     stroim = x
@@ -2639,6 +2689,350 @@ def vvod_by_angle_h_move(x=True):
             else:
                 stroim = False
                 mb.showerror("Неверные данные", "Расчёты невозможны")
+        elif (V0d and Ad and Hd and Vdopd): # 15
+            if (A > -pi/2) and (A < pi/2):
+                try:
+                    h = H - (V0 ** 2 * sin(A) ** 2) / (2 * g)
+                    T = (V0*sin(A)+sqrt(V0**2*sin(A)**2+2*g*h)) / g
+                    L = (V0*cos(A) + Vdop)*T
+                    vL.delete(0, END)
+                    vh.delete(0, END)
+                    vT.delete(0, END)
+                    vL.insert(0, round(L*1000)/1000)
+                    vh.insert(0, round(h*1000)/1000)
+                    vT.insert(0, round(T*1000)/1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
+            else:
+                stroim = False
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+        elif (V0d and Ad and Td and Vdopd): # 16
+            if (A > -pi/2) and (A < pi/2):
+                try:
+                    H = ((T - (V0 * sin(A)) / g) ** 2 * g) / 2
+                    h = H - (V0 ** 2 * sin(A) ** 2) / (2 * g)
+                    L = (V0*cos(A) + Vdop)*T
+                    vH.delete(0, END)
+                    vh.delete(0, END)
+                    vL.delete(0, END)
+                    vH.insert(0, round(H*1000)/1000)
+                    vh.insert(0, round(h*1000)/1000)
+                    vL.insert(0, round(L*1000)/1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
+            else:
+                stroim = False
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+        elif (V0d and Ad and Ld and Vdopd): # 17
+            if (A > -pi/2) and (A < pi/2):
+                try:
+                    T = L / (V0 * cos(A) + Vdop)
+                    H = ((T - (V0 * sin(A)) / g) ** 2 * g) / 2
+                    h = H - (V0 ** 2 * sin(A) ** 2) / (2 * g)
+                    vh.delete(0, END)
+                    vH.delete(0, END)
+                    vT.delete(0, END)
+                    vH.insert(0, round(H*1000)/1000)
+                    vh.insert(0, round(h*1000)/1000)
+                    vT.insert(0, round(T*1000)/1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
+            else:
+                stroim = False
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+        elif (V0d and hd and Hd and Vdopd): # 18
+            try:
+                A = asin((sqrt((H - h) * 2 * g)) / V0)
+                T = (V0*sin(A)+sqrt(V0**2*sin(A)**2+2*g*h)) / g
+                L = (V0*cos(A) + Vdop)*T
+                vA.delete(0, END)
+                vL.delete(0, END)
+                vT.delete(0, END)
+                vA.insert(0, round(A*1000)/1000)
+                vL.insert(0, round(L*1000)/1000)
+                vT.insert(0, round(T*1000)/1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
+        elif (V0d and Td and hd and Vdopd): # 19
+            try:
+                A = asin((T**2 - 2*h) / (2*T*V0))
+                H = h + (((V0**2)*(sin(A)**2)) / (2*g))
+                L = (V0*cos(A) + Vdop)*T
+                vA.delete(0, END)
+                vL.delete(0, END)
+                vH.delete(0, END)
+                vA.insert(0, round(A*1000)/1000)
+                vL.insert(0, round(L*1000)/1000)
+                vH.insert(0, round(H*1000)/1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
+        elif (V0d and Td and Hd and Vdopd): # 20
+            try:
+                A = asin(((T - sqrt((2 * H) / g)) * g) / Vdop) 
+                h = H - ((V0**2*sin(A)**2) / (2*g))
+                L = (V0*cos(A) + Vdop)*T
+                vA.delete(0, END)
+                vL.delete(0, END)
+                vh.delete(0, END)
+                vA.insert(0, round(A*1000)/1000)
+                vL.insert(0, round(L*1000)/1000)
+                vh.insert(0, round(h*1000)/1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
+        elif (V0d and Td and Ld and Vdopd): # 21
+            try:
+                A = acos((L - Vdop * T) / (V0*T))
+                H = (((T - (V0*sin(A))/g))**2*g) / 2 
+                h = H - (V0**2*sin(A)**2) / (2*g)
+                vA.delete(0, END)
+                vh.delete(0, END)
+                vH.delete(0, END)
+                vA.insert(0, round(A*1000)/1000)
+                vh.insert(0, round(h*1000)/1000)
+                vH.insert(0, round(H*1000)/1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
+        elif (V0d and Ad and hd and Ld): # 22
+            if (A > -pi/2) and (A < pi/2):
+                try:
+                    H = h + ((V0**2)*(sin(A)**2)) / (2*g)
+                    T = (V0*sin(A) + sqrt(2*H*g)) / g 
+                    Vdop = L/T - V0*cos(A)
+                    vVdop.delete(0, END)
+                    vH.delete(0, END)
+                    vT.delete(0, END)
+                    vVdop.insert(0, round(Vdop*1000)/1000)
+                    vH.insert(0, round(H*1000)/1000)
+                    vT.insert(0, round(T*1000)/1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
+            else:
+                stroim = False
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+        elif (V0d and Ad and Hd and Ld): # 23
+            if (A > -pi/2) and (A < pi/2):
+                try:
+                    h = H - (V0**2*sin(A)**2) / (2*g)
+                    T = (V0*sin(A) + sqrt(2*H*g)) / g
+                    Vdop = L/T - V0*cos(A)
+                    vL.delete(0, END)
+                    vh.delete(0, END)
+                    vVdop.delete(0, END)
+                    vL.insert(0, round(L*1000)/1000)
+                    vh.insert(0, round(h*1000)/1000)
+                    vVdop.insert(0, round(Vdop*1000)/1000)
+                except Exception as e:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
+            else:
+                stroim = False
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+        elif (V0d and Ad and Td and Ld): # 24
+            if (A > -pi/2) and (A < pi/2):
+                try:
+                    H = (((T - (V0*sin(A))/g))**2*g) / 2 
+                    h = H - (V0**2*sin(A)**2) / (2*g)
+                    Vdop = L/T - V0*cos(A)
+                    vVdop.delete(0, END)
+                    vH.delete(0, END)
+                    vh.delete(0, END)
+                    vVdop.insert(0, round(Vdop*1000)/1000)
+                    vH.insert(0, round(H*1000)/1000)
+                    vh.insert(0, round(h*1000)/1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
+            else:
+                stroim = False
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+        elif (V0d and hd and Hd and Ld): # 25
+            try:
+                A = asin((sqrt((H - h) * 2 * g)) / V0)
+                T = (V0*sin(A) + sqrt(2*H*g)) / g
+                Vdop = L/T - V0*cos(A)
+                vA.delete(0, END)
+                vT.delete(0, END)
+                vVdop.delete(0, END)
+                vA.insert(0, round(A*1000)/1000)
+                vT.insert(0, round(T*1000)/1000)
+                vVdop.insert(0, round(Vdop*1000)/1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
+        elif (V0d and hd and Td and Ld): # 26
+            try:
+                A = asin((T**2*g - 2*h) / (2*T*V0))
+                H = h + ((V0**2*sin(A)**2) / (2*g))
+                Vdop = L/T - V0*cos(A)
+                vA.delete(0, END)
+                vH.delete(0, END)
+                vVdop.delete(0, END)
+                vA.insert(0, round(A*1000)/1000)
+                vH.insert(0, round(H*1000)/1000)
+                vVdop.insert(0, round(Vdop*1000)/1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
+        elif (V0d and Td and Hd and Ld): # 27
+            try:
+                A = asin(((T - sqrt((2 * H) / g)) * g) / V0) 
+                h = H - (V0**2*sin(A)**2) / (2*g)
+                Vdop = L/T - V0*cos(A)
+                vA.delete(0, END)
+                vH.delete(0, END)
+                vVdop.delete(0, END)
+                vA.insert(0, round(A*1000)/1000)
+                vH.insert(0, round(H*1000)/1000)
+                vVdop.insert(0, round(Vdop*1000)/1000)
+            except Exception as e:
+                print(e)
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
+        elif (hd and Ad and Hd and Vdopd): # 28
+            if (A > -pi/2) and (A < pi/2):
+                try:
+                    V0 = sqrt(2*g*(H-h)) / sin(A)
+                    T = (V0*sin(A) + sqrt(2*H*g)) / g
+                    L = (V0*cos(A) + Vdop) * T
+                    vV0.delete(0, END)
+                    vT.delete(0, END)
+                    vL.delete(0, END)
+                    vV0.insert(0, round(V0*1000)/1000)
+                    vT.insert(0, round(T*1000)/1000)
+                    vL.insert(0, round(L*1000)/1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
+            else:
+                stroim = False
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+        elif (Td and Ad and hd and Vdopd): # 29
+            if (A > -pi/2) and (A < pi/2):
+                try:
+                    V0 = (T**2*g - 2*h) / (2*T*sin(A))
+                    H = h + ((V0**2*sin(A)**2) / (2*g))
+                    L = (V0*cos(A) + Vdop) * T
+                    vV0.delete(0, END)
+                    vH.delete(0, END)
+                    vL.delete(0, END)
+                    vV0.insert(0, round(V0*1000)/1000)
+                    vH.insert(0, round(H*1000)/1000)
+                    vL.insert(0, round(L*1000)/1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
+            else:
+                stroim = False
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+        elif (Ld and Ad and hd and Vdopd): # 30
+            if (A > -pi/2) and (A < pi/2):
+                try:
+                    V0 = (-L*sin(A)*Vdop - 2*h*Vdop*cos(A) + sqrt((L*Vdop*sin(A) + 2*h*Vdop*cos(A))**2 - (L*sin(2*A) + 2*h*cos(A)**2)*(2*h*Vdop**2 - L**2*g))) / (L*sin(2*A) + 2*h*cos(A)**2)
+                    H = h + ((V0**2*sin(A)**2) / (2*g))
+                    T = (V0*sin(A) + sqrt(2*H*g)) / g
+                    vV0.delete(0, END)
+                    vH.delete(0, END)
+                    vT.delete(0, END)
+                    vV0.insert(0, round(V0*1000)/1000)
+                    vH.insert(0, round(H*1000)/1000)
+                    vT.insert(0, round(T*1000)/1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
+            else:
+                stroim = False
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+        elif (Td and Ad and Hd and Vdopd): # 31
+            if (A > -pi/2) and (A < pi/2):
+                try:
+                    V0 = (T*g + sqrt(2*H*g)) / sin(A)
+                    h = H - (V0**2*sin(A)**2) / (2*g)
+                    L = (V0*cos(A) + Vdop)*T
+                    vV0.delete(0, END)
+                    vh.delete(0, END)
+                    vL.delete(0, END)
+                    vV0.insert(0, round(V0*1000)/1000)
+                    vh.insert(0, round(h*1000)/1000)
+                    vL.insert(0, round(L*1000)/1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
+            else:
+                stroim = False
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+        elif (Ld and Ad and Hd and Vdopd): # 32
+            if (A > -pi/2) and (A < pi/2):
+                try:
+                    V0 = (-Vdop*sin(A) - sqrt(2*H/g)*g*cos(A) + sqrt((Vdop*sin(A) + sqrt(2*H/g)*g*cos(A))**2 - 2*sin(2*A)*(4*sqrt(2*H/g)*g - L*g))) / sin(2*A)
+                    h = H - ((V0**2*sin(A)**2) / (2*g))
+                    T = (V0*sin(A) + sqrt(2*H*g)) / g
+                    vV0.delete(0, END)
+                    vh.delete(0, END)
+                    vT.delete(0, END)
+                    vV0.insert(0, round(V0*1000)/1000)
+                    vh.insert(0, round(h*1000)/1000)
+                    vT.insert(0, round(T*1000)/1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
+            else:
+                stroim = False
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+        elif (Ld and Ad and Td and Vdopd): # 33
+            if (A > -pi/2) and (A < pi/2):
+                try:
+                    V0 = (L/T - Vdop) / cos(A)
+                    H = (g*((T - (V0*sin(A))/g))**2) / 2 
+                    h = H - (V0**2*sin(A)**2) / (2*g)
+                    vV0.delete(0, END)
+                    vH.delete(0, END)
+                    vh.delete(0, END)
+                    vV0.insert(0, round(V0*1000)/1000)
+                    vH.insert(0, round(H*1000)/1000)
+                    vh.insert(0, round(h*1000)/1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
+            else:
+                stroim = False
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+        elif (Ld and hd and Hd and Vdopd): # 34
+            try:
+                A = acos((g*L - sqrt(2*H*g)*Vdop)/(2*g*sqrt(H*(H-h))))
+                V0 = sqrt(2*g*(H-h)) / sin(A)
+                T = (V0*sin(A) + sqrt(2*H*g)) / g
+                vA.delete(0, END)
+                vV0.delete(0, END)
+                vT.delete(0, END)
+                vA.insert(0, round(A*1000)/1000)
+                vV0.insert(0, round(V0*1000)/1000)
+                vT.insert(0, round(T*1000)/1000)
+            except Exception as e:
+                print(e)
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
+        elif (Vdopd and hd and Td and Ld): # 35
+            try:
+                A = atan((g*T**2 - 2*h)/(2*(L - Vdop*T)))
+                V0 = (L/T -Vdop) / cos(A)
+                H = h + (V0**2 * sin(A)**2)
+                vA.delete(0, END)
+                vV0.delete(0, END)
+                vH.delete(0, END)
+                vA.insert(0, round(A*1000)/1000)
+                vV0.insert(0, round(V0*1000)/1000)
+                vH.insert(0, round(H*1000)/1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
         else:
             vV0.delete(0, END)
             vA.delete(0, END)
@@ -2646,6 +3040,7 @@ def vvod_by_angle_h_move(x=True):
             vL.delete(0, END)
             vh.delete(0, END)
             vH.delete(0, END)
+            vVdop.delete(0, END)
             mb.showerror("Неверные данные", "Расчёты невозможны")
             stroim = False
 
@@ -2675,7 +3070,7 @@ def vvod_by_angle_h_move(x=True):
             global telo
             global xy
             xy = Label(text="x=0.000 , y=0.000", font="Cricket 12")
-            xy.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+            xy.config(bd=20, bg=label_bg_color, fg=label_text_color)
             xy.place(x= 400, y=320)
             XY.append(xy)
             telo = grafic.create_oval(10 - r, 210-h*k - r, 10 + r, 210-h*k + r, fill="#c00300")
@@ -2690,6 +3085,7 @@ def vvod_by_angle_h_move(x=True):
         vL.delete(0, END)
         vh.delete(0, END)
         vH.delete(0, END)
+        vVdop.delete(0, END)
         mb.showerror("Неверные данные", "Расчёты невозможны")
         stroim = False
 
@@ -2727,8 +3123,8 @@ def draw_angle_by_h_move():
         grafic.create_line((x) * k + 10, 220 - ((y) * k + 10), ((x1) * k + 10), 220 - ((y1) * k + 10), fill="#c00300")
         i+=1
         xy = Label(text="x="+str(col_znak(round(x*1000)/1000, 3))+", y="+str(col_znak(round(y*1000)/1000, 3)), font="Cricket 12")
-        xy.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-        xy.place(x=400, y=320)
+        xy.config(bd=20, bg=label_bg_color, fg=label_text_color)
+        xy.place(x=graph_x+120, y=graph_y+250)
         XY.append(xy)
         global vvod
         vvod.append(xy)
@@ -2814,88 +3210,88 @@ def save_by_angle_h_move():
 def by_angle_h_move():
     global vvod
     vvod = []
-    grafic.place(x=257, y=70)
+    grafic.place(x=graph_x, y=graph_y)
 
-    l1 = Label(text="Введите первые \n четыре значения", font="Cricket 12")
-    l1.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-    l1.grid(row=1, column=0, columnspan=2, rowspan=1)
+    l1 = Label(text="Введите первые четыре значения", font="Cricket 16")
+    l1.config(bd=20, bg=label_bg_color, fg=label_text_color)
+    l1.place(x=7, y=70)
     vvod.append(l1)
 
-    l2 = Label(text="Бросок под углом к горизонту с движущегося тела на высоте", font="Cricket 16")
-    l2.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-    l2.grid(row=0,  column=0, columnspan=100, rowspan=1)
+    l2 = Label(text="Бросок под углом к горизонту с движущегося тела на высоте", font="Cricket 18")
+    l2.config(bd=20, bg=label_bg_color, fg=label_text_color)
+    l2.place(x=7, y=10)
     vvod.append(l2)
 
     delete_main()
 
     global vh
     vh = Entry(width=13)
-    vh.place(x=172, y=129)
+    vh.place(x=172, y=128)
     vvod.append(vh)
 
     bh = Label(text="h (м)        =", font="Cricket 10")
     bh.place(x=84, y=128)
-    bh.config(bg='#F7DDC4', fg='#0C136F')
+    bh.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bh)
 
     global vV0
     vV0= Entry(width=13)
-    vV0.grid(row=2, column=2)
+    vV0.place(x=172, y=152)
     vvod.append(vV0)
 
     bV0 = Label(text="Vo (м/с)     =", font="Cricket 10")
     bV0.place(x=76, y=152)
-    bV0.config(bg='#F7DDC4', fg='#0C136F')
+    bV0.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bV0)
 
     global vA
     vA= Entry(width=13)
-    vA.grid(row=3, column=2)
+    vA.place(x=172, y=175)
     vvod.append(vA)
 
     bA = Label(text="Угол (В градусах)      = ", font="Cricket 10")
     bA.place(x=13, y=175)
-    bA.config(bg='#F7DDC4', fg='#0C136F')
+    bA.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bA)
 
     global vVdop
     vVdop = Entry(width=13)
-    vVdop.grid(row=4, column=2)
+    vVdop.place(x=172, y=198)
     vvod.append(vVdop)
 
     bVdop = Label(text="Vdop (м/с)       = ", font="Cricket 10")
-    bVdop.place(x=54 , y=197)
-    bVdop.config(bg='#F7DDC4', fg='#0C136F')
+    bVdop.place(x=54 , y=198)
+    bVdop.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bVdop)
 
     global vH
     vH = Entry(width=13)
-    vH.grid(row=5, column=2)
+    vH.place(x=172, y=221)
     vvod.append(vH)
 
     bH = Label(text="Hmax (м)    = ", font="Cricket 10")
-    bH.place(x=73, y=219)
-    bH.config(bg='#F7DDC4', fg='#0C136F')
+    bH.place(x=73, y=221)
+    bH.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bH)
 
     global vT
     vT = Entry(width=13)
-    vT.grid(row=6, column=2)
+    vT.place(x=172, y=243)
     vvod.append(vT)
 
     bT = Label(text="Tполёта (с)  = ", font="Cricket 10")
-    bT.place(x=71, y=240)
-    bT.config(bg='#F7DDC4', fg='#0C136F')
+    bT.place(x=71, y=243)
+    bT.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bT)
 
     global vL
     vL = Entry(width=13)
-    vL.grid(row=7, column=2)
+    vL.place(x=172, y=266)
     vvod.append(vL)
 
     bL = Label(text="Lполёта (м)  = ", font="Cricket 10")
-    bL.place(x=70, y=260)
-    bL.config(bg='#F7DDC4', fg='#0C136F')
+    bL.place(x=70, y=266)
+    bL.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bL)
 
     bvvesti = Button(root, height=2, width=17)
@@ -2910,34 +3306,34 @@ def by_angle_h_move():
     vvod.append(bdel)
     bdel.config(command=del_by_angle_h_move)
 
-    bopen = Button(root, height=5, width=30)
+    bopen = Button(root, height=5, width=30, font=('Cricket', 10))
     change_button(bopen, 'Считать значения из файла \n(введите 4 значения\n в следующем порядке: h, V0, A, \nVплатформы в файл "input.txt"\n в столбик)' )
-    bopen.place(x=20, y=390)
+    bopen.place(x=30, y=420)
     vvod.append(bopen)
     bopen.config(command=file_by_angle_h_move)
 
-    bsave = Button(root, height=5, width=30)
+    bsave = Button(root, height=5, width=30, font=('Cricket', 10))
     change_button(bsave,'Сохранить значения\n в файл')
-    bsave.place(x=300, y=390)
+    bsave.place(x=350, y=420)
     vvod.append(bsave)
     bsave.config(command=save_by_angle_h_move)
 
     l3 = Label(text="ИЛИ", font="Cricket 12", height=1)
-    l3.config(bd=12, bg='#F7DDC4', fg='#0C136F')
-    l3.place(x=90, y=345)
+    l3.config(bd=12, bg=label_bg_color, fg=label_text_color)
+    l3.place(x=90, y=360)
     vvod.append(l3)
 
 # Под углом с высоты под углом к горизонту с учетом ветра
 
 def vvod_by_angle_h_wind(x=True):
     grafic.delete("all")
-    global V0
-    global Vdop
-    global A
-    global H
-    global T
-    global L
-    global h
+    global V0 # начальная скорость
+    global Vdop # скорость ветра
+    global A # angle
+    global H # макс. высота
+    global T # время
+    global L # дальность
+    global h # начальная высота
     global XY
     for a in XY:
         a.destroy()
@@ -2956,6 +3352,7 @@ def vvod_by_angle_h_wind(x=True):
     Td = False
     Ld = False
     hd = False
+    Vdopd = False
     flag = True
     global stroim
     stroim = x
@@ -3019,6 +3416,351 @@ def vvod_by_angle_h_wind(x=True):
             else:
                 stroim = False
                 mb.showerror("Неверные данные", "Расчёты невозможны")
+        elif (V0d and Ad and Hd and Vdopd): # 15
+            if (A > -pi/2) and (A < pi/2):
+                try:
+                    h = H - (V0 ** 2 * sin(A) ** 2) / (2 * g)
+                    T = (V0*sin(A)+sqrt(V0**2*sin(A)**2+2*g*h)) / g
+                    L = (V0*cos(A) + Vdop)*T
+                    vL.delete(0, END)
+                    vh.delete(0, END)
+                    vT.delete(0, END)
+                    vL.insert(0, round(L*1000)/1000)
+                    vh.insert(0, round(h*1000)/1000)
+                    vT.insert(0, round(T*1000)/1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
+            else:
+                stroim = False
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+        elif (V0d and Ad and Td and Vdopd): # 16
+            if (A > -pi/2) and (A < pi/2):
+                try:
+                    H = ((T - (V0 * sin(A)) / g) ** 2 * g) / 2
+                    h = H - (V0 ** 2 * sin(A) ** 2) / (2 * g)
+                    L = (V0*cos(A) + Vdop)*T
+                    vH.delete(0, END)
+                    vh.delete(0, END)
+                    vL.delete(0, END)
+                    vH.insert(0, round(H*1000)/1000)
+                    vh.insert(0, round(h*1000)/1000)
+                    vL.insert(0, round(L*1000)/1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
+            else:
+                stroim = False
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+        elif (V0d and Ad and Ld and Vdopd): # 17
+            if (A > -pi/2) and (A < pi/2):
+                try:
+                    T = L / (V0 * cos(A) + Vdop)
+                    H = ((T - (V0 * sin(A)) / g) ** 2 * g) / 2
+                    h = H - (V0 ** 2 * sin(A) ** 2) / (2 * g)
+                    vh.delete(0, END)
+                    vH.delete(0, END)
+                    vT.delete(0, END)
+                    vH.insert(0, round(H*1000)/1000)
+                    vh.insert(0, round(h*1000)/1000)
+                    vT.insert(0, round(T*1000)/1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
+            else:
+                stroim = False
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+        elif (V0d and hd and Hd and Vdopd): # 18
+            try:
+                A = asin((sqrt((H - h) * 2 * g)) / V0)
+                T = (V0*sin(A)+sqrt(V0**2*sin(A)**2+2*g*h)) / g
+                L = (V0*cos(A) + Vdop)*T
+                vA.delete(0, END)
+                vL.delete(0, END)
+                vT.delete(0, END)
+                vA.insert(0, round(A*1000)/1000)
+                vL.insert(0, round(L*1000)/1000)
+                vT.insert(0, round(T*1000)/1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
+        elif (V0d and Td and hd and Vdopd): # 19
+            try:
+                A = asin((T**2 - 2*h) / (2*T*V0))
+                H = h + (((V0**2)*(sin(A)**2)) / (2*g))
+                L = (V0*cos(A) + Vdop)*T
+                vA.delete(0, END)
+                vL.delete(0, END)
+                vH.delete(0, END)
+                vA.insert(0, round(A*1000)/1000)
+                vL.insert(0, round(L*1000)/1000)
+                vH.insert(0, round(H*1000)/1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
+        elif (V0d and Td and Hd and Vdopd): # 20
+            try:
+                A = asin(((T - sqrt((2 * H) / g)) * g) / Vdop) 
+                h = H - ((V0**2*sin(A)**2) / (2*g))
+                L = (V0*cos(A) + Vdop)*T
+                vA.delete(0, END)
+                vL.delete(0, END)
+                vh.delete(0, END)
+                vA.insert(0, round(A*1000)/1000)
+                vL.insert(0, round(L*1000)/1000)
+                vh.insert(0, round(h*1000)/1000)
+            except Exception as e:
+                print(e)
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
+        elif (V0d and Td and Ld and Vdopd): # 21
+            try:
+                A = acos((L - Vdop * T) / (V0*T))
+                H = (((T - (V0*sin(A))/g))**2*g) / 2 
+                h = H - (V0**2*sin(A)**2) / (2*g)
+                vA.delete(0, END)
+                vh.delete(0, END)
+                vH.delete(0, END)
+                vA.insert(0, round(A*1000)/1000)
+                vh.insert(0, round(h*1000)/1000)
+                vH.insert(0, round(H*1000)/1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
+        elif (V0d and Ad and hd and Ld): # 22
+            if (A > -pi/2) and (A < pi/2):
+                try:
+                    H = h + ((V0**2)*(sin(A)**2)) / (2*g)
+                    T = (V0*sin(A) + sqrt(2*H*g)) / g 
+                    Vdop = L/T - V0*cos(A)
+                    vVdop.delete(0, END)
+                    vH.delete(0, END)
+                    vT.delete(0, END)
+                    vVdop.insert(0, round(Vdop*1000)/1000)
+                    vH.insert(0, round(H*1000)/1000)
+                    vT.insert(0, round(T*1000)/1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
+            else:
+                stroim = False
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+        elif (V0d and Ad and Hd and Ld): # 23
+            if (A > -pi/2) and (A < pi/2):
+                try:
+                    h = H - (V0**2*sin(A)**2) / (2*g)
+                    T = (V0*sin(A) + sqrt(2*H*g)) / g
+                    Vdop = L/T - V0*cos(A)
+                    vL.delete(0, END)
+                    vh.delete(0, END)
+                    vVdop.delete(0, END)
+                    vL.insert(0, round(L*1000)/1000)
+                    vh.insert(0, round(h*1000)/1000)
+                    vVdop.insert(0, round(Vdop*1000)/1000)
+                except Exception as e:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
+            else:
+                stroim = False
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+        elif (V0d and Ad and Td and Ld): # 24
+            if (A > -pi/2) and (A < pi/2):
+                try:
+                    H = (((T - (V0*sin(A))/g))**2*g) / 2 
+                    h = H - (V0**2*sin(A)**2) / (2*g)
+                    Vdop = L/T - V0*cos(A)
+                    vVdop.delete(0, END)
+                    vH.delete(0, END)
+                    vh.delete(0, END)
+                    vVdop.insert(0, round(Vdop*1000)/1000)
+                    vH.insert(0, round(H*1000)/1000)
+                    vh.insert(0, round(h*1000)/1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
+            else:
+                stroim = False
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+        elif (V0d and hd and Hd and Ld): # 25
+            try:
+                A = asin((sqrt((H - h) * 2 * g)) / V0)
+                T = (V0*sin(A) + sqrt(2*H*g)) / g
+                Vdop = L/T - V0*cos(A)
+                vA.delete(0, END)
+                vT.delete(0, END)
+                vVdop.delete(0, END)
+                vA.insert(0, round(A*1000)/1000)
+                vT.insert(0, round(T*1000)/1000)
+                vVdop.insert(0, round(Vdop*1000)/1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
+        elif (V0d and hd and Td and Ld): # 26
+            try:
+                A = asin((T**2*g - 2*h) / (2*T*V0))
+                H = h + ((V0**2*sin(A)**2) / (2*g))
+                Vdop = L/T - V0*cos(A)
+                vA.delete(0, END)
+                vH.delete(0, END)
+                vVdop.delete(0, END)
+                vA.insert(0, round(A*1000)/1000)
+                vH.insert(0, round(H*1000)/1000)
+                vVdop.insert(0, round(Vdop*1000)/1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
+        elif (V0d and Td and Hd and Ld): # 27
+            try:
+                A = asin(((T - sqrt((2 * H) / g)) * g) / V0) 
+                h = H - (V0**2*sin(A)**2) / (2*g)
+                Vdop = L/T - V0*cos(A)
+                vA.delete(0, END)
+                vH.delete(0, END)
+                vVdop.delete(0, END)
+                vA.insert(0, round(A*1000)/1000)
+                vH.insert(0, round(H*1000)/1000)
+                vVdop.insert(0, round(Vdop*1000)/1000)
+            except Exception as e:
+                print(e)
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
+        elif (hd and Ad and Hd and Vdopd): # 28
+            if (A > -pi/2) and (A < pi/2):
+                try:
+                    V0 = sqrt(2*g*(H-h)) / sin(A)
+                    T = (V0*sin(A) + sqrt(2*H*g)) / g
+                    L = (V0*cos(A) + Vdop) * T
+                    vV0.delete(0, END)
+                    vT.delete(0, END)
+                    vL.delete(0, END)
+                    vV0.insert(0, round(V0*1000)/1000)
+                    vT.insert(0, round(T*1000)/1000)
+                    vL.insert(0, round(L*1000)/1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
+            else:
+                stroim = False
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+        elif (Td and Ad and hd and Vdopd): # 29
+            if (A > -pi/2) and (A < pi/2):
+                try:
+                    V0 = (T**2*g - 2*h) / (2*T*sin(A))
+                    H = h + ((V0**2*sin(A)**2) / (2*g))
+                    L = (V0*cos(A) + Vdop) * T
+                    vV0.delete(0, END)
+                    vH.delete(0, END)
+                    vL.delete(0, END)
+                    vV0.insert(0, round(V0*1000)/1000)
+                    vH.insert(0, round(H*1000)/1000)
+                    vL.insert(0, round(L*1000)/1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
+            else:
+                stroim = False
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+        elif (Ld and Ad and hd and Vdopd): # 30
+            if (A > -pi/2) and (A < pi/2):
+                try:
+                    V0 = (-L*sin(A)*Vdop - 2*h*Vdop*cos(A) + sqrt((L*Vdop*sin(A) + 2*h*Vdop*cos(A))**2 - (L*sin(2*A) + 2*h*cos(A)**2)*(2*h*Vdop**2 - L**2*g))) / (L*sin(2*A) + 2*h*cos(A)**2)
+                    H = h + ((V0**2*sin(A)**2) / (2*g))
+                    T = (V0*sin(A) + sqrt(2*H*g)) / g
+                    vV0.delete(0, END)
+                    vH.delete(0, END)
+                    vT.delete(0, END)
+                    vV0.insert(0, round(V0*1000)/1000)
+                    vH.insert(0, round(H*1000)/1000)
+                    vT.insert(0, round(T*1000)/1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
+            else:
+                stroim = False
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+        elif (Td and Ad and Hd and Vdopd): # 31
+            if (A > -pi/2) and (A < pi/2):
+                try:
+                    V0 = (T*g + sqrt(2*H*g)) / sin(A)
+                    h = H - (V0**2*sin(A)**2) / (2*g)
+                    L = (V0*cos(A) + Vdop)*T
+                    vV0.delete(0, END)
+                    vh.delete(0, END)
+                    vL.delete(0, END)
+                    vV0.insert(0, round(V0*1000)/1000)
+                    vh.insert(0, round(h*1000)/1000)
+                    vL.insert(0, round(L*1000)/1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
+            else:
+                stroim = False
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+        elif (Ld and Ad and Hd and Vdopd): # 32
+            if (A > -pi/2) and (A < pi/2):
+                try:
+                    V0 = (-Vdop*sin(A) - sqrt(2*H/g)*g*cos(A) + sqrt((Vdop*sin(A) + sqrt(2*H/g)*g*cos(A))**2 - 2*sin(2*A)*(4*sqrt(2*H/g)*g - L*g))) / sin(2*A)
+                    h = H - ((V0**2*sin(A)**2) / (2*g))
+                    T = (V0*sin(A) + sqrt(2*H*g)) / g
+                    vV0.delete(0, END)
+                    vh.delete(0, END)
+                    vT.delete(0, END)
+                    vV0.insert(0, round(V0*1000)/1000)
+                    vh.insert(0, round(h*1000)/1000)
+                    vT.insert(0, round(T*1000)/1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
+            else:
+                stroim = False
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+        elif (Ld and Ad and Td and Vdopd): # 33
+            if (A > -pi/2) and (A < pi/2):
+                try:
+                    V0 = (L/T - Vdop) / cos(A)
+                    H = (g*((T - (V0*sin(A))/g))**2) / 2 
+                    h = H - (V0**2*sin(A)**2) / (2*g)
+                    vV0.delete(0, END)
+                    vH.delete(0, END)
+                    vh.delete(0, END)
+                    vV0.insert(0, round(V0*1000)/1000)
+                    vH.insert(0, round(H*1000)/1000)
+                    vh.insert(0, round(h*1000)/1000)
+                except:
+                    mb.showerror("Неверные данные", "Расчёты невозможны")
+                    stroim = False
+            else:
+                stroim = False
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+        elif (Ld and hd and Hd and Vdopd): # 34
+            try:
+                A = acos((g*L - sqrt(2*H*g)*Vdop)/(2*g*sqrt(H*(H-h))))
+                V0 = sqrt(2*g*(H-h)) / sin(A)
+                T = (V0*sin(A) + sqrt(2*H*g)) / g
+                vA.delete(0, END)
+                vV0.delete(0, END)
+                vT.delete(0, END)
+                vA.insert(0, round(A*1000)/1000)
+                vV0.insert(0, round(V0*1000)/1000)
+                vT.insert(0, round(T*1000)/1000)
+            except Exception as e:
+                print(e)
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
+        elif (Vdopd and hd and Td and Ld): # 35
+            try:
+                A = atan((g*T**2 - 2*h)/(2*(L - Vdop*T)))
+                V0 = (L/T -Vdop) / cos(A)
+                H = h + (V0**2 * sin(A)**2)
+                vA.delete(0, END)
+                vV0.delete(0, END)
+                vH.delete(0, END)
+                vA.insert(0, round(A*1000)/1000)
+                vV0.insert(0, round(V0*1000)/1000)
+                vH.insert(0, round(H*1000)/1000)
+            except:
+                mb.showerror("Неверные данные", "Расчёты невозможны")
+                stroim = False
         else:
             vV0.delete(0, END)
             vA.delete(0, END)
@@ -3055,8 +3797,8 @@ def vvod_by_angle_h_wind(x=True):
             global telo
             global xy
             xy = Label(text="x=0.000 , y=0.000", font="Cricket 12")
-            xy.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-            xy.place(x=400, y=320)
+            xy.config(bd=20, bg=label_bg_color, fg=label_text_color)
+            xy.place(x=graph_x+120, y=graph_y+250)
             XY.append(xy)
             telo = grafic.create_oval(10 - r, 210-h*k - r, 10 + r, 210-h*k + r, fill="#c00300")
             i=0
@@ -3070,6 +3812,7 @@ def vvod_by_angle_h_wind(x=True):
         vL.delete(0, END)
         vh.delete(0, END)
         vH.delete(0, END)
+        vVdop.delete(0, END)
         mb.showerror("Неверные данные", "Расчёты невозможны")
         stroim = False
 
@@ -3107,8 +3850,8 @@ def draw_angle_by_h_wind():
         grafic.create_line((x) * k + 10, 220 - ((y) * k + 10), ((x1) * k + 10), 220 - ((y1) * k + 10), fill="#c00300")
         i+=1
         xy = Label(text="x="+str(col_znak(round(x*1000)/1000, 3))+", y="+str(col_znak(round(y*1000)/1000, 3)), font="Cricket 12")
-        xy.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-        xy.place(x=400, y=320)
+        xy.config(bd=20, bg=label_bg_color, fg=label_text_color)
+        xy.place(x=graph_x+120, y=graph_y+250)
         XY.append(xy)
         global vvod
         vvod.append(xy)
@@ -3194,88 +3937,88 @@ def save_by_angle_h_wind():
 def by_angle_h_wind():
     global vvod
     vvod = []
-    grafic.place(x=257, y=70)
+    grafic.place(x=graph_x, y=graph_y)
 
-    l1 = Label(text="Введите первые \n четыре значения", font="Cricket 12")
-    l1.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-    l1.grid(row=1, column=0, columnspan=2, rowspan=1)
+    l1 = Label(text="Введите первые четыре значения", font="Cricket 16")
+    l1.config(bd=20, bg=label_bg_color, fg=label_text_color)
+    l1.place(x=7, y=70)
     vvod.append(l1)
 
-    l2 = Label(text="Бросок под углом к горизонту с высоты с учетом ветра", font="Cricket 16")
-    l2.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-    l2.grid(row=0,  column=0, columnspan=100, rowspan=1)
+    l2 = Label(text="Бросок под углом к горизонту с высоты с учетом ветра", font="Cricket 23")
+    l2.config(bd=20, bg=label_bg_color, fg=label_text_color)
+    l2.place(x=7, y=10)
     vvod.append(l2)
 
     delete_main()
 
     global vh
     vh = Entry(width=13)
-    vh.place(x=172, y=129)
+    vh.place(x=172, y=128)
     vvod.append(vh)
 
     bh = Label(text="h (м)        =", font="Cricket 10")
     bh.place(x=84, y=128)
-    bh.config(bg='#F7DDC4', fg='#0C136F')
+    bh.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bh)
 
     global vV0
     vV0= Entry(width=13)
-    vV0.grid(row=2, column=2)
+    vV0.place(x=172, y=152)
     vvod.append(vV0)
 
     bV0 = Label(text="Vo (м/с)     =", font="Cricket 10")
     bV0.place(x=76, y=152)
-    bV0.config(bg='#F7DDC4', fg='#0C136F')
+    bV0.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bV0)
 
     global vA
     vA= Entry(width=13)
-    vA.grid(row=3, column=2)
+    vA.place(x=172, y=176)
     vvod.append(vA)
 
     bA = Label(text="Угол (В градусах)      = ", font="Cricket 10")
-    bA.place(x=13, y=175)
-    bA.config(bg='#F7DDC4', fg='#0C136F')
+    bA.place(x=13, y=176)
+    bA.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bA)
 
     global vVdop
     vVdop = Entry(width=13)
-    vVdop.grid(row=4, column=2)
+    vVdop.place(x=172, y=199)
     vvod.append(vVdop)
 
     bVdop = Label(text="Vdop (м/с)       = ", font="Cricket 10")
-    bVdop.place(x=54 , y=197)
-    bVdop.config(bg='#F7DDC4', fg='#0C136F')
+    bVdop.place(x=54 , y=199)
+    bVdop.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bVdop)
 
     global vH
     vH = Entry(width=13)
-    vH.grid(row=5, column=2)
+    vH.place(x=172, y=224)
     vvod.append(vH)
 
     bH = Label(text="Hmax (м)    = ", font="Cricket 10")
-    bH.place(x=73, y=219)
-    bH.config(bg='#F7DDC4', fg='#0C136F')
+    bH.place(x=73, y=224)
+    bH.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bH)
 
     global vT
     vT = Entry(width=13)
-    vT.grid(row=6, column=2)
+    vT.place(x=172, y=248)
     vvod.append(vT)
 
     bT = Label(text="Tполёта (с)  = ", font="Cricket 10")
-    bT.place(x=70, y=240)
-    bT.config(bg='#F7DDC4', fg='#0C136F')
+    bT.place(x=70, y=248)
+    bT.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bT)
 
     global vL
     vL = Entry(width=13)
-    vL.grid(row=7, column=2)
+    vL.place(x=172, y=271)
     vvod.append(vL)
 
     bL = Label(text="Lполёта (м)  = ", font="Cricket 10")
-    bL.place(x=68, y=260)
-    bL.config(bg='#F7DDC4', fg='#0C136F')
+    bL.place(x=68, y=271)
+    bL.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bL)
 
     bvvesti = Button(root, height=2, width=17)
@@ -3290,21 +4033,21 @@ def by_angle_h_wind():
     vvod.append(bdel)
     bdel.config(command=del_by_angle_h_wind)
 
-    bopen = Button(root, height=5, width=30)
+    bopen = Button(root, height=5, width=30, font=('Cricket', 10))
     change_button(bopen, 'Считать значения из файла \n(введите 4 значения\n в следующем порядке: h, V0, A, \nVплатформы в файл "input.txt"\n в столбик)' )
-    bopen.place(x=20, y=390)
+    bopen.place(x=30, y=420)
     vvod.append(bopen)
     bopen.config(command=file_by_angle_h_wind)
 
-    bsave = Button(root, height=5, width=30)
+    bsave = Button(root, height=5, width=30, font=('Cricket', 10))
     change_button(bsave,'Сохранить значения\n в файл')
-    bsave.place(x=300, y=390)
+    bsave.place(x=350, y=420)
     vvod.append(bsave)
     bsave.config(command=save_by_angle_h_wind)
 
     l3 = Label(text="ИЛИ", font="Cricket 12", height=1)
-    l3.config(bd=12, bg='#F7DDC4', fg='#0C136F')
-    l3.place(x=90, y=345)
+    l3.config(bd=12, bg=label_bg_color, fg=label_text_color)
+    l3.place(x=90, y=360)
     vvod.append(l3)
 
 
@@ -3398,8 +4141,8 @@ def vvod_dop(x=True):
             i = 0
             global xy
             xy = Label(text="x=0.000 , y="+str(h), font="Cricket 12")
-            xy.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-            xy.place(x=400, y=320)
+            xy.config(bd=20, bg=label_bg_color, fg=label_text_color)
+            xy.place(x=graph_x+120, y=graph_y+250)
             XY.append(xy)
             root.after(1, draw_angle_by_h)
     else:
@@ -3500,22 +4243,17 @@ def save_dop():
 def dop():
     global vvod
     vvod = []
-    grafic.place(x=257, y=70)
+    grafic.place(x=graph_x, y=graph_y)
 
-    l1 = Label(text="Введите значения A, B, Vo, h", font="Cricket 12")
-    l1.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-    l1.grid(row=1, column=0, columnspan=2, rowspan=1)
+    l1 = Label(text="Введите значения A, B, Vo, h", font="Cricket 14")
+    l1.config(bd=20, bg=label_bg_color, fg=label_text_color)
+    l1.place(x=20, y=55)
     vvod.append(l1)
 
-    l2 = Label(text="Бросок под углом А к горизонту с высоты на наклонную плоскость под углом B", font="Cricket 13")
-    l2.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-    l2.grid(row=0,  column=0, columnspan=100, rowspan=1)
+    l2 = Label(text="Бросок под углом А к горизонту с высоты на наклонную плоскость под углом B (0°; 90°)", font="Cricket 14")
+    l2.config(bd=20, bg=label_bg_color, fg=label_text_color)
+    l2.place(x=20, y=10)
     vvod.append(l2)
-
-    l4 = Label(text="Бросок под углом А к горизонту с высоты на наклонную плоскость под углом B \n(0°; 90°) с основанием в точке (0;0)", font="Cricket 13")
-    l4.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-    l4.place(x=3, y=3)
-    vvod.append(l4)
 
     delete_main()
 
@@ -3526,7 +4264,7 @@ def dop():
 
     bh = Label(text="h (м)    =", font="Cricket 10")
     bh.place(x=82, y=116)
-    bh.config(bg='#F7DDC4', fg='#0C136F')
+    bh.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bh)
 
     global vV0
@@ -3536,7 +4274,7 @@ def dop():
 
     bV0 = Label(text="Vo (м/c)  =", font="Cricket 10")
     bV0.place(x=70, y=138)
-    bV0.config(bg='#F7DDC4', fg='#0C136F')
+    bV0.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bV0)
 
     global vA
@@ -3546,7 +4284,7 @@ def dop():
 
     bA = Label(text="A (В градусах)  = ", font="Cricket 10")
     bA.place(x=29, y=160)
-    bA.config(bg='#F7DDC4', fg='#0C136F')
+    bA.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bA)
 
     global vB
@@ -3556,7 +4294,7 @@ def dop():
 
     bB = Label(text="B (В градусах)  = ", font="Cricket 10")
     bB.place(x=29, y=182)
-    bB.config(bg='#F7DDC4', fg='#0C136F')
+    bB.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bB)
 
     global vT
@@ -3566,7 +4304,7 @@ def dop():
 
     bT = Label(text="T (c)  = ", font="Cricket 10")
     bT.place(x=92, y=204)
-    bT.config(bg='#F7DDC4', fg='#0C136F')
+    bT.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bT)
 
     global vLx
@@ -3576,7 +4314,7 @@ def dop():
 
     bLx = Label(text="Lx (м)  = ", font="Cricket 10")
     bLx.place(x=83, y=226)
-    bLx.config(bg='#F7DDC4', fg='#0C136F')
+    bLx.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bLx)
 
     global vLpl
@@ -3586,36 +4324,36 @@ def dop():
 
     bLpl = Label(text="Lна плоскости (м)  = ", font="Cricket 10")
     bLpl.place(x=12, y=248)
-    bLpl.config(bg='#F7DDC4', fg='#0C136F')
+    bLpl.config(bg=label_bg_color, fg=label_text_color)
     vvod.append(bLpl)
 
     bvvesti = Button(root, height=2, width=17)
     change_button(bvvesti, "Ввести значения")
-    bvvesti.place(x=20, y=275)
+    bvvesti.place(x=20, y=300)
     vvod.append(bvvesti)
     bvvesti.config(command=vvod_dop)
 
     bdel = Button(root, height=2, width=10)
     change_button(bdel, "Удалить\nзначения")
-    bdel.place(x=163, y=275)
+    bdel.place(x=163, y=300)
     vvod.append(bdel)
     bdel.config(command=del_dop)
 
-    bopen = Button(root, height=5, width=30)
+    bopen = Button(root, height=5, width=30, font=('Cricket', 10))
     change_button(bopen, 'Считать значения из файла \n(введите 4 значения \n в следующем порядке: h, V0, A, B \n в файл "input.txt" в столбик)' )
-    bopen.place(x=20, y=385)
+    bopen.place(x=30, y=425)
     vvod.append(bopen)
     bopen.config(command=file_dop)
 
-    bsave = Button(root, height=5, width=30)
+    bsave = Button(root, height=5, width=30, font=('Cricket', 10))
     change_button(bsave, 'Сохранить значения\n в файл')
-    bsave.place(x=300, y=385)
+    bsave.place(x=350, y=425)
     vvod.append(bsave)
     bsave.config(command=save_dop)
 
     l3 = Label(text="ИЛИ", font="Cricket 12")
-    l3.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-    l3.place(x=90, y=320)
+    l3.config(bd=20, bg=label_bg_color, fg=label_text_color)
+    l3.place(x=90, y=350)
     vvod.append(l3)
 
 
@@ -3625,51 +4363,44 @@ def delete_th():
         for a in vvod:
             a.destroy()
 
-        global BB
-        b_home = Button(root, height=2, width=5)
-        change_button(b_home, 'HOME')
-        b_home.place(x=633, y=457)
-        b_home.config(command=start_window)
-        BB.append(b_home)
-
 def th_by_angle_zero():
     delete_th()
     global BB
     l0 = Label(text="Бросок тела под углом к горизонту с земли", font="Cricket 18")
     l0.place(x=75, y=10)
-    l0.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l0.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l0)
     l1 = Label(text="Vy(t) = Vo*sinA - gt - скорость по оси оу через t секунд полёта", font="Cricket 14")
     l1.place(x=10, y=80)
-    l1.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l1.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l1)
     l2 = Label(text="Vx(t) = Vo*cosA - скорость по оси ох через t секунд полёта", font="Cricket 14")
     l2.place(x=10, y=130)
-    l2.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l2.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l2)
     l3 = Label(text="y(t) = Vo*sinA*t - g*t^2/2 - координата по оси оу через t секунд полёта", font="Cricket 14")
     l3.place(x=10, y=180)
-    l3.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l3.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l3)
     l4 = Label(text="x(t) = xo + Vo*cosA*t - координата по оси ох через t секунд полёта", font="Cricket 14")
     l4.place(x=10, y=230)
-    l4.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l4.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l4)
     l5 = Label(text="Hmax = Vo^2*(sinA)^2/(2*g) - максимальная высота полёта", font="Cricket 14")
     l5.place(x=10, y=280)
-    l5.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l5.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l5)
     l6 = Label(text="Lmax = Vo^2*sin(2A)/g - дальность полёта", font="Cricket 14")
     l6.place(x=10, y=320)
-    l6.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l6.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l6)
     l7 = Label(text="Tполёта = 2*Vo*sinA/g - время полёта", font="Cricket 14")
     l7.place(x=10, y=370)
-    l7.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l7.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l7)
-    l8 = Label(text="Траектория движения тела, брошенного под углом к горизонту - парабола", font="Cricket 13")
+    l8 = Label(text="Траектория движения тела, брошенного под углом к горизонту - парабола", font="Cricket 14")
     l8.place(x=10, y=420)
-    l8.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l8.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l8)
 
 def th_vert_v_zero():
@@ -3677,39 +4408,39 @@ def th_vert_v_zero():
     global BB
     l0 = Label(text="Бросок тела вертикально вверх с земли", font="Cricket 18")
     l0.place(x=75, y=10)
-    l0.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l0.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l0)
     l1 = Label(text="Vy(t) = Vo - gt - скорость по оси оу через t секунд полёта", font="Cricket 14")
     l1.place(x=10, y=80)
-    l1.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l1.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l1)
     l2 = Label(text="Vx(t) = 0 - скорость по оси ох через t секунд полёта", font="Cricket 14")
     l2.place(x=10, y=130)
-    l2.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l2.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l2)
     l3 = Label(text="y(t) = Vo*t - g*t^2/2 - координата по оси оу через t секунд полёта", font="Cricket 14")
     l3.place(x=10, y=180)
-    l3.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l3.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l3)
     l4 = Label(text="x(t) = xo - координата по оси ох через t секунд полёта", font="Cricket 14")
     l4.place(x=10, y=230)
-    l4.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l4.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l4)
     l5 = Label(text="Hmax = Vo^2*/(2*g) - максимальная высота полёта", font="Cricket 14")
     l5.place(x=10, y=275)
-    l5.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l5.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l5)
     l6 = Label(text="Lmax = 0 - дальность полёта", font="Cricket 14")
     l6.place(x=10, y=320)
-    l6.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l6.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l6)
     l7 = Label(text="Tполёта = 2*Vo/g - время полёта", font="Cricket 14")
     l7.place(x=10, y=370)
-    l7.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l7.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l7)
-    l8 = Label(text="Траектория движения тела, брошенного вертикально вверх - прямая линия", font="Cricket 13")
+    l8 = Label(text="Траектория движения тела, брошенного вертикально вверх - прямая линия", font="Cricket 14")
     l8.place(x=10, y=420)
-    l8.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l8.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l8)
 
 def th_hor():
@@ -3717,39 +4448,39 @@ def th_hor():
     global BB
     l0 = Label(text="Бросок тела горизонтально с высоты h", font="Cricket 18")
     l0.place(x=75, y=10)
-    l0.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l0.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l0)
     l1 = Label(text="Vy(t) = - gt - скорость по оси оу через t секунд полёта", font="Cricket 14")
     l1.place(x=10, y=80)
-    l1.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l1.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l1)
     l2 = Label(text="Vx(t) = Vo - скорость по оси ох через t секунд полёта", font="Cricket 14")
     l2.place(x=10, y=130)
-    l2.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l2.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l2)
     l3 = Label(text="y(t) = h - g*t^2/2 - координата по оси оу через t секунд полёта", font="Cricket 14")
     l3.place(x=10, y=180)
-    l3.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l3.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l3)
     l4 = Label(text="x(t) = xo + Vo*t - координата по оси ох через t секунд полёта", font="Cricket 14")
     l4.place(x=10, y=230)
-    l4.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l4.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l4)
     l5 = Label(text="Hmax = h - максимальная высота полёта", font="Cricket 14")
     l5.place(x=10, y=280)
-    l5.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l5.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l5)
     l6 = Label(text="Lmax = Vo*sqrt(2h/g) - дальность полёта", font="Cricket 14")
     l6.place(x=10, y=320)
-    l6.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l6.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l6)
     l7 = Label(text="Tполёта = sqrt(2h/g) - время полёта", font="Cricket 14")
     l7.place(x=10, y=370)
-    l7.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l7.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l7)
-    l8 = Label(text="Траектория движения тела, брошенного горизонтально с высоты \nh - парабола", font="Cricket 13")
+    l8 = Label(text="Траектория движения тела, брошенного горизонтально с высоты \nh - парабола", font="Cricket 14")
     l8.place(x=10, y=420)
-    l8.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l8.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l8)
 
 def th_angle_h():
@@ -3757,39 +4488,39 @@ def th_angle_h():
     global BB
     l0 = Label(text="Бросок тела под углом к горизонту с высоты h", font="Cricket 18")
     l0.place(x=75, y=10)
-    l0.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l0.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l0)
     l1 = Label(text="Vy(t) = Vo*sinA - gt - скорость по оси оу через t секунд полёта", font="Cricket 14")
     l1.place(x=10, y=80)
-    l1.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l1.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l1)
     l2 = Label(text="Vx(t) = Vo*cosA - скорость по оси ох через t секунд полёта", font="Cricket 14")
     l2.place(x=10, y=130)
-    l2.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l2.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l2)
     l3 = Label(text="y(t) = h + Vo*sinA*t - g*t^2/2 - координата по оси оу через t секунд полёта", font="Cricket 14")
     l3.place(x=10, y=180)
-    l3.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l3.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l3)
     l4 = Label(text="x(t) = xo + Vo*cosA*t - координата по оси ох через t секунд полёта", font="Cricket 14")
     l4.place(x=10, y=230)
-    l4.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l4.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l4)
     l5 = Label(text="Hmax = (V0^2 * (sin(A))^2 + 2 * g * h) / (2 * g) - максимальная высота полёта", font="Cricket 14")
     l5.place(x=10, y=280)
-    l5.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l5.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l5)
-    l6 = Label(text="Lmax = (V0^2*sin(A)*cos(A)+V0*cos(A)*sqrt(V0^2*(sin(A))^2+2*g*h))/g - дальность полёта", font="Cricket 12")
+    l6 = Label(text="Lmax = (V0^2*sin(A)*cos(A)+V0*cos(A)*sqrt(V0^2*(sin(A))^2+2*g*h))/g - дальность полёта", font="Cricket 14")
     l6.place(x=10, y=320)
-    l6.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l6.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l6)
     l7 = Label(text="Tполёта = (V0 * sin(A) + sqrt(V0^2 * (sin(A))^2 + 2 * g * h)) / g - время полёта", font="Cricket 14")
     l7.place(x=10, y=370)
-    l7.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l7.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l7)
-    l8 = Label(text="Траектория движения тела, брошенного под углом к горизонту с высоты - \nпарабола", font="Cricket 13")
+    l8 = Label(text="Траектория движения тела, брошенного под углом к горизонту с высоты - \nпарабола", font="Cricket 14")
     l8.place(x=10, y=420)
-    l8.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l8.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l8)
 
 def th_vert_vniz():
@@ -3797,39 +4528,39 @@ def th_vert_vniz():
     global BB
     l0 = Label(text="Бросок тела вертикально вниз с высоты h", font="Cricket 18")
     l0.place(x=75, y=10)
-    l0.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l0.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l0)
     l1 = Label(text="Vy(t) = -Vo - gt - скорость по оси оу через t секунд полёта", font="Cricket 14")
     l1.place(x=10, y=80)
-    l1.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l1.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l1)
     l2 = Label(text="Vx(t) = 0 - скорость по оси ох через t секунд полёта", font="Cricket 14")
     l2.place(x=10, y=130)
-    l2.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l2.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l2)
     l3 = Label(text="y(t) = h - Vo*t - g*t^2/2 - координата по оси оу через t секунд полёта", font="Cricket 14")
     l3.place(x=10, y=180)
-    l3.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l3.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l3)
     l4 = Label(text="x(t) = xo - координата по оси ох через t секунд полёта", font="Cricket 14")
     l4.place(x=10, y=230)
-    l4.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l4.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l4)
     l5 = Label(text="Hmax = h - максимальная высота полёта", font="Cricket 14")
     l5.place(x=10, y=275)
-    l5.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l5.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l5)
     l6 = Label(text="Lmax = 0 - дальность полёта", font="Cricket 14")
     l6.place(x=10, y=320)
-    l6.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l6.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l6)
     l7 = Label(text="Tполёта = (-V0+sqrt(V0^2+2*g*h))/g - время полёта", font="Cricket 14")
     l7.place(x=10, y=370)
-    l7.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l7.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l7)
-    l8 = Label(text="Траектория движения тела, брошенного вертикально вниз с высоты \nh - прямая линия", font="Cricket 13")
+    l8 = Label(text="Траектория движения тела, брошенного вертикально вниз с высоты \nh - прямая линия", font="Cricket 14")
     l8.place(x=10, y=420)
-    l8.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l8.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l8)
 
 def th_vert_vverh():
@@ -3837,39 +4568,39 @@ def th_vert_vverh():
     global BB
     l0 = Label(text="Бросок тела вертикально вверх с высоты h", font="Cricket 18")
     l0.place(x=75, y=10)
-    l0.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l0.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l0)
     l1 = Label(text="Vy(t) = Vo - gt - скорость по оси оу через t секунд полёта", font="Cricket 14")
     l1.place(x=10, y=80)
-    l1.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l1.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l1)
     l2 = Label(text="Vx(t) = 0 - скорость по оси ох через t секунд полёта", font="Cricket 14")
     l2.place(x=10, y=130)
-    l2.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l2.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l2)
     l3 = Label(text="y(t) = h + Vo*t - g*t^2/2 - координата по оси оу через t секунд полёта", font="Cricket 14")
     l3.place(x=10, y=180)
-    l3.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l3.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l3)
     l4 = Label(text="x(t) = xo - координата по оси ох через t секунд полёта", font="Cricket 14")
     l4.place(x=10, y=230)
-    l4.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l4.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l4)
     l5 = Label(text="Hmax = h + V0^2/(2*g) - максимальная высота полёта", font="Cricket 14")
     l5.place(x=10, y=275)
-    l5.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l5.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l5)
     l6 = Label(text="Lmax = 0 - дальность полёта", font="Cricket 14")
     l6.place(x=10, y=320)
-    l6.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l6.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l6)
     l7 = Label(text="Tполёта = (V0+sqrt(V0^2+2*g*h))/g - время полёта", font="Cricket 14")
     l7.place(x=10, y=370)
-    l7.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l7.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l7)
-    l8 = Label(text="Траектория движения тела, брошенного вертикально вверх с высоты \nh - прямая линия", font="Cricket 13")
+    l8 = Label(text="Траектория движения тела, брошенного вертикально вверх с высоты \nh - прямая линия", font="Cricket 14")
     l8.place(x=10, y=420)
-    l8.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l8.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l8)
 
 def th_dop():
@@ -3877,123 +4608,123 @@ def th_dop():
     global BB
     l0 = Label(text="Бросок тела под углом к горизонту с высоты h а наклонную плоскость\n под углом B", font="Cricket 15")
     l0.place(x=5, y=10)
-    l0.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l0.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l0)
     l1 = Label(text="Vy(t) = Vo*sinA - gt - скорость по оси оу через t секунд полёта", font="Cricket 14")
     l1.place(x=10, y=80)
-    l1.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l1.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l1)
     l2 = Label(text="Vx(t) = Vo*cosA - скорость по оси ох через t секунд полёта", font="Cricket 14")
     l2.place(x=10, y=130)
-    l2.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l2.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l2)
     l3 = Label(text="y(t) = h + Vo*sinA*t - g*t^2/2 - координата по оси оу через t секунд полёта", font="Cricket 14")
     l3.place(x=10, y=180)
-    l3.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l3.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l3)
     l4 = Label(text="x(t) = xo + Vo*cosA*t - координата по оси ох через t секунд полёта", font="Cricket 14")
     l4.place(x=10, y=230)
-    l4.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l4.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l4)
     l6 = Label(text="Lx = ((tan(A)-tan(B)+sqrt(D)))/(g/(V0^2*cos(A)^2)) - дальность полёта по оси ох",
-               font="Cricket 12")
+               font="Cricket 14")
     l6.place(x=10, y=320)
-    l6.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l6.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l6)
     l7 = Label(text="Tполёта = L/(V0*cos(A)) - время полёта",
                font="Cricket 14")
     l7.place(x=10, y=270)
-    l7.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l7.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l7)
     l5 = Label(text="Lпл. = (((tan(A)-tan(B)+sqrt(D)))/(g/(V0^2*cos(A)^2)))/cos(A) - дальность полёта по плоскости",
-               font="Cricket 11")
+               font="Cricket 14")
     l5.place(x=10, y=370)
-    l5.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l5.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l5)
     l8 = Label(text="Траектория движения тела, брошенного под углом к горизонту с высоты - \nпарабола",
-               font="Cricket 13")
+               font="Cricket 14")
     l8.place(x=10, y=420)
-    l8.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l8.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l8)
 
 def th_angle_h_wind():
     delete_th()
     global BB
     l0 = Label(text="Бросок тела под углом к горизонту с высоты h с учетом ветра", font="Cricket 18")
-    l0.place(x=75, y=10)
-    l0.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l0.place(x=10, y=10)
+    l0.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l0)
     l1 = Label(text="Vy(t) = Vo*sinA - gt - скорость по оси оу через t секунд полёта", font="Cricket 14")
     l1.place(x=10, y=80)
-    l1.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l1.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l1)
     l2 = Label(text="Vx(t) = Vo*cosA + Vdop - скорость по оси ох через t секунд полёта", font="Cricket 14")
     l2.place(x=10, y=130)
-    l2.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l2.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l2)
     l3 = Label(text="y(t) = h + Vo*sinA*t - g*t^2/2 - координата по оси оу через t секунд полёта", font="Cricket 14")
     l3.place(x=10, y=180)
-    l3.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l3.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l3)
     l4 = Label(text="x(t) = xo + (Vo*cosA+Vdop)*t - координата по оси ох через t секунд полёта", font="Cricket 14")
     l4.place(x=10, y=230)
-    l4.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l4.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l4)
     l5 = Label(text="Hmax = (V0^2 * (sin(A))^2 + 2 * g * h) / (2 * g) - максимальная высота полёта", font="Cricket 14")
     l5.place(x=10, y=280)
-    l5.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l5.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l5)
-    l6 = Label(text="Lmax = (V0*sin(A)+sqrt(V0^2*(sin(A))^2+2*g*h))/g * (Vo*cosA+Vdop) - дальность полёта", font="Cricket 12")
+    l6 = Label(text="Lmax = (V0*sin(A)+sqrt(V0^2*(sin(A))^2+2*g*h))/g * (Vo*cosA+Vdop) - дальность полёта", font="Cricket 14")
     l6.place(x=10, y=320)
-    l6.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l6.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l6)
     l7 = Label(text="Tполёта = (V0 * sin(A) + sqrt(V0^2 * (sin(A))^2 + 2 * g * h)) / g - время полёта", font="Cricket 14")
     l7.place(x=10, y=370)
-    l7.config(bd=14, bg='#F7DDC4', fg='#0C136F')
+    l7.config(bd=14, bg=label_bg_color, fg=label_text_color)
     BB.append(l7)
-    l8 = Label(text="Траектория движения тела, брошенного под углом к горизонту с \n высоты с учемом ветра - парабола", font="Cricket 13")
+    l8 = Label(text="Траектория движения тела, брошенного под углом к горизонту с \n высоты с учемом ветра - парабола", font="Cricket 14")
     l8.place(x=10, y=410)
-    l8.config(bd=14, bg='#F7DDC4', fg='#0C136F')
+    l8.config(bd=14, bg=label_bg_color, fg=label_text_color)
     BB.append(l8)
 
 def th_angle_h_move():
     delete_th()
     global BB
-    l0 = Label(text="Бросок тела под углом к горизонту с движущейся платформы на высоте h", font="Cricket 18")
-    l0.place(x=75, y=10)
-    l0.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l0 = Label(text="Бросок тела под углом к горизонту с движущейся платформы на высоте h", font="Cricket 16")
+    l0.place(x=10, y=10)
+    l0.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l0)
     l1 = Label(text="Vy(t) = Vo*sinA - gt - скорость по оси оу через t секунд полёта", font="Cricket 14")
     l1.place(x=10, y=80)
-    l1.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l1.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l1)
     l2 = Label(text="Vx(t) = Vo*cosA + Vdop - скорость по оси ох через t секунд полёта", font="Cricket 14")
     l2.place(x=10, y=130)
-    l2.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l2.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l2)
     l3 = Label(text="y(t) = h + Vo*sinA*t - g*t^2/2 - координата по оси оу через t секунд полёта", font="Cricket 14")
     l3.place(x=10, y=180)
-    l3.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l3.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l3)
     l4 = Label(text="x(t) = xo + (Vo*cosA+Vdop)*t - координата по оси ох через t секунд полёта", font="Cricket 14")
     l4.place(x=10, y=230)
-    l4.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l4.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l4)
     l5 = Label(text="Hmax = (V0^2 * (sin(A))^2 + 2 * g * h) / (2 * g) - максимальная высота полёта", font="Cricket 14")
     l5.place(x=10, y=280)
-    l5.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l5.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l5)
-    l6 = Label(text="Lmax = (V0*sin(A)+sqrt(V0^2*(sin(A))^2+2*g*h))/g * (Vo*cosA+Vdop) - дальность полёта", font="Cricket 12")
+    l6 = Label(text="Lmax = (V0*sin(A)+sqrt(V0^2*(sin(A))^2+2*g*h))/g * (Vo*cosA+Vdop) - дальность полёта", font="Cricket 14")
     l6.place(x=10, y=320)
-    l6.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    l6.config(bd=20, bg=label_bg_color, fg=label_text_color)
     BB.append(l6)
     l7 = Label(text="Tполёта = (V0 * sin(A) + sqrt(V0^2 * (sin(A))^2 + 2 * g * h)) / g - время полёта", font="Cricket 14")
     l7.place(x=10, y=370)
-    l7.config(bd=14, bg='#F7DDC4', fg='#0C136F')
+    l7.config(bd=14, bg=label_bg_color, fg=label_text_color)
     BB.append(l7)
-    l8 = Label(text="Траектория движения тела, брошенного под углом к горизонту с \nплатформы - парабола", font="Cricket 13")
+    l8 = Label(text="Траектория движения тела, брошенного под углом к горизонту с \nплатформы - парабола", font="Cricket 14")
     l8.place(x=10, y=410)
-    l8.config(bd=14, bg='#F7DDC4', fg='#0C136F')
+    l8.config(bd=14, bg=label_bg_color, fg=label_text_color)
     BB.append(l8)
 
 def theory():
@@ -4002,67 +4733,67 @@ def theory():
     vvod = []
     for a in vvod:
         a.destroy()
-    lth = Label(text="Теория", font="Cricket 22")
-    lth.config(bd=20, bg='#F7DDC4', fg='#0C136F')
-    lth.place(x=290, y=21)
+    lth = Label(text="Теория", font="Cricket 25")
+    lth.config(bd=20, bg=label_bg_color, fg=label_text_color)
+    lth.place(x=345, y=21)
     vvod.append(lth)
 
     lx = Label(text="Выберите раздел,\n по которому хотите \nузнать больше:", font="Cricket 14")
-    lx.config(bd=20, bg='#F7DDC4', fg='#0C136F')
+    lx.config(bd=20, bg=label_bg_color, fg=label_text_color)
     #lx.place(x=33, y=111)
     vvod.append(lx)
 
-    b1 = Button(root, text="1", width=25, height=6)
-    b1.place(x=460, y=230)
+    b1 = Button(root, width=21, height=4, font=('Cricket', 14))
+    b1.place(x=40, y=120)
     change_button(b1, "Бросок под углом \n с земли")
     vvod.append(b1)
     b1.config(command=th_by_angle_zero)
 
-    b2 = Button(root, text="2", width=25, height=6)
-    b2.place(x=40, y=230)
+    b2 = Button(root, width=21, height=4, font=('Cricket', 14))
+    b2.place(x=40, y=270)
     change_button(b2, "Бросок вертикально \n вверх с земли")
     vvod.append(b2)
     b2.config(command=th_vert_v_zero)
 
-    b3 = Button(root, text="3", width=25, height=6)
-    b3.place(x=40, y=350)
-    change_button(b3, "Бросок со скоростью, \n направленной горизонтально, \n с высоты ")
+    b3 = Button(root, width=21, height=4, font=('Cricket', 14))
+    b3.place(x=40, y=420)
+    change_button(b3, "Бросок со скоростью, \n направленной \nгоризонтально, с высоты ")
     vvod.append(b3)
     b3.config(command=th_hor)
 
-    b4 = Button(root, text="4", width=25, height=6)
-    b4.place(x=250, y=110)
+    b4 = Button(root, width=21, height=4, font=('Cricket', 14))
+    b4.place(x=295, y=120)
     change_button(b4, "Бросок со скоростью, \n направленной под углом \n к горизонту, с высоты ")
     vvod.append(b4)
     b4.config(command=th_angle_h)
 
-    b5 = Button(root, text="5", width=25, height=6)
-    b5.place(x=250, y=230)
+    b5 = Button(root, width=21, height=4, font=('Cricket', 14))
+    b5.place(x=295, y=270)
     change_button(b5, "Бросок с высоты со \n скоростью, направленной \nвертикально вверх")
     vvod.append(b5)
     b5.config(command=th_vert_vverh)
 
-    b6 = Button(root, text="6", width=25, height=6)
-    b6.place(x=250, y=350)
+    b6 = Button(root, width=21, height=4, font=('Cricket', 14))
+    b6.place(x=295, y=420)
     change_button(b6, "Бросок с высоты со \n скоростью, направленной \nвертикально вниз")
     vvod.append(b6)
     b6.config(command=th_vert_vniz)
 
-    b7 = Button(root, text="7", width=25, height=6)
-    b7.place(x=460, y=110)
-    change_button(b7, "Бросок под углом А к горизонту\n с высоты h на наклонную\n плоскость под углом B")
+    b7 = Button(root, width=21, height=4, font=('Cricket', 14))
+    b7.place(x=550, y=120)
+    change_button(b7, "Бросок под углом А к \nгоризонту с высоты h\n на наклонную плоскость\n под углом B")
     vvod.append(b7)
     b7.config(command=th_dop)
 
-    b8 = Button(root, text="8", width=25, height=6)
-    b8.place(x=40, y=110)
-    change_button(b8, "Бросок под углом А к горизонту\n c движущейся платформы\n на высоте h")
+    b8 = Button(root, width=21, height=4, font=('Cricket', 14))
+    b8.place(x=550, y=270)
+    change_button(b8, "Бросок под углом А к \nгоризонту c движущейся \nплатформы на высоте h")
     vvod.append(b8)
     b8.config(command=th_angle_h_move)
 
-    b9 = Button(root, text="8", width=25, height=6)
-    b9.place(x=460, y=350)
-    change_button(b9, "Бросок под углом А к горизонту\n c высоты с учетом\n ветра")
+    b9 = Button(root, width=21, height=4, font=('Cricket', 14))
+    b9.place(x=550, y=420)
+    change_button(b9, "Бросок под углом А к \nгоризонту c высоты \nс учетом ветра")
     vvod.append(b9)
     b9.config(command=th_angle_h_wind)
 
@@ -4185,7 +4916,10 @@ def start_window():  # Основное меню
     global stroim
     stroim = False
     b_home.destroy()
-    c.create_text(415, 60, text="Движение тела, брошенного под углом к горизонту", font=('Cricket', 23), fill = '#0C136F')
+    c.create_text(415, 60, text="Движение тела, брошенного под углом к горизонту", font=('Cricket', 23), fill=label_text_color)
+    
+    c['bg'] = label_bg_color
+
     for a in vvod:
         a.destroy()
 
@@ -4227,7 +4961,7 @@ def start_window():  # Основное меню
     b10 = Button(root, text="6", width=21, height=4, font=('Cricket', 14))
     b10.place(x=550, y=360)
     b10.config(command=by_angle_h_move)
-    change_button(b10, "Бросок под углом \nс движущегося тела")
+    change_button(b10, "Бросок под углом \nс движущегося тела\n на высоте")
 
     b11 = Button(root, text="6", width=21, height=4, font=('Cricket', 14))
     b11.place(x=295, y=360)
