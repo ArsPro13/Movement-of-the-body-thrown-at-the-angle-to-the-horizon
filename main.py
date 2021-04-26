@@ -60,12 +60,12 @@ def change_theme():
         button_active_bg_color = '#99BEF4'
         button_active_fg_color = '#ffffff'
     else:
-        label_bg_color = 'gray'
-        label_text_color = 'red'
-        button_passive_bg_color = 'purple'
-        button_passive_fg_color = 'blue'
-        button_active_bg_color = 'yellow'
-        button_active_fg_color = 'green'
+        label_bg_color = '#000247'
+        label_text_color = '#FFFFFF'
+        button_passive_bg_color = '#002280'
+        button_passive_fg_color = '#FFFFFF'
+        button_active_bg_color = '#000E3D'
+        button_active_fg_color = '#FFFFFF'
 
     for a in main_buttons:
         a.destroy()
